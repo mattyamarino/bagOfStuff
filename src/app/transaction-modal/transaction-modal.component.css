@@ -1,0 +1,10 @@
+.mat-column-currency { 
+    border-bottom: none !important;
+    width: 60px !important;
+  }
+
+  .mat-column-transactionAmount { 
+    border-bottom: none !important;
+    width: 120px !important;
+    text-align: center !important;
+  }

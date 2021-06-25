@@ -1,0 +1,12 @@
+<div class="bag-background">
+    <div *ngIf="loading">
+        <img  class="images" src="../../assets/dice-load.gif"/>
+    </div>
+    <div *ngIf="!loading">
+        <app-money [currencyTransaction]="latestTransaction"></app-money>
+        <br>
+        <br>
+        <app-user [users]="users" #user></app-user>
+        <button mat-raised-button color="primary" (click)="openTransactionDialog()">Deposit/Withdraw</button>
+    </div>
+</div>

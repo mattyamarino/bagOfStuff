@@ -1,0 +1,11 @@
+.bag-background{
+    background-image: url('../../assets/wallpaper.jpg');
+    background-repeat: repeat;
+    height: 100vh;
+}
+
+.dice-loading{
+    height: 200;
+}
+
+

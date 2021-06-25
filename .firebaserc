@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "bag-of-stuff"
+  },
+  "targets": {
+    "bag-of-stuff": {
+      "hosting": {
+        "bag-of-stuff": [
+          "bag-of-stuff"
+        ]
+      }
+    }
+  }
+}
