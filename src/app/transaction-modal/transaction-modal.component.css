@@ -25,3 +25,21 @@ tr.mat-header-row {
 height: 8px !important;
 text-align: center !important;
 }
+
+.centerButton {
+display: flex;
+margin: auto;
+}
+
+.textBox {
+display: flex;
+margin: auto;
+width: 80%;
+height: 115px;
+}
+
+.textBoxTitle {
+padding-left: 10%;
+font-size: 12px;
+text-align: left;
+}

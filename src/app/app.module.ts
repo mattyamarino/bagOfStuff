@@ -15,6 +15,7 @@ import { TransactionModalComponent } from './transaction-modal/transaction-modal
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {MatInputModule} from '@angular/material/input';
     MatDialogModule,
     MatTableModule,
     MatInputModule,
+    MatCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { CurrencyTransaction } from '../models/currencyTransaction';
 import { User } from '../models/user';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TransactionModalComponent } from '../transaction-modal/transaction-modal.component';
 import { UserComponent } from '../user/user.component';
+import { MonetaryTransaction } from '../models/MonetaryTransaction';
 
 @Component({
   selector: 'app-bag-parent',
@@ -12,9 +12,9 @@ import { UserComponent } from '../user/user.component';
   styleUrls: ['./bag-parent.component.css']
 })
 export class BagParentComponent implements OnInit {
-  currencyTransactions: CurrencyTransaction[] = [];
+  currencyTransactions: MonetaryTransaction[] = [];
   users: User[] = [];
-  latestTransaction!: CurrencyTransaction;
+  latestTransaction!: MonetaryTransaction;
   loading!: boolean;
   userLoading!: boolean;
   currencyLoading!: boolean;
@@ -33,11 +33,17 @@ export class BagParentComponent implements OnInit {
   getCurrencyTotals(): void {
     this.currencyLoading = true;
     this.firestore.collection("currency-transactions").valueChanges().subscribe(res => {
-      this.currencyTransactions = <CurrencyTransaction[]>res;
+      this.currencyTransactions = <MonetaryTransaction[]>res;
       this.latestTransaction = this.currencyTransactions[this.currencyTransactions.length - 1];
       this.calculateTotalValueInSilver();
       this.currencyLoading = false;
       this.checkLoading();
+      if(this.dialogRef && this.dialogRef.componentInstance){
+        this.dialogRef.componentInstance.data = {
+          latestTransaction: this.latestTransaction,
+          selectedUser: this.userComponent?.selectedUser
+        };
+      }
     });
   }
 
@@ -61,14 +67,6 @@ export class BagParentComponent implements OnInit {
     }
   }
 
-  async tempTester(): Promise<void> {
-    await this.delay(10000);
-    this.latestTransaction.platinumTotal += 22;
-    this.dialogRef.componentInstance.data = {
-      latestTransaction: this.latestTransaction
-    };
-  }
-
   calculateTotalValueInSilver(): void {
     this.latestTransaction.totalValueInSilver = (this.latestTransaction.platinumTotal * 100);
     this.latestTransaction.totalValueInSilver += (this.latestTransaction.electrumTotal * 50);
@@ -80,6 +78,6 @@ export class BagParentComponent implements OnInit {
   openTransactionDialog() {
   
     this.dialogRef = this.dialog.open(TransactionModalComponent, 
-      {data: {latestTransaction: this.latestTransaction}});
+      {data: {latestTransaction: this.latestTransaction, selectedUser: this.userComponent?.selectedUser}});
   }
 }

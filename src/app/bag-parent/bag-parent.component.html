@@ -1,17 +1,19 @@
 <div class="bag-background">
     <div *ngIf="loading">
-        <img  class="images" src="../../assets/dice-load.gif"/>
+        <br><br><br><br><br><br><br><br><br><br>
+        <img class="centerDie" src="../../assets/dice-load.gif"/>
     </div>
     <div *ngIf="!loading">
+        <br>
+        <img class="title" src="../../assets/title.png"/>
+        <br>
         <app-money [currencyTransaction]="latestTransaction"></app-money>
-        <br>
-        <br>
+        <br><br>
+        
         <app-user [users]="users" #user></app-user>
         <div *ngIf="userComponent?.selectedUser !== undefined">
-            {{userComponent?.selectedUser}}
-            <button mat-raised-button color="primary" (click)="openTransactionDialog()">Deposit/Withdraw</button>
+            <br><br>
+            <button mat-raised-button (click)="openTransactionDialog()">Deposit/Withdraw</button>
         </div>
     </div>
 </div>
-
-{{tempTester()}}

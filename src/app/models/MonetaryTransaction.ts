@@ -1,4 +1,4 @@
-export class CurrencyTransaction{
+export class MonetaryTransaction{
     platinumDeposited!: number;
     electrumDeposited!: number;
     silverDeposited!: number;

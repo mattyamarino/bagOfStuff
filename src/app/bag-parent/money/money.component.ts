@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CurrencyTransaction } from 'src/app/models/currencyTransaction';
+import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 
 @Component({
   selector: 'app-money',
@@ -7,7 +7,7 @@ import { CurrencyTransaction } from 'src/app/models/currencyTransaction';
   styleUrls: ['./money.component.css']
 })
 export class MoneyComponent implements OnInit {
-  @Input() currencyTransaction!: CurrencyTransaction;
+  @Input() currencyTransaction!: MonetaryTransaction;
 
   constructor() { }
 

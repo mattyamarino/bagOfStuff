@@ -1,7 +1,26 @@
-Total Value in Silver {{ currencyTransaction?.totalValueInSilver }}
-<br>
-Platinum {{ currencyTransaction?.platinumTotal }}
-Electrum {{ currencyTransaction?.electrumTotal }}
-Silver {{ currencyTransaction?.silverTotal }}
-Copper {{ currencyTransaction?.copperTotal }}
-Gold {{ currencyTransaction?.goldTotal }}
+<mat-card class="moneyCard">
+    <div class="moneyText">
+        <div class="bigMoneyText">
+            Total Value in Silver &nbsp;&nbsp; 
+            <img src="../../../assets/silver.png" class="bigMoneyIcon">
+            {{ currencyTransaction?.totalValueInSilver }}
+            <br><br>
+        </div>
+        <img src="../../../assets/platinum.png" class="moneyIcon">
+        Platinum &nbsp;
+        {{ currencyTransaction?.platinumTotal }} &nbsp;&nbsp;
+        <img src="../../../assets/electrum.png" class="moneyIcon">
+        Electrum &nbsp;
+        {{ currencyTransaction?.electrumTotal }} &nbsp;&nbsp;
+        <img src="../../../assets/silver.png" class="moneyIcon">
+        Silver &nbsp;
+        {{ currencyTransaction?.silverTotal }} &nbsp;&nbsp;
+        <img src="../../../assets/copper.png" class="moneyIcon">
+        Copper &nbsp;
+        {{ currencyTransaction?.copperTotal }} &nbsp;&nbsp;
+        <img src="../../../assets/gold.png" class="moneyIcon">
+        Gold &nbsp;
+        {{ currencyTransaction?.goldTotal }} &nbsp;&nbsp;
+        <br>
+    </div>
+</mat-card>
