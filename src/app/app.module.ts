@@ -6,7 +6,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AppComponent } from './app.component';
 import { environment } from "src/environments/environment";
 import { MoneyComponent } from './bag-parent/money/money.component';
-import { UserComponent } from './bag-parent/user/user.component';
+import { UserComponent } from './user/user.component';
 import { BagParentComponent } from './bag-parent/bag-parent.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSelectModule} from '@angular/material/select';
@@ -14,6 +14,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { TransactionModalComponent } from './transaction-modal/transaction-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {MatTableModule} from '@angular/material/table';
     ReactiveFormsModule,
     MatDialogModule,
     MatTableModule,
+    MatInputModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

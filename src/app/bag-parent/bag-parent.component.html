@@ -7,6 +7,11 @@
         <br>
         <br>
         <app-user [users]="users" #user></app-user>
-        <button mat-raised-button color="primary" (click)="openTransactionDialog()">Deposit/Withdraw</button>
+        <div *ngIf="userComponent?.selectedUser !== undefined">
+            {{userComponent?.selectedUser}}
+            <button mat-raised-button color="primary" (click)="openTransactionDialog()">Deposit/Withdraw</button>
+        </div>
     </div>
 </div>
+
+{{tempTester()}}

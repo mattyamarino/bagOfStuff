@@ -1,10 +1,27 @@
 .mat-column-currency { 
-    border-bottom: none !important;
-    width: 60px !important;
-  }
+border-bottom: none !important;
+width: 100px !important;
+}
 
-  .mat-column-transactionAmount { 
-    border-bottom: none !important;
-    width: 120px !important;
-    text-align: center !important;
-  }
+.mat-column-transactionAmount { 
+border-bottom: none !important;
+width: 180px !important;
+text-align: center !important;
+}
+
+.mat-column-valueInSilver { 
+border-bottom: none !important;
+min-width: 100 !important;
+text-align: center !important;
+}
+
+.mat-column-currentAmount { 
+border-bottom: none !important;
+width: 100 !important;
+text-align: center !important;
+}
+
+tr.mat-header-row {
+height: 8px !important;
+text-align: center !important;
+}

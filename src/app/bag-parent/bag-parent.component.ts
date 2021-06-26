@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { CurrencyTransaction } from '../models/currencyTransaction';
 import { User } from '../models/user';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { TransactionModalComponent } from '../transaction-modal/transaction-modal.component';
-import { UserComponent } from './user/user.component';
+import { UserComponent } from '../user/user.component';
 
 @Component({
   selector: 'app-bag-parent',
@@ -19,6 +19,8 @@ export class BagParentComponent implements OnInit {
   userLoading!: boolean;
   currencyLoading!: boolean;
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
+  dialogRef!: MatDialogRef<TransactionModalComponent>;
+  tempNumber: number = 0;
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog) { }
 
@@ -59,6 +61,14 @@ export class BagParentComponent implements OnInit {
     }
   }
 
+  async tempTester(): Promise<void> {
+    await this.delay(10000);
+    this.latestTransaction.platinumTotal += 22;
+    this.dialogRef.componentInstance.data = {
+      latestTransaction: this.latestTransaction
+    };
+  }
+
   calculateTotalValueInSilver(): void {
     this.latestTransaction.totalValueInSilver = (this.latestTransaction.platinumTotal * 100);
     this.latestTransaction.totalValueInSilver += (this.latestTransaction.electrumTotal * 50);
@@ -68,6 +78,8 @@ export class BagParentComponent implements OnInit {
   }
 
   openTransactionDialog() {
-    const dialogRef = this.dialog.open(TransactionModalComponent);
+  
+    this.dialogRef = this.dialog.open(TransactionModalComponent, 
+      {data: {latestTransaction: this.latestTransaction}});
   }
 }
