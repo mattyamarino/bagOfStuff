@@ -1,0 +1,18 @@
+.user-container{
+margin: auto;
+width: 40%;
+text-align: center;
+font-family: 'Lobster', cursive;
+}
+.user-label{
+margin: auto;
+font-size: 30px;
+text-align: center;
+font-family: 'Lobster', cursive;
+}
+
+.user-label-small{
+margin: auto;
+font-size: 13px;
+text-align: center;
+}

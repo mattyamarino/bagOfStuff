@@ -7,10 +7,9 @@
         <br>
         <img class="title" src="../../assets/title.png"/>
         <br>
-        <app-money [currencyTransaction]="latestTransaction"></app-money>
-        <br><br>
-        
         <app-user [users]="users" #user></app-user>
+        <br><br>
+        <app-money [currencyTransaction]="latestTransaction"></app-money>
         <div *ngIf="userComponent?.selectedUser !== undefined">
             <br><br>
             <button mat-raised-button (click)="openTransactionDialog()">Deposit/Withdraw</button>

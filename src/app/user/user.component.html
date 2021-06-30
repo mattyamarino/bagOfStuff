@@ -1,11 +1,19 @@
-<div *ngIf="!selectedUser">
-    <mat-select placeholder = "Select Character" [(ngModel)]="selectedUser" name = "user">
+<div class="user-label" *ngIf="!selectedUser">
+    Choose Your Character to Continue
+</div>
+<div class="user-container" *ngIf="!selectedUser">
+    <br>
+    <mat-select placeholder = "No Character Selected" [(ngModel)]="selectedUser" name = "user">
         <mat-option *ngFor="let user of users" [value]="user.character">
-            {{user.character}} ({{user.player}})
+            {{user.character}}
         </mat-option>
     </mat-select>
 </div>
 
-<div *ngIf="selectedUser">
+<div *ngIf="selectedUser" class="user-label-small">
+    Currently Logged In As:
+</div>
+<div *ngIf="selectedUser" class="user-label">
+    <br>
     {{selectedUser}}
 </div>
