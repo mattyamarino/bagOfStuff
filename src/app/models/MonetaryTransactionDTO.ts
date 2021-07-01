@@ -11,4 +11,5 @@ export class MonetaryTransactionDTO{
     goldTotal!: number;
     description!: string;
     createdBy!: string;
+    createdOn!: number;
 }

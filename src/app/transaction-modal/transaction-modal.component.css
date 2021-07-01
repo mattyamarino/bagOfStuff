@@ -35,7 +35,8 @@ margin: auto;
 display: flex;
 margin: auto;
 width: 80%;
-height: 115px;
+color: black;
+background-color: white;
 }
 
 .textBoxTitle {
@@ -43,3 +44,26 @@ padding-left: 10%;
 font-size: 12px;
 text-align: left;
 }
+
+.withdraw-label {
+font-size: 30px;
+text-align: center;
+font-weight: bolder;
+color: orangered;
+}
+
+.deposit-label {
+font-size: 30px;
+text-align: center;
+font-weight: bolder;
+color: #4699c7;
+}
+
+.mat-light-blue {
+    background-color: #4699c7;
+}
+
+.mat-orange {
+    background-color: orangered;
+}
+

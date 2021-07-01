@@ -12,4 +12,5 @@ export class MonetaryTransaction{
     description?: string;
     createdBy!: string;
     totalValueInSilver?: number;
+    createdOn!: number;
 }

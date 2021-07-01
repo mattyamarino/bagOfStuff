@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { FirestoreConstants } from '../config/FirestoreConstants';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
 import { MonetaryTransactionDTO } from '../models/MonetaryTransactionDTO';
 
@@ -16,9 +17,11 @@ export class TransactionModalComponent implements OnInit {
   dataSource: any = [];  
   description: string = "";
   selectedUser!: string;
+  type!: string;
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private firestore: AngularFirestore, public dialog: MatDialog) {
       this.latestTransaction = data.latestTransaction;
       this.selectedUser = data.selectedUser;
+      this.type = data.type;
    }
 
   ngOnInit(): void {
@@ -45,7 +48,10 @@ export class TransactionModalComponent implements OnInit {
 
   isInvalidAmount(currency: string, amount: number): boolean {
     let currentTotal: number = this.getTotalForCurrencyType(currency);
-    return (currentTotal + amount) < 0;
+    if(this.type === "Withdraw") {
+      return (currentTotal - amount) < 0;
+    } 
+    return amount < 0;
   }
 
   getTotalForCurrencyType(currency: string): number {
@@ -68,23 +74,43 @@ export class TransactionModalComponent implements OnInit {
   getTransactionTotalForCurrencyType(currency: string, transaction: any, adjustmentAmount: number): void {
     if(currency === "Platinum") {
       transaction.platinumDeposited = adjustmentAmount;
-      transaction.platinumTotal = adjustmentAmount + this.latestTransaction.platinumTotal;
+      if(this.type === "Withdraw") {
+        transaction.platinumTotal = this.latestTransaction.platinumTotal - adjustmentAmount;
+      } else {
+        transaction.platinumTotal = this.latestTransaction.platinumTotal + adjustmentAmount;
+      }
     }
     if(currency === "Electrum") {
       transaction.electrumDeposited = adjustmentAmount;
-      transaction.electrumTotal = adjustmentAmount + this.latestTransaction.electrumTotal;
+      if(this.type === "Withdraw") {
+        transaction.electrumTotal = this.latestTransaction.electrumTotal - adjustmentAmount;
+      } else {
+        transaction.electrumTotal = this.latestTransaction.electrumTotal + adjustmentAmount;
+      }
     }
     if(currency === "Silver") {
       transaction.silverDeposited = adjustmentAmount;
-      transaction.silverTotal = adjustmentAmount + this.latestTransaction.silverTotal;
+      if(this.type === "Withdraw") {
+        transaction.silverTotal = this.latestTransaction.silverTotal - adjustmentAmount;
+      } else {
+        transaction.silverTotal = this.latestTransaction.silverTotal + adjustmentAmount;
+      }
     }
     if(currency === "Copper") {
       transaction.copperDeposited = adjustmentAmount;
-      transaction.copperTotal = adjustmentAmount + this.latestTransaction.copperTotal;
+      if(this.type === "Withdraw") {
+        transaction.copperTotal = this.latestTransaction.copperTotal - adjustmentAmount;
+      } else {
+        transaction.copperTotal = this.latestTransaction.copperTotal + adjustmentAmount;
+      }
     }
     if(currency === "Gold") {
       transaction.goldDeposited = adjustmentAmount;
-      transaction.goldTotal = adjustmentAmount + this.latestTransaction.goldTotal;
+      if(this.type === "Withdraw") {
+        transaction.goldTotal = this.latestTransaction.goldTotal - adjustmentAmount;
+      } else {
+        transaction.goldTotal = this.latestTransaction.goldTotal + adjustmentAmount;
+      }
     }
   }
 
@@ -92,6 +118,7 @@ export class TransactionModalComponent implements OnInit {
 
     let newTransaction: MonetaryTransactionDTO = new MonetaryTransactionDTO;
 
+    newTransaction.createdOn = Date.now();
     newTransaction.description = this.description;
     newTransaction.createdBy = this.selectedUser;
     
@@ -103,9 +130,10 @@ export class TransactionModalComponent implements OnInit {
 
     return new Promise<any>((resolve, reject) =>{
       this.firestore
-          .collection("currency-transactions")
+          .collection(FirestoreConstants.currencyTransactions)
           .add(data)
           .then(res => {}, err => reject(err));
+          this.dialog.closeAll();
         });
   }
 

@@ -1,9 +1,9 @@
 <div class="user-label" *ngIf="!selectedUser">
     Choose Your Character to Continue
 </div>
-<div class="user-container" *ngIf="!selectedUser">
+<div class="user-dropdown" *ngIf="!selectedUser">
     <br>
-    <mat-select placeholder = "No Character Selected" [(ngModel)]="selectedUser" name = "user">
+    <mat-select placeholder = "No Character Selected" [(ngModel)]="selectedUser" name = "user" >
         <mat-option *ngFor="let user of users" [value]="user.character">
             {{user.character}}
         </mat-option>

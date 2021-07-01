@@ -16,4 +16,19 @@
     width: 25%;
 }
 
+.moneyCard{
+    margin: auto;
+    width: 60%;
+    background-color: #424242;
+    border: 5px solid #000
+}
+
+.button-container {
+    margin: auto;
+    text-align: center;
+}
+
+.mat-light-blue {
+    background-color: #4699c7;
+}
 

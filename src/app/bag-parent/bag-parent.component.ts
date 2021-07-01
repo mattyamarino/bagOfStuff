@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TransactionModalComponent } from '../transaction-modal/transaction-modal.component';
 import { UserComponent } from '../user/user.component';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
+import { FirestoreConstants } from '../config/FirestoreConstants';
 
 @Component({
   selector: 'app-bag-parent',
@@ -19,7 +20,6 @@ export class BagParentComponent implements OnInit {
   userLoading!: boolean;
   currencyLoading!: boolean;
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
-  dialogRef!: MatDialogRef<TransactionModalComponent>;
   tempNumber: number = 0;
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog) { }
@@ -32,18 +32,12 @@ export class BagParentComponent implements OnInit {
 
   getCurrencyTotals(): void {
     this.currencyLoading = true;
-    this.firestore.collection("currency-transactions").valueChanges().subscribe(res => {
+    this.firestore.collection(FirestoreConstants.currencyTransactions).valueChanges().subscribe(res => {
       this.currencyTransactions = <MonetaryTransaction[]>res;
-      this.latestTransaction = this.currencyTransactions[this.currencyTransactions.length - 1];
+      this.getLatestTransaction();
       this.calculateTotalValueInSilver();
       this.currencyLoading = false;
       this.checkLoading();
-      if(this.dialogRef && this.dialogRef.componentInstance){
-        this.dialogRef.componentInstance.data = {
-          latestTransaction: this.latestTransaction,
-          selectedUser: this.userComponent?.selectedUser
-        };
-      }
     });
   }
 
@@ -61,9 +55,26 @@ export class BagParentComponent implements OnInit {
   }
 
   async checkLoading(): Promise<void> {
-    await this.delay(3000);
+    // await this.delay(3000);
     if (!this.userLoading && !this.currencyLoading) {
       this.loading = false;
+    }
+  }
+
+  getLatestTransaction(): void {
+    if(this.currencyTransactions.length === 0) {
+      let transaction: MonetaryTransaction = new MonetaryTransaction;
+      transaction.platinumTotal = 0;
+      transaction.electrumTotal = 0;
+      transaction.silverTotal = 0;
+      transaction.copperTotal = 0;
+      transaction.goldTotal = 0;
+      this.latestTransaction = transaction;
+    } else {
+      this.currencyTransactions.sort(function(x, y){
+        return x.createdOn - y.createdOn;
+      });
+      this.latestTransaction = this.currencyTransactions[this.currencyTransactions.length -1];
     }
   }
 
@@ -71,13 +82,39 @@ export class BagParentComponent implements OnInit {
     this.latestTransaction.totalValueInSilver = (this.latestTransaction.platinumTotal * 100);
     this.latestTransaction.totalValueInSilver += (this.latestTransaction.electrumTotal * 50);
     this.latestTransaction.totalValueInSilver += this.latestTransaction.silverTotal;
-    this.latestTransaction.totalValueInSilver += (this.latestTransaction.copperDeposited / 10);
+    this.latestTransaction.totalValueInSilver += (this.latestTransaction.copperTotal / 10);
     this.latestTransaction.totalValueInSilver += (this.latestTransaction.goldTotal / 10);
   }
 
-  openTransactionDialog() {
-  
-    this.dialogRef = this.dialog.open(TransactionModalComponent, 
-      {data: {latestTransaction: this.latestTransaction, selectedUser: this.userComponent?.selectedUser}});
+  openDepositDialog(): void {
+    this.dialog.open(TransactionModalComponent, 
+      {
+        data: {
+          latestTransaction: this.latestTransaction, 
+          selectedUser: this.userComponent?.selectedUser,
+          type: "Deposit"
+        }
+      });
+  }
+
+  openWithdrawDialog(): void {
+    this.dialog.open(TransactionModalComponent, 
+      {
+        data: {
+          latestTransaction: this.latestTransaction, 
+          selectedUser: this.userComponent?.selectedUser,
+          type: "Withdraw"
+        }
+      });
+  }
+
+  openMonetaryHistoryDialog(): void {
+
+  }
+
+  switchUser(): void {
+    if(this.userComponent?.selectedUser) {
+      this.userComponent.selectedUser = undefined;
+    }
   }
 }
