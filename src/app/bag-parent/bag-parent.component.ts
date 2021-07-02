@@ -57,15 +57,13 @@ export class BagParentComponent implements OnInit {
   }
 
   async checkLoading(): Promise<void> {
-    // await this.delay(3000);
+    await this.delay(2000);
     if (!this.userLoading && !this.currencyLoading) {
       this.loading = false;
     }
   }
 
-  
-
-  openDepositDialog(): void {
+    openDepositDialog(): void {
     this.dialog.open(TransactionModalComponent, 
       {
         data: {

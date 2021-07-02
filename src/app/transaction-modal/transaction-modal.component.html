@@ -1,6 +1,6 @@
 <mat-dialog-content>
     <div [ngClass]="{'withdraw-label': type === 'Withdraw', 'deposit-label': type === 'Deposit'}">
-        <br>
+        <span class="br"> </span>
         {{type}}
     </div>
     <br>
@@ -20,6 +20,7 @@
                             <input 
                             numeric 
                             type="number"
+                            (click)="clearZeroAmount($event)"
                             (focusout)="onFocusOutEvent($event)"  
                             matInput 
                             [(ngModel)]="dataSource[i].transactionAmount" 
@@ -55,8 +56,12 @@
     <div *ngIf="isFieldsEmpty && submitAttempted" class="warning emptyTransaction">
         Cannot Submit Empty Transaction
     </div>
-
-    <br><br>
+    <div class="emptyTransaction">
+        Value of {{type}} in Silver
+        <img src="../../../assets/silver.png" class="smallMoneyIcon">
+        {{ getTransactionValueInSilver() | number:'1.2-2' }}
+    </div>
+    <span class="br"> </span>
     <div class="textBoxTitle">
     Reason For {{type}}
         <span *ngIf="description == '' && submitAttempted" class="warning">
@@ -71,7 +76,7 @@
     cols="40" 
     rows="4"></textarea>
 
-    <br><br>
+    <br>
  
     <div class="button-row">
         <button 

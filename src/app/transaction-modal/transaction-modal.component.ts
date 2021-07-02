@@ -185,9 +185,40 @@ export class TransactionModalComponent implements OnInit {
   }
 
 
-  onFocusOutEvent(event: any) {
+  onFocusOutEvent(event: any): void {
     if (event.target.value == '')  {
       event.target.value = 0;
+    }
+  }
+
+  clearZeroAmount(event: any): void {
+    if (event.target.value == 0)  {
+      event.target.value = undefined;
+    }
+  }
+
+  getTransactionValueInSilver(): number {
+    let amount = 0;
+    this.dataSource.forEach((element: { currency: any; transactionAmount: any; }) => {
+      amount += this.getCurrentAmountValueInSilver(element.currency, element.transactionAmount);
+    });
+    return amount;
+  }
+
+  getCurrentAmountValueInSilver(currency: string, amount: number): number {
+    switch (currency) {
+      case "Platinum":
+        return amount * 100;
+      case "Electrum":
+        return amount * 50;
+      case "Silver":
+        return amount;
+      case "Copper":
+        return amount * 0.1;
+      case "Gold":
+        return amount * 0.1;
+      default:
+        return 0;
     }
   }
 
