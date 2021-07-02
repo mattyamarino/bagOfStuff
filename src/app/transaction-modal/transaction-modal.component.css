@@ -63,7 +63,16 @@ color: #4699c7;
     background-color: #4699c7;
 }
 
-.mat-orange {
-    background-color: orangered;
+.button-row {
+    display: flex;
+  }
+
+.warning {
+    color: rgb(255, 60, 0);
+}
+
+.emptyTransaction {
+    font-size: 12px;
+    text-align: center;
 }
 

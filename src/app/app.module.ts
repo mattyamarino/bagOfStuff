@@ -17,6 +17,9 @@ import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import { MonetaryHistoryComponent } from './monetary-history/monetary-history.component';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { NumericDirective } from './config/numeric.directive';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,9 @@ import {MatButtonModule} from '@angular/material/button';
     MoneyComponent,
     UserComponent,
     BagParentComponent,
-    TransactionModalComponent
+    TransactionModalComponent,
+    MonetaryHistoryComponent,
+    NumericDirective
   ],
   imports: [
     BrowserModule,
@@ -40,6 +45,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    MatPaginatorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -12,4 +12,5 @@ export class MonetaryTransactionDTO{
     description!: string;
     createdBy!: string;
     createdOn!: number;
+    type!: string;
 }

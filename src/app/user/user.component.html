@@ -2,8 +2,8 @@
     Choose Your Character to Continue
 </div>
 <div class="user-dropdown" *ngIf="!selectedUser">
-    <br>
-    <mat-select placeholder = "No Character Selected" [(ngModel)]="selectedUser" name = "user" >
+    <span class="br"> </span>
+    <mat-select placeholder = "Select Character Here" [(ngModel)]="selectedUser" name = "user" >
         <mat-option *ngFor="let user of users" [value]="user.character">
             {{user.character}}
         </mat-option>
@@ -14,6 +14,10 @@
     Currently Logged In As:
 </div>
 <div *ngIf="selectedUser" class="user-label">
-    <br>
+    <span class="br"> </span>
     {{selectedUser}}
+</div>
+<span class="br"> </span>
+<div *ngIf="selectedUser" class="user-label-small blue" (click)="switchUser()">
+   Switch Character
 </div>

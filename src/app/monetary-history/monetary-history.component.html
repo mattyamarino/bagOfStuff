@@ -1,0 +1,74 @@
+<mat-dialog-content>
+    <div class="bigText">
+        <br>
+        Currency Transaction History
+    </div>
+    <br><br>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Transaction Type</th>
+            <td mat-cell *matCellDef="let element">
+                <div [ngClass]="{'orange': element.type === 'Withdraw', 'light-blue': element.type === 'Deposit'}">
+                    {{element.type}}
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="platinumDeposited">
+            <th mat-header-cell *matHeaderCellDef>Platinum Transacted</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{element.platinumDeposited}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="electrumDeposited">
+            <th mat-header-cell *matHeaderCellDef>Electrum Transacted</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{element.electrumDeposited}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="silverDeposited">
+            <th mat-header-cell *matHeaderCellDef>Silver Transacted</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{element.silverDeposited}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="copperDeposited">
+            <th mat-header-cell *matHeaderCellDef>Copper Transacted</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{element.copperDeposited}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="goldDeposited">
+            <th mat-header-cell *matHeaderCellDef>Gold Transacted</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{element.goldDeposited}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef>Created By</th>
+            <td mat-cell *matCellDef="let element">{{element.createdBy}}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="createdOn">
+            <th mat-header-cell *matHeaderCellDef>Transacted On</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionDate(element.createdOn)}}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Reason For Transaction</th>
+            <td mat-cell *matCellDef="let element">{{element.description}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    
+    <br>
+
+    <button 
+    mat-raised-button 
+    color="light-blue"
+    class="centerButton" 
+    (click)="closeDialog()">
+        Close History Table
+    </button>
+
+</mat-dialog-content>

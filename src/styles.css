@@ -5,3 +5,9 @@ body {  margin: 0;
         font-family: 'Lobster', cursive;
         color: white;
     }
+
+    
+ .br {
+    display: block;
+    margin: 8px 0;
+ }

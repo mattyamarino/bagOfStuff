@@ -6,6 +6,8 @@ import { TransactionModalComponent } from '../transaction-modal/transaction-moda
 import { UserComponent } from '../user/user.component';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
 import { FirestoreConstants } from '../config/FirestoreConstants';
+import { FirestoreService } from '../services/firestore.service';
+import { MonetaryHistoryComponent } from '../monetary-history/monetary-history.component';
 
 @Component({
   selector: 'app-bag-parent',
@@ -22,7 +24,7 @@ export class BagParentComponent implements OnInit {
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
   tempNumber: number = 0;
 
-  constructor(private firestore: AngularFirestore, public dialog: MatDialog) { }
+  constructor(private firestoreService: FirestoreService,  public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -32,10 +34,10 @@ export class BagParentComponent implements OnInit {
 
   getCurrencyTotals(): void {
     this.currencyLoading = true;
-    this.firestore.collection(FirestoreConstants.currencyTransactions).valueChanges().subscribe(res => {
+      this.firestoreService.getCurrencyTransactions().subscribe(res => {
       this.currencyTransactions = <MonetaryTransaction[]>res;
-      this.getLatestTransaction();
-      this.calculateTotalValueInSilver();
+      this.latestTransaction = this.firestoreService.getLatestTransaction(this.currencyTransactions);
+      this.firestoreService.calculateTotalValueInSilver(this.latestTransaction);
       this.currencyLoading = false;
       this.checkLoading();
     });
@@ -43,7 +45,7 @@ export class BagParentComponent implements OnInit {
 
   getUsers(): void {
     this.userLoading = true;
-    this.firestore.collection("users").valueChanges().subscribe(res => {
+    this.firestoreService.getUsers().subscribe(res => {
       this.users = <User[]>res;
       this.userLoading = false;
       this.checkLoading();
@@ -61,30 +63,7 @@ export class BagParentComponent implements OnInit {
     }
   }
 
-  getLatestTransaction(): void {
-    if(this.currencyTransactions.length === 0) {
-      let transaction: MonetaryTransaction = new MonetaryTransaction;
-      transaction.platinumTotal = 0;
-      transaction.electrumTotal = 0;
-      transaction.silverTotal = 0;
-      transaction.copperTotal = 0;
-      transaction.goldTotal = 0;
-      this.latestTransaction = transaction;
-    } else {
-      this.currencyTransactions.sort(function(x, y){
-        return x.createdOn - y.createdOn;
-      });
-      this.latestTransaction = this.currencyTransactions[this.currencyTransactions.length -1];
-    }
-  }
-
-  calculateTotalValueInSilver(): void {
-    this.latestTransaction.totalValueInSilver = (this.latestTransaction.platinumTotal * 100);
-    this.latestTransaction.totalValueInSilver += (this.latestTransaction.electrumTotal * 50);
-    this.latestTransaction.totalValueInSilver += this.latestTransaction.silverTotal;
-    this.latestTransaction.totalValueInSilver += (this.latestTransaction.copperTotal / 10);
-    this.latestTransaction.totalValueInSilver += (this.latestTransaction.goldTotal / 10);
-  }
+  
 
   openDepositDialog(): void {
     this.dialog.open(TransactionModalComponent, 
@@ -109,12 +88,12 @@ export class BagParentComponent implements OnInit {
   }
 
   openMonetaryHistoryDialog(): void {
-
+    this.dialog.open(MonetaryHistoryComponent, 
+      {
+        data: {
+          currencyTransactions: this.currencyTransactions
+        }
+      });
   }
 
-  switchUser(): void {
-    if(this.userComponent?.selectedUser) {
-      this.userComponent.selectedUser = undefined;
-    }
-  }
 }

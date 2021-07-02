@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-user',
@@ -13,6 +13,12 @@ export class UserComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  switchUser(): void {
+    if(this.selectedUser) {
+      this.selectedUser = undefined;
+    }
   }
 
 }
