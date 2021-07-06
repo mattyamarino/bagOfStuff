@@ -20,6 +20,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { MonetaryHistoryComponent } from './monetary-history/monetary-history.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { NumericDirective } from './config/numeric.directive';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { NumericDirective } from './config/numeric.directive';
     MatCardModule,
     MatButtonModule,
     MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

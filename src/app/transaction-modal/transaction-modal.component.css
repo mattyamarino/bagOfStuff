@@ -59,17 +59,9 @@ font-weight: bolder;
 color: #4699c7;
 }
 
-.mat-light-blue {
-    background-color: #4699c7;
-}
-
 .button-row {
     display: flex;
   }
-
-.warning {
-    color: rgb(255, 60, 0);
-}
 
 .emptyTransaction {
     font-size: 12px;

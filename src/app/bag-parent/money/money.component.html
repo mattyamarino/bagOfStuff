@@ -1,9 +1,9 @@
 <mat-card class="mat-elevation-z0">
-    <div class="moneyText">
-        <div class="bigMoneyText">
+    <div class="lobsterText">
+        <div class="bigLobsterText">
             Total Value in Silver &nbsp;&nbsp; 
             <img src="../../../assets/silver.png" class="bigMoneyIcon">
-            {{ currencyTransaction?.totalValueInSilver }}
+            {{ currencyTransaction?.totalValueInSilver | number:'1.2-2'  }}
             <br><br>
         </div>
         <img src="../../../assets/platinum.png" class="moneyIcon">

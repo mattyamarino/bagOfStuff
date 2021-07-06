@@ -1,13 +1,17 @@
 <mat-dialog-content>
-    <div class="bigText">
+    <div class="bigLobsterText">
         <br>
         Currency Transaction History
     </div>
     <br><br>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+    <table 
+    mat-table 
+    matSort 
+    [dataSource]="dataSource" 
+    class="mat-elevation-z0">
 
         <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Transaction Type</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Transaction Type</th>
             <td mat-cell *matCellDef="let element">
                 <div [ngClass]="{'orange': element.type === 'Withdraw', 'light-blue': element.type === 'Deposit'}">
                     {{element.type}}
@@ -41,12 +45,12 @@
         </ng-container>
 
         <ng-container matColumnDef="createdBy">
-            <th mat-header-cell *matHeaderCellDef>Created By</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Created By</th>
             <td mat-cell *matCellDef="let element">{{element.createdBy}}</td>
         </ng-container>
         
         <ng-container matColumnDef="createdOn">
-            <th mat-header-cell *matHeaderCellDef>Transacted On</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Transacted On</th>
             <td mat-cell *matCellDef="let element">{{getTransactionDate(element.createdOn)}}</td>
         </ng-container>
         

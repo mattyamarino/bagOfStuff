@@ -1,22 +1,4 @@
-.moneyText{
-    margin: auto;
-    text-align: center;
-    font-family: 'Lobster', cursive;
-    font-size: 20px;
-}
 
 .moneyCard{
     margin: auto;
-}
-
-.bigMoneyText{
-    margin: auto;
-    text-align: center;
-    font-family: 'Lobster', cursive;
-    font-size: 30px;
-}
-
-.bigMoneyIcon{
-    height: 30px;
-    margin-left: 7px;
 }
