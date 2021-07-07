@@ -5,8 +5,8 @@ margin: auto;
 }
 
 .mat-column-type { 
-width: 100px !important;
-text-align: center !important;
+width: 80px !important;
+text-align: left !important;
 }
 
 .mat-column-platinumDeposited { 
@@ -55,3 +55,20 @@ tr.mat-header-row {
 height: 12px !important;
 text-align: center !important;
 }
+
+.mat-column {
+    border: none;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+    display: flex;
+    justify-content: center;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.54 !important;
+    transform: translateY(0px) !important;
+  }
+/* .mat-row:nth-child(odd){
+    background-color: rgb(58, 58, 58);
+} */

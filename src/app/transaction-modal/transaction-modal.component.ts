@@ -122,9 +122,8 @@ export class TransactionModalComponent implements OnInit {
 
     let newTransaction: MonetaryTransactionDTO = new MonetaryTransactionDTO;
 
-    this.firestoreService.getCurrencyTransactions().subscribe(res => {
+    this.firestoreService.getLatestTransaction().subscribe(res => {
       
-      this.latestTransaction = this.firestoreService.getLatestTransaction(<MonetaryTransaction[]>res);
       this.updateAvailableAmounts();
   
       this.dataSource.forEach((element: { currency: string; transactionAmount: number; }) => {

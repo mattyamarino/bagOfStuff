@@ -16,7 +16,12 @@ export class FirestoreService {
   }
 
   getCurrencyTransactions() {
-    return this.firestore.collection(FirestoreConstants.currencyTransactions).valueChanges();
+    return this.firestore.collection(FirestoreConstants.currencyTransactions).get();
+  }
+  
+  getLatestTransaction() {
+    return  this.firestore.collection(FirestoreConstants.currencyTransactions, 
+      ref => ref.orderBy("createdOn", "desc").limit(1)).valueChanges(); 
   }
 
   createCurrencyTransaction(data: any) {
@@ -28,7 +33,7 @@ export class FirestoreService {
         });
   }
 
-  getLatestTransaction(currencyTransactions: MonetaryTransaction[]): MonetaryTransaction {
+  getLatestTransactionFromList(currencyTransactions: MonetaryTransaction[]): MonetaryTransaction {
     if(currencyTransactions.length === 0) {
       let transaction: MonetaryTransaction = new MonetaryTransaction;
       transaction.platinumTotal = 0;
@@ -48,6 +53,7 @@ export class FirestoreService {
       return y.createdOn - x.createdOn;
     });
   }
+
 
   calculateTotalValueInSilver(transaction: MonetaryTransaction): void {
     transaction.totalValueInSilver = (transaction.platinumTotal * 100);

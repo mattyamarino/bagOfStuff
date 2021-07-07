@@ -1,9 +1,9 @@
 <div class="bag-background">
-    <div *ngIf="loading">
+    <div *ngIf="checkLoading()">
         <br><br><br><br><br><br><br><br><br><br>
         <img class="centerDie" src="../../assets/dice-load.gif"/>
     </div>
-    <div *ngIf="!loading">
+    <div *ngIf="!checkLoading()">
         <br>
         <img class="title" src="../../assets/title.png"/>
         <br>

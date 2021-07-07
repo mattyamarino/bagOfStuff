@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TransactionModalComponent } from '../transaction-modal/transaction-modal.component';
 import { UserComponent } from '../user/user.component';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
-import { FirestoreConstants } from '../config/FirestoreConstants';
 import { FirestoreService } from '../services/firestore.service';
 import { MonetaryHistoryComponent } from '../monetary-history/monetary-history.component';
 
@@ -15,7 +13,6 @@ import { MonetaryHistoryComponent } from '../monetary-history/monetary-history.c
   styleUrls: ['./bag-parent.component.css']
 })
 export class BagParentComponent implements OnInit {
-  currencyTransactions: MonetaryTransaction[] = [];
   users: User[] = [];
   latestTransaction!: MonetaryTransaction;
   loading!: boolean;
@@ -34,21 +31,20 @@ export class BagParentComponent implements OnInit {
 
   getCurrencyTotals(): void {
     this.currencyLoading = true;
-      this.firestoreService.getCurrencyTransactions().subscribe(res => {
-      this.currencyTransactions = <MonetaryTransaction[]>res;
-      this.latestTransaction = this.firestoreService.getLatestTransaction(this.currencyTransactions);
+    this.firestoreService.getLatestTransaction().subscribe(res => {
+      const resArray = <MonetaryTransaction[]>res;
+      this.latestTransaction = resArray[0];
       this.firestoreService.calculateTotalValueInSilver(this.latestTransaction);
       this.currencyLoading = false;
-      this.checkLoading();
     });
   }
 
   getUsers(): void {
     this.userLoading = true;
-    this.firestoreService.getUsers().subscribe(res => {
+    this.firestoreService.getUsers().subscribe(async res => {
       this.users = <User[]>res;
+      await this.delay(1000);
       this.userLoading = false;
-      this.checkLoading();
     });
   }
 
@@ -56,11 +52,11 @@ export class BagParentComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async checkLoading(): Promise<void> {
-    await this.delay(2000);
+   checkLoading(): boolean {
     if (!this.userLoading && !this.currencyLoading) {
-      this.loading = false;
+      return false;
     }
+    return true;
   }
 
     openDepositDialog(): void {
@@ -86,12 +82,15 @@ export class BagParentComponent implements OnInit {
   }
 
   openMonetaryHistoryDialog(): void {
-    this.dialog.open(MonetaryHistoryComponent, 
-      {
+    this.firestoreService.getCurrencyTransactions().subscribe(res => {
+      const refArray =  res.docs.map(doc => doc.data());
+      this.firestoreService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
+      this.dialog.open(MonetaryHistoryComponent, {
         data: {
-          currencyTransactions: this.currencyTransactions
+          currencyTransactions: refArray
         }
       });
+    });
   }
 
 }
