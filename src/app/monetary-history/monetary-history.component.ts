@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
+import { FirestoreService } from '../services/firestore.service';
 
 @Component({
   selector: 'app-monetary-history',
@@ -21,6 +22,7 @@ export class MonetaryHistoryComponent implements OnInit {
     'silverDeposited',
     'copperDeposited',
     'goldDeposited',
+    'totalValueInSilver',
     'createdBy',
     'createdOn',
     'description'
@@ -35,7 +37,7 @@ export class MonetaryHistoryComponent implements OnInit {
     this.dataSource.data = this.currencyTransactions;
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog) { 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService) { 
     this.currencyTransactions = data.currencyTransactions;
   }
 
@@ -53,5 +55,10 @@ export class MonetaryHistoryComponent implements OnInit {
   
   getTransactionSymbol(type: string): string {
     return type === "Withdraw"? "-" : "+";
+  }
+
+  getTotalValueInSilver(transaction: MonetaryTransaction): number {
+    this.firestoreService.calculateTransactionValueInSilver(transaction);
+    return transaction.totalValueInSilver ? transaction.totalValueInSilver : 0;
   }
 }

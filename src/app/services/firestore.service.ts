@@ -54,12 +54,19 @@ export class FirestoreService {
     });
   }
 
-
   calculateTotalValueInSilver(transaction: MonetaryTransaction): void {
     transaction.totalValueInSilver = (transaction.platinumTotal * 100);
     transaction.totalValueInSilver += (transaction.electrumTotal * 50);
     transaction.totalValueInSilver += transaction.silverTotal;
     transaction.totalValueInSilver += (transaction.copperTotal / 10);
     transaction.totalValueInSilver += (transaction.goldTotal / 10);
+  }
+
+  calculateTransactionValueInSilver(transaction: MonetaryTransaction): void {
+    transaction.totalValueInSilver = (transaction.platinumDeposited * 100);
+    transaction.totalValueInSilver += (transaction.electrumDeposited * 50);
+    transaction.totalValueInSilver += transaction.silverDeposited;
+    transaction.totalValueInSilver += (transaction.copperDeposited / 10);
+    transaction.totalValueInSilver += (transaction.goldDeposited / 10);
   }
 }

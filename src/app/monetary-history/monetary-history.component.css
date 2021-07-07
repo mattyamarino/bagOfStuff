@@ -34,6 +34,11 @@ width: 80px !important;
 text-align: center !important;
 }
 
+.mat-column-totalValueInSilver {
+    width: 100px !important;
+    text-align: center !important;   
+}
+
 .mat-column-createdBy { 
 width: 180px !important;
 text-align: center !important;
