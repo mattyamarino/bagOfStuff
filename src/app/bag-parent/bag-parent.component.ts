@@ -43,7 +43,7 @@ export class BagParentComponent implements OnInit {
     this.userLoading = true;
     this.firestoreService.getUsers().subscribe(async res => {
       this.users = <User[]>res;
-      await this.delay(1000);
+      await this.delay(1200);
       this.userLoading = false;
     });
   }
