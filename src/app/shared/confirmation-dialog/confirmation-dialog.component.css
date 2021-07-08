@@ -1,0 +1,11 @@
+.confirm-message{
+    font-size: 30px;
+    text-align: center;
+    font-weight: bolder;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

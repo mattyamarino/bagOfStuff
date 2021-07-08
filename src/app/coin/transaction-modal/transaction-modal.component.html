@@ -53,7 +53,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <div *ngIf="isFieldsEmpty && submitAttempted" class="warning emptyTransaction">
+    <div *ngIf="isFieldsEmpty && submitAttempted" class="orange emptyTransaction">
         Cannot Submit Empty Transaction
     </div>
     <div class="emptyTransaction">
@@ -83,13 +83,13 @@
         mat-raised-button 
         color="light-blue"
         class="centerButton" 
-        (click)="completeTransaction()">
+        (click)="confirmAction()">
             Complete {{type}}
         </button>
     
         <button 
         mat-raised-button 
-        color="orange"
+        color="light-blue"
         class="centerButton" 
         (click)="closeDialog()">
             Cancel

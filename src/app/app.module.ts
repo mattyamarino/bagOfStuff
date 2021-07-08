@@ -25,6 +25,7 @@ import { ItemContainerComponent } from './item/item-container/item-container.com
 import { ItemTableComponent } from './item/item-table/item-table.component';
 import { HttpClientModule } from '@angular/common/http';
 import {MatTabsModule} from '@angular/material/tabs';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     MonetaryHistoryComponent,
     NumericDirective,
     ItemContainerComponent,
-    ItemTableComponent
+    ItemTableComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,

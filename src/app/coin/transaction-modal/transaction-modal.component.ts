@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 import { MonetaryTransactionDTO } from '../../models/MonetaryTransactionDTO';
 
@@ -116,19 +117,12 @@ export class TransactionModalComponent implements OnInit {
   }
 
   async completeTransaction() {
-    this.submitAttempted = true;
-
     let newTransaction: MonetaryTransactionDTO = new MonetaryTransactionDTO;
 
     this.firestoreService.getLatestTransaction().subscribe(res => {
-      
-      this.updateAvailableAmounts();
-  
-      this.dataSource.forEach((element: { currency: string; transactionAmount: number; }) => {
-        this.getTransactionTotalForCurrencyType(element.currency, newTransaction, element.transactionAmount);
-      });
-      
-      if (!this.processingTransaction && !this.isEmptyTransaction(newTransaction) && this.description && this.isTransactionAmountsValid()) {
+      const response = <MonetaryTransaction[]>res;
+      this.latestTransaction = response[0];    
+      if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
   
         newTransaction.description = this.description;
@@ -141,8 +135,17 @@ export class TransactionModalComponent implements OnInit {
         this.firestoreService.createCurrencyTransaction(data);
   
         this.closeDialog();
-      }
-  });
+      } 
+   });
+  }
+
+  validateTransaction(transaction: MonetaryTransactionDTO): boolean {
+    this.submitAttempted = true;
+    this.updateAvailableAmounts();
+    this.dataSource.forEach((element: { currency: string; transactionAmount: number; }) => {
+      this.getTransactionTotalForCurrencyType(element.currency, transaction, element.transactionAmount);
+    });
+    return (!this.isEmptyTransaction(transaction) && this.description != '' && this.isTransactionAmountsValid());
   }
 
   updateAvailableAmounts(): void {
@@ -219,4 +222,23 @@ export class TransactionModalComponent implements OnInit {
     }
   }
 
+  confirmAction(): void {
+    if(this.validateTransaction(new MonetaryTransactionDTO)) {
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      maxWidth: "400px",
+      data: {
+          confirm: "confirm " + this.type,
+          cancel: "go back",
+          message: "complete " + this.type + "?"
+        }
+    });
+  
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult) {
+        this.completeTransaction();
+      }
+   });
+  }    
+}
 }

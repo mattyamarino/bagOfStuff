@@ -50,9 +50,6 @@ export class ItemTableComponent implements OnInit {
   }
 
   getItemIcon(type: string) {
-    let returnType = type.split(" ")[0].toLowerCase();
-    
-    console.log("***step2***", returnType);
-    return returnType;
+    return type.split(" ")[0].toLowerCase();
   }
 }

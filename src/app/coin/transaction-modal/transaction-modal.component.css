@@ -59,10 +59,6 @@ font-weight: bolder;
 color: #4699c7;
 }
 
-.button-row {
-    display: flex;
-  }
-
 .emptyTransaction {
     font-size: 12px;
     text-align: center;
