@@ -45,6 +45,10 @@ font-size: 20px;
 background-color: #4699c7;
 }
 
+.mat-orange {
+   background-color: orangered;
+}
+
 .light-blue {
 color: #4699c7; 
 }
@@ -70,4 +74,5 @@ app-item-container .mat-tab-label.mat-tab-label-active {
    text-align: center;
 font-family: 'Lobster', cursive;
 font-size: 30px;
+color: white;
  }

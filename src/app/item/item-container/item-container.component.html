@@ -9,10 +9,11 @@
         </div>
         <br>
         <div class="center-table">
-            <app-item-table items="bankItems"></app-item-table>
+            <app-item-table [items]="bankItems"></app-item-table>
         </div>
     </mat-tab>
     <mat-tab label="My Items">
-        <app-item-table items="userItems"></app-item-table>
+        <br>
+        <app-item-table [items]="userItems"></app-item-table>
     </mat-tab>
 </mat-tab-group>

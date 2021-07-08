@@ -4,6 +4,7 @@ export class Item{
     type!: string;
     rarity!: string;
     cost!: number;
-    quantity!: number;
+    quantity?: number;
+    owner!: string;
     
 }

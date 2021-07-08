@@ -17,23 +17,28 @@ export class FirestoreService {
   getCurrencyTransactions() {
     return this.firestore.collection(FirestoreConstants.currencyTransactions).get();
   }
-  
+
   getLatestTransaction() {
-    return  this.firestore.collection(FirestoreConstants.currencyTransactions, 
-      ref => ref.orderBy("createdOn", "desc").limit(1)).valueChanges(); 
+    return this.firestore.collection(FirestoreConstants.currencyTransactions,
+      ref => ref.orderBy("createdOn", "desc").limit(1)).valueChanges();
   }
 
   createCurrencyTransaction(data: any) {
-    return new Promise<any>((resolve, reject) =>{
+    return new Promise<any>((resolve, reject) => {
       this.firestore
-          .collection(FirestoreConstants.currencyTransactions)
-          .add(data)
-          .then(res => {}, err => reject(err));
+        .collection(FirestoreConstants.currencyTransactions)
+        .add(data)
+        .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
         });
+    });
   }
 
   getLatestTransactionFromList(currencyTransactions: MonetaryTransaction[]): MonetaryTransaction {
-    if(currencyTransactions.length === 0) {
+    if (currencyTransactions.length === 0) {
       let transaction: MonetaryTransaction = new MonetaryTransaction;
       transaction.platinumTotal = 0;
       transaction.electrumTotal = 0;
@@ -48,7 +53,7 @@ export class FirestoreService {
   }
 
   sortTransactionsDescendingByDate(currencyTransactions: MonetaryTransaction[]): void {
-    currencyTransactions.sort(function(x, y){
+    currencyTransactions.sort(function (x, y) {
       return y.createdOn - x.createdOn;
     });
   }

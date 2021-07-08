@@ -1,7 +1,9 @@
 .bag-background{
     background-image: url('../../assets/wallpaper.jpg');
     background-repeat: repeat;
+    background-attachment: fixed;
     height: 100vh;
+    overflow-x: scroll;
 }
 
 .centerDie{

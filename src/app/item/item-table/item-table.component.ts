@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,25 +10,17 @@ import { Item } from 'src/app/models/Item';
   styleUrls: ['./item-table.component.css']
 })
 export class ItemTableComponent implements OnInit {
+  @Input() items!: Item[];
   dataSource = new MatTableDataSource<Item>([]);
   displayedColumns: string[] = [
+    'icon',
     'name',
     'type',
     'rarity',
     'cost',
-    'quantity' 
+    'withdraw',
+
   ];
-
-  TEMPITEM: Item = {
-    id: "aaljvlkasdf",
-    name: "Sword Of Stuff",
-    type: "weapon",
-    rarity: "very rare",
-    cost: 10000,
-    quantity: 1
-  }
-
-  TEMPITEMS = [this.TEMPITEM];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -38,14 +30,29 @@ export class ItemTableComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.dataSource.data = this.TEMPITEMS;
+    this.dataSource.data = this.items;
   }
 
   ngOnInit(): void {
   }
 
+  moveItem(): void {
 
-  getIconType(): string {
-    return 'weapon';
+  }
+
+  getRarity(rarity: string) {
+    switch (rarity) {
+      case "very rare":
+        return 'very-rare';
+      default:
+        return rarity;
+    }
+  }
+
+  getItemIcon(type: string) {
+    let returnType = type.split(" ")[0].toLowerCase();
+    
+    console.log("***step2***", returnType);
+    return returnType;
   }
 }

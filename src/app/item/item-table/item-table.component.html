@@ -1,22 +1,29 @@
     <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z0">
 
+        <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+            <td mat-cell *matCellDef="let element">
+                <img [src]='"../../../assets/"+getItemIcon(element.type)+".jpg"' class="item-icon">
+            </td>
+        </ng-container>
 
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let element">
-                <img [src]='"../../../assets/"+getIconType()+".jpg"' class="moneyIcon">
-                {{element.name}}
-            </td>
+            <td mat-cell *matCellDef="let element">{{element.name}}</td>
         </ng-container>
 
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-            <td mat-cell *matCellDef="let element">{{element.type}}</td>
+            <td mat-cell *matCellDef="let element">{{element.type | titlecase}}</td>
         </ng-container>
 
         <ng-container matColumnDef="rarity">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Rarity</th>
-            <td mat-cell *matCellDef="let element">{{element.rarity}}</td>
+            <td mat-cell *matCellDef="let element">
+                <span [ngClass]="getRarity(element.rarity)">
+                    {{element.rarity | titlecase}}
+                </span>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="cost">
@@ -24,9 +31,13 @@
             <td mat-cell *matCellDef="let element">{{element.cost}}</td>
         </ng-container>
 
-        <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
-            <td mat-cell *matCellDef="let element">{{element.quantity}}</td>
+        <ng-container matColumnDef="withdraw">
+            <th mat-header-cell *matHeaderCellDef>Move Item</th>
+            <td mat-cell *matCellDef="let element">
+                <div class="button-container">
+                    <button class="small-button" mat-raised-button color="light-blue" (click)="moveItem()">Withdraw Item</button>
+                </div>
+            </td>
         </ng-container>
 
 
