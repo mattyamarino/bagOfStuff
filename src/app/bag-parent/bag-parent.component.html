@@ -23,5 +23,9 @@
             </div>
             <br>
         </div>
+        <br><br><br>
+        <div *ngIf="userComponent?.selectedUser !== undefined" class="moneyCard">
+            <app-item-container user="this.userComponent?.selectedUser"></app-item-container>
+        </div>
     </div>
 </div>

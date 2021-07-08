@@ -1,10 +1,8 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FirestoreConstants } from '../config/FirestoreConstants';
-import { MonetaryTransaction } from '../models/MonetaryTransaction';
-import { MonetaryTransactionDTO } from '../models/MonetaryTransactionDTO';
-import { FirestoreService } from '../services/firestore.service';
+import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { MonetaryTransaction } from '../../models/MonetaryTransaction';
+import { MonetaryTransactionDTO } from '../../models/MonetaryTransactionDTO';
 
 @Component({
   selector: 'app-transaction-modal',

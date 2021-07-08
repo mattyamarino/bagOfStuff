@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../models/user';
 import { MatDialog } from '@angular/material/dialog';
-import { TransactionModalComponent } from '../transaction-modal/transaction-modal.component';
+import { TransactionModalComponent } from '../coin/transaction-modal/transaction-modal.component';
 import { UserComponent } from '../user/user.component';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
-import { FirestoreService } from '../services/firestore.service';
-import { MonetaryHistoryComponent } from '../monetary-history/monetary-history.component';
+import { MonetaryHistoryComponent } from '../coin/monetary-history/monetary-history.component';
+import { FirestoreService } from '../services/firestore/firestore.service';
+import { HttpService } from '../services/http/http.service';
 
 @Component({
   selector: 'app-bag-parent',
@@ -21,7 +22,7 @@ export class BagParentComponent implements OnInit {
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
   tempNumber: number = 0;
 
-  constructor(private firestoreService: FirestoreService,  public dialog: MatDialog) { }
+  constructor(private firestoreService: FirestoreService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loading = true;

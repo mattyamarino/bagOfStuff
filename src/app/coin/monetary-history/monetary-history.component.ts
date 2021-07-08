@@ -4,8 +4,8 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MonetaryTransaction } from '../models/MonetaryTransaction';
-import { FirestoreService } from '../services/firestore.service';
+import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 
 @Component({
   selector: 'app-monetary-history',
@@ -30,15 +30,15 @@ export class MonetaryHistoryComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService) { 
+    this.currencyTransactions = data.currencyTransactions;
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.data = this.currencyTransactions;
-  }
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService) { 
-    this.currencyTransactions = data.currencyTransactions;
   }
 
   ngOnInit(): void {

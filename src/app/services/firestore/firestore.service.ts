@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { FirestoreConstants } from '../config/FirestoreConstants';
-import { MonetaryTransaction } from '../models/MonetaryTransaction';
+import { FirestoreConstants } from 'src/app/config/FirestoreConstants';
+import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ export class FirestoreService {
   constructor(private firestore: AngularFirestore) { }
 
   getUsers() {
-    return this.firestore.collection("users").valueChanges();
+    return this.firestore.collection(FirestoreConstants.users).valueChanges();
   }
 
   getCurrencyTransactions() {

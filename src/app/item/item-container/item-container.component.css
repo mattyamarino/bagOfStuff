@@ -1,0 +1,8 @@
+
+::ng-deep .mat-ink-bar {
+background-color: var(--primary-color, orangered) !important;
+}
+
+.center-table {
+    margin: auto;
+}

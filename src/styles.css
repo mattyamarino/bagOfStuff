@@ -53,8 +53,21 @@ color: #4699c7;
 color: orangered;
 }
 
-
 .button-container {
 margin: auto;
 text-align: center;
 }
+
+/* MAT TAB STYLING */
+app-item-container .mat-tab-label.mat-tab-label-active {
+   text-align: center;
+   font-family: 'Lobster', cursive;
+   font-size: 30px;
+   color: white;
+ }
+
+ app-item-container .mat-tab-label{
+   text-align: center;
+font-family: 'Lobster', cursive;
+font-size: 30px;
+ }

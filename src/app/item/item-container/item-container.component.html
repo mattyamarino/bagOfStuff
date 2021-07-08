@@ -1,0 +1,18 @@
+<br>
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab label="Item Bank">
+        <br>
+        <div class="button-container">
+            <button mat-raised-button color="light-blue" (click)="openDepositDialog()">Deposit Item</button>
+            &nbsp;&nbsp;&nbsp;
+            <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">Transaction History</button>
+        </div>
+        <br>
+        <div class="center-table">
+            <app-item-table items="bankItems"></app-item-table>
+        </div>
+    </mat-tab>
+    <mat-tab label="My Items">
+        <app-item-table items="userItems"></app-item-table>
+    </mat-tab>
+</mat-tab-group>
