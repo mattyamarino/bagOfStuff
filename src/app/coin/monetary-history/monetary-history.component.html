@@ -3,22 +3,33 @@
             <br>
             Currency Transaction History
         </div>
-        <br><br>
-        
-        <mat-form-field appearance="fill">
-            <mat-label>Get Transactions After Date:</mat-label>
-            <input readonly matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        
-        <button 
-        mat-raised-button 
-        color="light-blue"
-        class="centerButton" 
-        (click)="updateTransactions()">
-          Update From Selected Date
-        </button>
+        <span class="br"></span>
+        <br>
+
+        <mat-grid-list cols="2" rowHeight="70px">
+            <mat-grid-tile>
+                <div class="grid-left">
+                    <mat-form-field #pickerForm appearance="fill" class="form">
+                        <mat-label>Get Transactions After Date:</mat-label>
+                        <input readonly matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="grid-right">
+                    <button 
+                    mat-raised-button 
+                    color="light-blue"
+                    class="centerButton tall-button"
+                    [disabled]="isDateUnchanged()" 
+                    (click)="updateTransactions()">
+                      Update From Selected Date
+                    </button>
+                </div>
+            </mat-grid-tile>
+          </mat-grid-list>
         
         <table 
         mat-table 

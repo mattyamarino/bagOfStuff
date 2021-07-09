@@ -1,0 +1,33 @@
+.menu-right {
+    position: absolute;
+    right: 25%;
+    padding-right: 10px;
+    top: 40px;
+}
+
+.menu-container {
+    margin: auto;
+    display: flex;
+    width: 50%;
+}
+
+::ng-deep .mat-menu-panel {
+    max-width: none !important;
+  }
+
+  .mat-button-toggle {
+    background-color: rgb(71, 71, 71);
+  }
+
+  .mat-button-toggle-checked {
+    background-color: #4699c7;
+  }
+
+  .small-text {
+      font-size: 12px;
+  }
+
+  .mat-button-toggle-group {
+    height: 32px;
+    align-items: center;
+  }

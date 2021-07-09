@@ -15,6 +15,7 @@ import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 export class MonetaryHistoryComponent implements OnInit {
   currencyTransactions!: MonetaryTransaction[];
   selectedDate: Date =new Date(new Date().setDate(new Date().getDate()-30));
+  originalDate: Date = this.selectedDate;
   dataSource = new MatTableDataSource<MonetaryTransaction>([]);
   displayedColumns: string[] = [
     'type', 
@@ -71,5 +72,9 @@ export class MonetaryHistoryComponent implements OnInit {
         this.dataSource.data = <MonetaryTransaction[]>refArray;
       });
     }
+  }
+
+  isDateUnchanged() {
+    return this.selectedDate == this.originalDate;
   }
 }

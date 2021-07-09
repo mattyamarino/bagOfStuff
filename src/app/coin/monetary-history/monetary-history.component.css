@@ -74,6 +74,29 @@ text-align: center !important;
     opacity: 0.54 !important;
     transform: translateY(0px) !important;
   }
+
+  /* STYLE TO ALTERNATE COLOR ON TABLE ROWS */
 /* .mat-row:nth-child(odd){
     background-color: rgb(58, 58, 58);
 } */
+
+::ng-deep mat-datepicker-toggle.mat-datepicker-toggle button.mat-focus-indicator.mat-icon-button.mat-button-base {
+    display: inherit;
+  }
+
+.grid-left {
+    margin-left: 43%;
+}
+
+.grid-right {
+    margin-right: 43%;
+}
+
+.tall-button {
+    height: 52px;
+    width: 202px;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+

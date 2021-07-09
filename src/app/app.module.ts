@@ -28,6 +28,11 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+import { FilterMenuComponent } from './item/filter-menu/filter-menu.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -40,7 +45,8 @@ import {MatNativeDateModule} from '@angular/material/core';
     NumericDirective,
     ItemContainerComponent,
     ItemTableComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    FilterMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +68,10 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatTabsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-
+    MatGridListModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonToggleModule,
   ],
   providers: [MatDatepickerModule],
   bootstrap: [AppComponent]
