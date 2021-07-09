@@ -26,6 +26,8 @@ import { ItemTableComponent } from './item/item-table/item-table.component';
 import { HttpClientModule } from '@angular/common/http';
 import {MatTabsModule} from '@angular/material/tabs';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -58,8 +60,11 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
     MatSortModule,
     HttpClientModule,
     MatTabsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+
   ],
-  providers: [],
+  providers: [MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

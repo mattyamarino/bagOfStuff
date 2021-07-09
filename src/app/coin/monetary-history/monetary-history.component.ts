@@ -14,6 +14,7 @@ import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 })
 export class MonetaryHistoryComponent implements OnInit {
   currencyTransactions!: MonetaryTransaction[];
+  selectedDate: Date =new Date(new Date().setDate(new Date().getDate()-30));
   dataSource = new MatTableDataSource<MonetaryTransaction>([]);
   displayedColumns: string[] = [
     'type', 
@@ -60,5 +61,15 @@ export class MonetaryHistoryComponent implements OnInit {
   getTotalValueInSilver(transaction: MonetaryTransaction): number {
     this.firestoreService.calculateTransactionValueInSilver(transaction);
     return transaction.totalValueInSilver ? transaction.totalValueInSilver : 0;
+  }
+
+  updateTransactions(): void {
+    if(this.selectedDate) {
+      this.firestoreService.getCurrencyTransactions(this.selectedDate.getTime()).subscribe(res => {
+        const refArray =  res.docs.map(doc => doc.data());
+        this.firestoreService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
+        this.dataSource.data = <MonetaryTransaction[]>refArray;
+      });
+    }
   }
 }
