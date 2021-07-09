@@ -16,7 +16,7 @@ export class FirestoreService {
 
   getCurrencyTransactions(queryDate: number) {
     return this.firestore.collection(FirestoreConstants.currencyTransactions,
-      ref => ref.where("createdOn", ">", queryDate)).get();
+      ref => ref.where("createdOn", ">=", queryDate)).get();
   }
 
   getLatestTransaction() {
