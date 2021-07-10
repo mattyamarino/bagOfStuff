@@ -3,31 +3,31 @@
         Filter Items
         <mat-icon>filter_list</mat-icon>
     </button>
-    {{TEMP()}}
     <mat-menu #menu="matMenu" yPosition="above" xPosition="before" class="mat-elevation-z20">
         <span (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
             <button mat-menu-item>
-                <mat-button-toggle-group multiple="true" name="fontStyle" aria-label="Font Style">
-                    <mat-button-toggle value="rarityArray[0].selected">
+                <mat-button-toggle-group multiple="true" name="fontStyle" aria-label="Font Style" [(ngModel)]="rarityArray">
+                    <mat-button-toggle value="common">
                         <span class="small-text">Common</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="rarityArray[1].selected">
+                    <mat-button-toggle value="uncommon">
                         <span class="small-text">Uncommon</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="rarityArray[2].selected">
+                    <mat-button-toggle value="rare">
                         <span class="small-text">Rare</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="rarityArray[3].selected">
+                    <mat-button-toggle value="very rare">
                         <span class="small-text">Very Rare</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="rarityArray[4].selected">
+                    <mat-button-toggle value="legendary">
                         <span class="small-text">Legendary</span>
                     </mat-button-toggle>
-                    <mat-button-toggle value="rarityArray[5].selected">
+                    <mat-button-toggle value="artifact">
                         <span class="small-text">Artifact</span>
                     </mat-button-toggle>
                 </mat-button-toggle-group>
             </button>
+            <span class="br"></span>
             <button mat-menu-item>
                 <mat-select placeholder = "Filter By Item Type" [(ngModel)]="type" name = "type" >
                     <mat-option *ngFor="let type of types" [value]="type">
@@ -35,9 +35,7 @@
                     </mat-option>
                 </mat-select>
             </button>
-            <button mat-menu-item>
-                bock bock
-            </button>
+            <span class="br"></span>
             <span class="button-container">
                 <button mat-raised-button color="light-blue" (click)="clearFilters()">Clear Filters</button>
             </span>
