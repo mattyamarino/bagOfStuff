@@ -9,9 +9,9 @@
         <br>
         <app-user [users]="users" #user></app-user>
         <br><br>
-        <div class="moneyCard">
+        <div class="moneyCard"  *ngIf="userComponent?.selectedUser !== undefined">
             <app-money [currencyTransaction]="latestTransaction"></app-money>
-            <div *ngIf="userComponent?.selectedUser !== undefined" class="button-container">
+            <div class="button-container">
                 <br>
                 <span *ngIf="userComponent?.selectedUser == 'DM (Chris)'">
                     <button mat-raised-button color="light-blue" (click)="openDepositDialog()">Deposit</button>

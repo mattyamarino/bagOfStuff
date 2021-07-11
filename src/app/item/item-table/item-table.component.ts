@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +12,8 @@ import { Item } from 'src/app/models/Item';
 })
 export class ItemTableComponent implements OnInit {
   @Input() items!: Item[];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Item>([]);
   displayedColumns: string[] = [
     'icon',
@@ -19,11 +22,11 @@ export class ItemTableComponent implements OnInit {
     'rarity',
     'cost',
     'withdraw',
-
+    'delete',
   ];
-  
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  filteredValues = {
+    type: '', rarity: ''
+  };
   
   constructor() { }
   
@@ -34,13 +37,52 @@ export class ItemTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dataSource.filterPredicate = this.customFilterPredicate();
   }
+
+  // **************BEGIN FILTER METHODS**************
+  customFilterPredicate() {
+    const myFilterPredicate = (data: Item, filter: string): boolean => {
+      let searchString = JSON.parse(filter);
+      return data.type.toString().trim().indexOf(searchString.type) !== -1 &&
+        this.applyRarityPredicate(data, searchString);
+    }
+    return myFilterPredicate;
+  }
+
+  updateTypeFilter(event: string): void {
+    if(event == null) {
+      event = "";
+    }
+    this.filteredValues['type'] = event;
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
+  }
+
+  updateRarityFilter(event: string): void {
+    if(event == null) {
+      event = "";
+    } 
+    this.filteredValues['rarity'] = event;
+    this.dataSource.filter = JSON.stringify(this.filteredValues);
+  }
+
+  applyRarityPredicate(data: Item, searchString: any): boolean {
+    if(searchString.rarity == "") {
+      return true;
+    }
+    return data.rarity.toString().trim().toLowerCase() == searchString.rarity.toLowerCase();
+  }
+  // **************END FILTER METHODS**************
 
   moveItem(): void {
 
   }
 
-  getRarity(rarity: string) {
+  deleteItem(): void {
+
+  }
+
+  getRarity(rarity: string): string {
     switch (rarity) {
       case "very rare":
         return 'very-rare';
@@ -49,7 +91,7 @@ export class ItemTableComponent implements OnInit {
     }
   }
 
-  getItemIcon(type: string) {
+  getItemIcon(type: string): string {
     return type.split(" ")[0].toLowerCase();
   }
 }

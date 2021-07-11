@@ -46,7 +46,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     ItemContainerComponent,
     ItemTableComponent,
     ConfirmationDialogComponent,
-    FilterMenuComponent
+    FilterMenuComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 .menu-right {
     position: absolute;
-    right: 25%;
+    right: 23%;
     padding-right: 10px;
     top: 40px;
 }
@@ -30,4 +30,12 @@
   .mat-button-toggle-group {
     height: 32px;
     align-items: center;
+  }
+
+  .button-left {
+      margin-left: 30%; 
+  }
+
+  .button-right {
+      margin-right: 20%;
   }

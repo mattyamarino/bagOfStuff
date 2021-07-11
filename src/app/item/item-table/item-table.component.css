@@ -24,7 +24,12 @@ text-align: center !important;
 }
 
 .mat-column-withdraw { 
-width: 100px !important;
+width: 110px !important;
+text-align: center !important;
+}
+
+.mat-column-delete { 
+width: 80px !important;
 text-align: center !important;
 }
 

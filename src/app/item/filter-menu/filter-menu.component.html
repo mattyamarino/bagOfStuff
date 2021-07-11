@@ -6,7 +6,7 @@
     <mat-menu #menu="matMenu" yPosition="above" xPosition="before" class="mat-elevation-z20">
         <span (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
             <button mat-menu-item>
-                <mat-button-toggle-group multiple="true" name="fontStyle" aria-label="Font Style" [(ngModel)]="rarityArray">
+                <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [formControl]="rarity">
                     <mat-button-toggle value="common">
                         <span class="small-text">Common</span>
                     </mat-button-toggle>
@@ -29,20 +29,21 @@
             </button>
             <span class="br"></span>
             <button mat-menu-item>
-                <mat-select placeholder = "Filter By Item Type" [(ngModel)]="type" name = "type" >
+                <mat-select placeholder = "Filter By Item Type" [formControl]="type" name = "type" >
                     <mat-option *ngFor="let type of types" [value]="type">
                         {{type | titlecase}}
                     </mat-option>
                 </mat-select>
             </button>
             <span class="br"></span>
-            <span class="button-container">
+            <span class="button-left">
                 <button mat-raised-button color="light-blue" (click)="clearFilters()">Clear Filters</button>
             </span>
         </span>
         &nbsp;&nbsp;
-        <span class="button-container">
+        <span class="button-right">
             <button mat-raised-button color="light-blue">Close</button>
         </span>
+        <br>
     </mat-menu>
 </div>

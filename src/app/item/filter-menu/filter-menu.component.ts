@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-filter-menu',
@@ -6,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./filter-menu.component.css']
 })
 export class FilterMenuComponent implements OnInit {
-  type?: string;
-  name?: string;
-  rarityArray = [];
+  @Output() typeEvent = new EventEmitter<string>();
+  @Output() rarityEvent = new EventEmitter<string>();
+  type = new FormControl;
+  rarity = new FormControl;
 
   types: string[] = [
     "adventuring gear",
@@ -26,13 +28,16 @@ export class FilterMenuComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.type.valueChanges.subscribe((typeValue) => {
+    this.typeEvent.emit(this.type.value);
+    });
+    this.rarity.valueChanges.subscribe((rarityValue) => {
+    this.rarityEvent.emit(this.rarity.value);
+    });
   }
 
   clearFilters(): void {
-    console.log("*******", this.rarityArray)
-    this.name = undefined;
-    this.type = undefined;
-    this.rarityArray = [];
-    console.log("***after****", this.rarityArray)
+    this.type.reset();
+    this.rarity.reset();
   }
 }
