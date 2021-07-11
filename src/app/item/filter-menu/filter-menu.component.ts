@@ -40,4 +40,8 @@ export class FilterMenuComponent implements OnInit {
     this.type.reset();
     this.rarity.reset();
   }
+
+  areFiltersDeactivated(): boolean {
+    return this.type.value == undefined && this.rarity.value == undefined;
+  }
 }

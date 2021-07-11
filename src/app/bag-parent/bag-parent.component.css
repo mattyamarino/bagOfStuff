@@ -4,7 +4,7 @@
     background-attachment: fixed;
     height: 100vh;
     min-height: 1800px;
-    overflow-x: scroll;
+    overflow-x: visible;
 }
 
 .centerDie{

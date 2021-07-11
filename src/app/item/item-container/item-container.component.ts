@@ -1,3 +1,4 @@
+import { Input } from '@angular/core';
 import { Component, OnInit, Output } from '@angular/core';
 import { Item } from 'src/app/models/Item';
 
@@ -74,6 +75,7 @@ export class ItemContainerComponent implements OnInit {
 
   @Output() bankItems: Item[] = this.TEMPITEMS;
   @Output() userItems: Item[] = [];
+  @Input() user!: string;
 
   constructor() { }
 
