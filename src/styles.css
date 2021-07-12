@@ -11,6 +11,11 @@ body {  margin: 0;
    display: block;
    margin: 8px 0;
 }
+   
+.br-big {
+   display: block;
+   margin: 16px 0;
+}
 
 .moneyIcon{
 height: 20px;
@@ -72,11 +77,25 @@ app-item-container .mat-tab-label.mat-tab-label-active {
    font-family: 'Lobster', cursive;
    font-size: 30px;
    color: white;
- }
+   opacity: 100%;
+}
 
- app-item-container .mat-tab-label{
+app-item-container .mat-tab-label{
    text-align: center;
-font-family: 'Lobster', cursive;
-font-size: 30px;
-color: white;
+   font-family: 'Lobster', cursive;
+   font-size: 30px;
+   color: white;
+}
+
+ /* MAT CHECKBOX STYLING */
+ .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+   border-color: #4699c7;
+ }
+ 
+ .mat-radio-button.mat-accent .mat-radio-inner-circle{
+   background-color: #4699c7;
+ }
+ 
+ .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+   background-color:#4699c7;
  }

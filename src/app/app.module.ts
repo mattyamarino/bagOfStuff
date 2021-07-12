@@ -33,6 +33,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import { FilterMenuComponent } from './item/filter-menu/filter-menu.component';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { ItemTransactionModalComponent } from './item/item-transaction-modal/item-transaction-modal.component';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -47,6 +51,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     ItemTableComponent,
     ConfirmationDialogComponent,
     FilterMenuComponent,
+    ItemTransactionModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,8 +77,11 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatMenuModule,
     MatIconModule,
     MatButtonToggleModule,
+    MatStepperModule,
+    MatRadioModule,
+    MatAutocompleteModule
   ],
   providers: [MatDatepickerModule],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

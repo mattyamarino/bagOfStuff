@@ -8,18 +8,18 @@
         </div>
         <img src="../../../assets/platinum.png" class="moneyIcon">
         Platinum &nbsp;
-        {{ currencyTransaction?.platinumTotal }} &nbsp;&nbsp;
+        {{ currencyTransaction?.platinumTotal | number }} &nbsp;&nbsp;
         <img src="../../../assets/electrum.png" class="moneyIcon">
         Electrum &nbsp;
-        {{ currencyTransaction?.electrumTotal }} &nbsp;&nbsp;
+        {{ currencyTransaction?.electrumTotal | number }} &nbsp;&nbsp;
         <img src="../../../assets/silver.png" class="moneyIcon">
         Silver &nbsp;
-        {{ currencyTransaction?.silverTotal }} &nbsp;&nbsp;
+        {{ currencyTransaction?.silverTotal | number }} &nbsp;&nbsp;
         <img src="../../../assets/copper.png" class="moneyIcon">
         Copper &nbsp;
-        {{ currencyTransaction?.copperTotal }} &nbsp;&nbsp;
+        {{ currencyTransaction?.copperTotal | number }} &nbsp;&nbsp;
         <img src="../../../assets/gold.png" class="moneyIcon">
         Gold &nbsp;
-        {{ currencyTransaction?.goldTotal }} &nbsp;&nbsp;
+        {{ currencyTransaction?.goldTotal | number }} &nbsp;&nbsp;
     </div>
 </mat-card>

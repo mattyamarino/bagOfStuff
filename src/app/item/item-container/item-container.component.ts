@@ -1,6 +1,8 @@
 import { Input } from '@angular/core';
 import { Component, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Item } from 'src/app/models/Item';
+import { ItemTransactionModalComponent } from '../item-transaction-modal/item-transaction-modal.component';
 
 @Component({
   selector: 'app-item-container',
@@ -77,13 +79,13 @@ export class ItemContainerComponent implements OnInit {
   @Output() userItems: Item[] = [];
   @Input() user!: string;
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
 
   openDepositDialog(): void {
-
+    this.dialog.open(ItemTransactionModalComponent);
   }
   
   openHistoryDialog(): void {

@@ -39,7 +39,7 @@
         
         <ng-container matColumnDef="currentAmount">
             <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;&nbsp; Available Amount &nbsp;&nbsp;</th>
-            <td mat-cell *matCellDef="let element">{{getTotalForCurrencyType(element.currency)}}</td>
+            <td mat-cell *matCellDef="let element">{{getTotalForCurrencyType(element.currency) | number}}</td>
         </ng-container>
 
         <ng-container matColumnDef="valueInSilver">
