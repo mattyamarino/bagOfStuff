@@ -1,0 +1,57 @@
+<mat-dialog-content>
+    <div class="bigLobsterText">Deposit Item</div>
+    <br>
+
+    <mat-stepper orientation="vertical" [linear]="true" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>New Or Pregenerated Item</ng-template>
+                
+                <mat-radio-group [formControl]="isNewItem">
+                    <mat-radio-button [value]="true">Create New</mat-radio-button>&nbsp;&nbsp;
+                    <mat-radio-button [value]="false">Select Pregenerated</mat-radio-button>
+                </mat-radio-group>
+
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let externalItem of externalItems" [value]="externalItem.name">
+                        {{externalItem.name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <span class="br-big"></span>
+                <input type="text" 
+                placeholder="Type Name Of Pregenerated Item"
+                disabled="firstFormGroup.get('isNewItem')"
+                matInput [formControl]="firstFormGroup.get('firstCtrl')"
+                [matAutocomplete]="auto"><br>
+
+                <div>
+                    <br>
+                    <button mat-raised-button color="light-blue" matStepperNext>Next</button>
+                </div>
+
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Fill out your address</ng-template>
+                <mat-form-field appearance="fill">
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+                </mat-form-field>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            <p>You are now done.</p>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button (click)="stepper.reset()">Reset</button>
+            </div>
+        </mat-step>
+    </mat-stepper>
+
+</mat-dialog-content>
