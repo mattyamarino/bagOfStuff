@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { ScrollConstants } from 'src/app/config/ScrollConstants';
+import { ItemConstants } from 'src/app/config/ItemConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
 import { Item } from 'src/app/models/Item';
@@ -83,9 +83,9 @@ export class ItemTransactionModalComponent implements OnInit {
         items.results.forEach(item => {
           item.type = "scroll"
           item.name = "Scroll Of " + item.name; 
-          item.rarity = ScrollConstants.scrollStatsMap.get(item.level_int!)?.rarity!;
-          item.desc = "--- Spell Scroll with (if applicable) Save DC of " + ScrollConstants.scrollStatsMap.get(item.level_int!)?.DC! + 
-          " and an Atk Bonus of +" + ScrollConstants.scrollStatsMap.get(item.level_int!)?.attackBonus! + " --- " + item.desc;
+          item.rarity = ItemConstants.scrollStatsMap.get(item.level_int!)?.rarity!;
+          item.desc = "--- Spell Scroll with (if applicable) Save DC of " + ItemConstants.scrollStatsMap.get(item.level_int!)?.DC! + 
+          " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(item.level_int!)?.attackBonus! + " --- " + item.desc;
         });
         this.externalItems = items.results;
       });

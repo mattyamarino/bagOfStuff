@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ItemConstants } from 'src/app/config/ItemConstants';
 
 @Component({
   selector: 'app-filter-menu',
@@ -11,19 +12,7 @@ export class FilterMenuComponent implements OnInit {
   @Output() rarityEvent = new EventEmitter<string>();
   type = new FormControl;
   rarity = new FormControl;
-
-  types: string[] = [
-    "adventuring gear",
-    "armor",
-    "potion",
-    "ring",
-    "rod",
-    "scroll",
-    "staff",
-    "wand",
-    "weapon"
-  ];
-
+  types: string[] = ItemConstants.itemTypes;
 
   constructor() { }
 
