@@ -1,4 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
@@ -14,7 +15,7 @@ export class TransactionModalComponent implements OnInit {
   latestTransaction!: MonetaryTransaction;
   displayedColumns: string[] = ['currency', 'transactionAmount', 'currentAmount', 'valueInSilver'];
   dataSource: any = [];
-  description: string = "";
+  description: FormControl = new FormControl;
   selectedUser!: string;
   type!: string;
   processingTransaction: boolean = false;
@@ -125,7 +126,7 @@ export class TransactionModalComponent implements OnInit {
       if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
   
-        newTransaction.description = this.description;
+        newTransaction.description = this.description.value;
         newTransaction.type = this.type;
         newTransaction.createdOn = Date.now();
         newTransaction.createdBy = this.selectedUser;
@@ -145,7 +146,7 @@ export class TransactionModalComponent implements OnInit {
     this.dataSource.forEach((element: { currency: string; transactionAmount: number; }) => {
       this.getTransactionTotalForCurrencyType(element.currency, transaction, element.transactionAmount);
     });
-    return (!this.isEmptyTransaction(transaction) && this.description != '' && this.isTransactionAmountsValid());
+    return (!this.isEmptyTransaction(transaction) && this.description.value != '' && this.isTransactionAmountsValid());
   }
 
   updateAvailableAmounts(): void {

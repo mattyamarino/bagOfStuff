@@ -12,6 +12,12 @@ export class ItemConstants {
         [9, {rarity: "legendary", DC: 19, attackBonus: 11}],
     ]);
 
+    public static magicWeaponMap: Map<number, string> = new Map([
+        [1, "uncommon"],
+        [2, "rare"],
+        [3, "very rare"],
+    ]);
+
     public static itemTypes: string[] = [
         "adventuring gear",
         "armor",

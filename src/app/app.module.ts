@@ -37,6 +37,7 @@ import { ItemTransactionModalComponent } from './item/item-transaction-modal/ite
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { TitleCasePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatRadioModule,
     MatAutocompleteModule
   ],
-  providers: [MatDatepickerModule],
+  providers: [MatDatepickerModule, TitleCasePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

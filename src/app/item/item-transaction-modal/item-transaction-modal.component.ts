@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
@@ -20,7 +21,7 @@ export class ItemTransactionModalComponent implements OnInit {
   itemTypes: string[] = ItemConstants.itemTypes;
   rarityTypes: string[] = ItemConstants.rarityTypes;
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -70,8 +71,27 @@ export class ItemTransactionModalComponent implements OnInit {
 
     forkJoin([weapons, magicItems]).subscribe(res => {
       const resWeapons: ExternalOpen5EResponse = res[0];
+      this.addMagicWeapons(resWeapons.results);
       const resMagicItems: ExternalOpen5EResponse = res[1];
-      this.externalItems = resWeapons.results.concat(resMagicItems.results)
+      this.externalItems = resWeapons.results.concat(resMagicItems.results);
+    });
+  }
+
+  addMagicWeapons(weapons: any[]) {
+    weapons.forEach(weapon => {
+      for(let i = 1; i <= 3; i++) {
+        let item = {
+          name: weapon.name + " +" + i,
+          level_int: i,
+          damage_type: weapon.damage_type,
+          damage_dice: weapon.damage_dice,
+          category: weapon.category
+        }
+        weapons.push(item)
+      }
+    });
+    weapons.sort(function (a, b) {
+      return a.name.localeCompare(b.name); 
     });
   }
 
@@ -103,19 +123,21 @@ export class ItemTransactionModalComponent implements OnInit {
       return element.name === itemName;
     });
 
-    if(externalItem?.level_int) {
+    if(externalItem?.school) {
       externalItem.type = "scroll"
       externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
-      externalItem.desc = "--- Level " + externalItem.level_int + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + 
+      externalItem.desc = "--- Level " + externalItem.level_int! + externalItem.school + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + 
       " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " --- " + externalItem.desc;
     }
 
      if(externalItem?.category){
       externalItem.type = "weapon";
-      externalItem.rarity = "common";
-      externalItem.desc = externalItem.category + " ---" + externalItem.damage_dice + " " + externalItem.damage_type;
-      externalItem.cost = externalItem.cost!.replace(/[^\d.-]/g, '');
+      externalItem.rarity = externalItem.level_int ? ItemConstants.magicWeaponMap.get(externalItem.level_int)! : "common";
+      const magicWeaponDesc = externalItem.level_int ? "Magic Weapon +" + externalItem.level_int : "";
+      externalItem.desc = magicWeaponDesc + " --- " + externalItem.category.slice(0, -1) + " ---" + externalItem.damage_dice + " " + this.titleCasePipe.transform(externalItem.damage_type);
+      externalItem.cost = externalItem.cost ? externalItem.cost!.replace(/[^\d.-]/g, '') : "";
     }
+
     const type: string[] = externalItem!.type.toLowerCase().split(" ");
 
     this.secondFormGroup.get("cost")?.setValue( externalItem!.cost ? Number(externalItem!.cost!) : 0 );

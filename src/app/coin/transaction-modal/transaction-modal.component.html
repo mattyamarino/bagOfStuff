@@ -60,24 +60,26 @@
         <img src="../../../assets/silver.png" class="smallMoneyIcon">
         {{ getTransactionValueInSilver() | number:'1.2-2' }}
     </div>
+   
+    <mat-form-field appearance="fill" class="description">
+        <mat-label>Reason For {{type}}</mat-label>
+        <textarea
+        matInput 
+        [formControl]="description" 
+        cols="40" 
+        rows="4"
+        required>
+        </textarea>
+    </mat-form-field>
 
     <span class="br"> </span>
 
     <div class="textBoxTitle">
-         Reason For {{type}}
-        <span *ngIf="description == '' && submitAttempted" class="orange">
+        <span *ngIf="description.value == '' && submitAttempted" class="orange">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Please Enter A Reason
         </span>
     </div>
-   
-    <textarea 
-    class="textBox"  
-    [(ngModel)]="description" 
-    cols="40" 
-    rows="4"></textarea>
-
-    <br>
  
     <div class="button-row">
         <button 
