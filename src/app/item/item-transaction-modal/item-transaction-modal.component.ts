@@ -17,34 +17,41 @@ export class ItemTransactionModalComponent implements OnInit {
   secondFormGroup!: FormGroup;
   externalItems: ExternalItem[] = [];
   itemToCreate: Item = new Item;
+  itemTypes: string[] = ItemConstants.itemTypes;
+  rarityTypes: string[] = ItemConstants.rarityTypes;
 
   constructor(private httpService: HttpService) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
       isNewItem: new FormControl(true),
-      firstCtrl: new FormControl('')
+      itemName: new FormControl('')
     });
     this.secondFormGroup = new FormGroup({
-      secondCtrl: new FormControl('', Validators.required)
+      name: new FormControl('', Validators.required),
+      type: new FormControl('', Validators.required),
+      cost: new FormControl(''),
+      description: new FormControl('', Validators.required),
+      rarity: new FormControl('', Validators.required),
     });
 
-    this.isValidatorsRequiredFirstCtrl();
+    this.isValidatorsRequireditemName();
   }
 
-  isValidatorsRequiredFirstCtrl(): void {
+
+  isValidatorsRequireditemName(): void {
     this.firstFormGroup.get('isNewItem')?.valueChanges.subscribe(val => {
       if (val == false) {
-        this.firstFormGroup.controls['firstCtrl'].setValidators([Validators.required]);
+        this.firstFormGroup.controls['itemName'].setValidators([Validators.required]);
       } else {
-        this.firstFormGroup.controls['firstCtrl'].clearValidators();
+        this.firstFormGroup.controls['itemName'].clearValidators();
       }
-      this.firstFormGroup.controls['firstCtrl'].updateValueAndValidity();
+      this.firstFormGroup.controls['itemName'].updateValueAndValidity();
     });
   }
 
   getPregeneratedItem(event: any) {
-    const query: string = this.firstFormGroup.get("firstCtrl")?.value.toLowerCase();
+    const query: string = this.firstFormGroup.get("itemName")?.value.toLowerCase();
     if(query.indexOf("scroll of") !== -1) {
       this.getScrolls(query);
     } else if(query.length > 3 && (this.externalItems.length == 0 || event.key === 'Backspace')) {
@@ -63,15 +70,8 @@ export class ItemTransactionModalComponent implements OnInit {
 
     forkJoin([weapons, magicItems]).subscribe(res => {
       const resWeapons: ExternalOpen5EResponse = res[0];
-      resWeapons.results.forEach(weapon => {
-        weapon.type = "weapon";
-        weapon.rarity = "common";
-        weapon.desc = weapon.category + " ---" + weapon.damage_dice + " " + weapon.damage_type;
-        weapon.cost = weapon.cost!.replace(/[^\d.-]/g, '');
-      });
       const resMagicItems: ExternalOpen5EResponse = res[1];
       this.externalItems = resWeapons.results.concat(resMagicItems.results)
-      console.log(this.externalItems)
     });
   }
 
@@ -81,11 +81,7 @@ export class ItemTransactionModalComponent implements OnInit {
       this.httpService.getScrolls(rawQuery[2]).subscribe(res => {
         const items: ExternalOpen5EResponse = res;
         items.results.forEach(item => {
-          item.type = "scroll"
           item.name = "Scroll Of " + item.name; 
-          item.rarity = ItemConstants.scrollStatsMap.get(item.level_int!)?.rarity!;
-          item.desc = "--- Spell Scroll with (if applicable) Save DC of " + ItemConstants.scrollStatsMap.get(item.level_int!)?.DC! + 
-          " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(item.level_int!)?.attackBonus! + " --- " + item.desc;
         });
         this.externalItems = items.results;
       });
@@ -106,10 +102,37 @@ export class ItemTransactionModalComponent implements OnInit {
     const externalItem = this.externalItems.find(function (element) {
       return element.name === itemName;
     });
-    this.itemToCreate.cost = externalItem!.cost ? Number(externalItem!.cost!) : 0 
-    this.itemToCreate.description = externalItem!.desc;
-    this.itemToCreate.name = externalItem!.name;
-    this.itemToCreate.rarity = externalItem!.rarity;
-    this.itemToCreate.type = externalItem!.type;
+
+    if(externalItem?.level_int) {
+      externalItem.type = "scroll"
+      externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
+      externalItem.desc = "--- Level " + externalItem.level_int + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + 
+      " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " --- " + externalItem.desc;
+    }
+
+     if(externalItem?.category){
+      externalItem.type = "weapon";
+      externalItem.rarity = "common";
+      externalItem.desc = externalItem.category + " ---" + externalItem.damage_dice + " " + externalItem.damage_type;
+      externalItem.cost = externalItem.cost!.replace(/[^\d.-]/g, '');
+    }
+    const type: string[] = externalItem!.type.toLowerCase().split(" ");
+
+    this.secondFormGroup.get("cost")?.setValue( externalItem!.cost ? Number(externalItem!.cost!) : 0 );
+    this.secondFormGroup.get("description")?.setValue( externalItem!.desc);
+    this.secondFormGroup.get("name")?.setValue( externalItem!.name.toLowerCase());
+    this.secondFormGroup.get("rarity")?.setValue( externalItem!.rarity.toLowerCase());
+    this.secondFormGroup.get("type")?.setValue(type[0]);
+
+  }
+
+  clearSelection(): void {
+    if(!this.secondFormGroup.get("name")?.value) {
+      this.firstFormGroup.get("itemName")?.setValue(undefined);
+    }
+  }
+
+  getItemValue(): string {
+    return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "——"
   }
 }

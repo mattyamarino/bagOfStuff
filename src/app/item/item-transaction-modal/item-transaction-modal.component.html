@@ -19,11 +19,16 @@
                         </mat-option>
                     </mat-autocomplete>
                     <span class="br-big"></span>
-                    <input type="text" 
-                    placeholder="Type Name Of Pregenerated Item"
-                    matInput formControlName="firstCtrl"
-                    (keyup)="getPregeneratedItem($event)"
-                    [matAutocomplete]="auto"><br>
+                    <mat-form-field appearance="fill" class="field">
+                        <input type="text" 
+                        placeholder="Type Name Of Pregenerated Item"
+                        matInput 
+                        formControlName="itemName"
+                        (keyup)="getPregeneratedItem($event)"
+                        (focusout)="clearSelection()"
+                        required
+                        [matAutocomplete]="auto">
+                    </mat-form-field>
                 </div>
 
                 <div>
@@ -36,24 +41,61 @@
         <mat-step [stepControl]="secondFormGroup">
             <form [formGroup]="secondFormGroup">
                 <ng-template matStepLabel>Item Details</ng-template><br>
-                {{itemToCreate.name}}<br>
-                {{itemToCreate.type}}<br>
-                {{itemToCreate.rarity}}<br>
-                {{itemToCreate.description}}<br>
-                {{itemToCreate.cost}}<br>
-                <mat-form-field appearance="fill">
-                    <mat-label>Address</mat-label>
-                    <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
-                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="field">
+                    <mat-label>Item Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter Name Of New Item" required>
+                </mat-form-field><br>
+
+                <mat-form-field appearance="fill" class="field">
+                    <mat-label>Item Type</mat-label>
+                    <mat-select placeholder = "Select Item Type" formControlName="type" name = "type" required>
+                        <mat-option *ngFor="let type of itemTypes" [value]="type">
+                            {{type | titlecase}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field><br>
+
+                <mat-form-field appearance="fill" class="field">
+                    <mat-label>Item Rarity</mat-label>
+                    <mat-select placeholder = "Select Item Rarity" formControlName="rarity" name = "rarity" required>
+                        <mat-option *ngFor="let rarity of rarityTypes" [value]="rarity">
+                            {{rarity | titlecase}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field><br>
+
+                <mat-form-field appearance="fill" class="field">
+                    <mat-label>Item Value (Optional)</mat-label>
+                    <input matInput formControlName="cost" placeholder="Enter Cost Of Item In Silver">
+                </mat-form-field><br>
+
+                <mat-form-field appearance="fill" class="field">
+                    <mat-label>Description</mat-label>
+                    <textarea
+                    matInput 
+                    class="textBox"  
+                    formControlName="description" 
+                    cols="40" 
+                    rows="10" required>
+                    </textarea>
+                </mat-form-field><br>
+
                 <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext>Next</button>
+                    <button mat-raised-button color="light-blue" matStepperPrevious>Back</button>&nbsp;&nbsp;
+                    <button mat-raised-button color="light-blue" matStepperNext>Next</button>
                 </div>
             </form>
         </mat-step>
         <mat-step>
             <ng-template matStepLabel>Done</ng-template>
-            <p>You are now done.</p>
+            <div class="button container">
+                {{secondFormGroup.get("name")!.value | titlecase}}<br>
+                {{secondFormGroup.get("type")!.value | titlecase}}<br>
+                {{secondFormGroup.get("rarity")!.value | titlecase}}<br>
+                {{secondFormGroup.get("description")!.value | titlecase}}<br>
+                {{getItemValue()}}
+            </div>
             <div>
                 <button mat-button matStepperPrevious>Back</button>
                 <button mat-button (click)="stepper.reset()">Reset</button>

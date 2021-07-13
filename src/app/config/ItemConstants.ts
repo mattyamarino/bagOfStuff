@@ -24,7 +24,18 @@ export class ItemConstants {
         "wand",
         "weapon"
       ];
+
+    public static rarityTypes: string[] = [
+        "common",
+        "uncommon",
+        "rare",
+        "very rare",
+        "legendary",
+        "artifact"
+    ];
 }
+
+
 
 export class ScrollStatistic {
     rarity!: string;

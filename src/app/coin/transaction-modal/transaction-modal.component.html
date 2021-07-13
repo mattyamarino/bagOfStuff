@@ -48,7 +48,6 @@
         </ng-container>
 
 
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
@@ -61,9 +60,11 @@
         <img src="../../../assets/silver.png" class="smallMoneyIcon">
         {{ getTransactionValueInSilver() | number:'1.2-2' }}
     </div>
+
     <span class="br"> </span>
+
     <div class="textBoxTitle">
-    Reason For {{type}}
+         Reason For {{type}}
         <span *ngIf="description == '' && submitAttempted" class="orange">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             Please Enter A Reason
