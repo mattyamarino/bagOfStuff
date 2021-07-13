@@ -12,7 +12,15 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-getMagicItems() {
-  return this.http.get<any>(ExternalUrl.magicItemUrl + this.jsonFormat + "potion");
-}
+  getMagicItems(query: string) {
+    return this.http.get<any>(ExternalUrl.magicItemUrl + this.jsonFormat + query);
+  }
+
+  getScrolls(query: string) {
+    return this.http.get<any>(ExternalUrl.scrollUrl + this.jsonFormat + query);
+  }
+
+  getWeapons(query: string) {
+    return this.http.get<any>(ExternalUrl.weaponUrl + this.jsonFormat + query);
+  }
 }

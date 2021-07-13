@@ -3,7 +3,8 @@ export class Item{
     name!: string;
     type!: string;
     rarity!: string;
-    cost!: number;
+    description?: string;
+    cost?: number;
     quantity?: number;
     owner!: string;
     

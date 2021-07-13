@@ -1,28 +1,30 @@
-<mat-dialog-content>
+<mat-dialog-content class="fixed-width">
+    <span class="br"></span>
     <div class="bigLobsterText">Deposit Item</div>
     <br>
 
     <mat-stepper orientation="vertical" [linear]="true" #stepper>
         <mat-step [stepControl]="firstFormGroup">
             <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>New Or Pregenerated Item</ng-template>
+                <ng-template matStepLabel>New Or Pregenerated Item</ng-template><br>
                 
-                <mat-radio-group [formControl]="isNewItem">
+                <mat-radio-group formControlName="isNewItem">
                     <mat-radio-button [value]="true">Create New</mat-radio-button>&nbsp;&nbsp;
                     <mat-radio-button [value]="false">Select Pregenerated</mat-radio-button>
                 </mat-radio-group>
-
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let externalItem of externalItems" [value]="externalItem.name">
-                        {{externalItem.name}}
-                    </mat-option>
-                </mat-autocomplete>
-                <span class="br-big"></span>
-                <input type="text" 
-                placeholder="Type Name Of Pregenerated Item"
-                disabled="firstFormGroup.get('isNewItem')"
-                matInput [formControl]="firstFormGroup.get('firstCtrl')"
-                [matAutocomplete]="auto"><br>
+                <div *ngIf="!firstFormGroup.get('isNewItem')?.value">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)='selectItem($event.option.value)'>
+                        <mat-option *ngFor="let externalItem of externalItems" [value]="externalItem.name">
+                            {{externalItem.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <span class="br-big"></span>
+                    <input type="text" 
+                    placeholder="Type Name Of Pregenerated Item"
+                    matInput formControlName="firstCtrl"
+                    (keyup)="getPregeneratedItem($event)"
+                    [matAutocomplete]="auto"><br>
+                </div>
 
                 <div>
                     <br>
@@ -33,7 +35,12 @@
         </mat-step>
         <mat-step [stepControl]="secondFormGroup">
             <form [formGroup]="secondFormGroup">
-                <ng-template matStepLabel>Fill out your address</ng-template>
+                <ng-template matStepLabel>Item Details</ng-template><br>
+                {{itemToCreate.name}}<br>
+                {{itemToCreate.type}}<br>
+                {{itemToCreate.rarity}}<br>
+                {{itemToCreate.description}}<br>
+                {{itemToCreate.cost}}<br>
                 <mat-form-field appearance="fill">
                     <mat-label>Address</mat-label>
                     <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
