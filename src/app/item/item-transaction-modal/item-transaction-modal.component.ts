@@ -126,8 +126,8 @@ export class ItemTransactionModalComponent implements OnInit {
     if(externalItem?.school) {
       externalItem.type = "scroll"
       externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
-      externalItem.desc = "--- Level " + externalItem.level_int! + externalItem.school + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + 
-      " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " --- " + externalItem.desc;
+      externalItem.desc = "--- Level " + externalItem.level_int! + " " + externalItem.school + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + 
+      " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " --- " + "\n" + externalItem.desc;
     }
 
      if(externalItem?.category){

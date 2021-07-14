@@ -28,7 +28,8 @@ export class ItemConstants {
         "scroll",
         "staff",
         "wand",
-        "weapon"
+        "weapon",
+        "wondrous item"
       ];
 
     public static rarityTypes: string[] = [

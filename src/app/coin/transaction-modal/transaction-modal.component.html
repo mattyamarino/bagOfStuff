@@ -4,82 +4,77 @@
         {{type}}
     </div>
     <br>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+    <form [formGroup]="transactionFormGroup">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
 
-        <ng-container matColumnDef="currency">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">{{element.currency}}</td>
-        </ng-container>
+            <ng-container matColumnDef="currency">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">{{element.currency}}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="transactionAmount">
-            <th mat-header-cell *matHeaderCellDef>Amount To {{type}}</th>
-            <td mat-cell *matCellDef="let element; let i = index">
-                <form>
-                    <div style="font-size: 13px">
-                        <mat-form-field appearance="fill">
-                            <input 
-                            numeric 
-                            type="number"
-                            (click)="clearZeroAmount($event)"
-                            (focusout)="onFocusOutEvent($event)"  
-                            matInput 
-                            [(ngModel)]="dataSource[i].transactionAmount" 
-                            name="Amount" 
-                            placeholder="Amount">
-                            <div *ngIf="isInvalidAmount(element.currency, element.transactionAmount)">
-                                <mat-error >
-                                    Invalid Amount
-                                </mat-error>
-                            </div>
-                        </mat-form-field>
-                    </div>
-                </form>
-            </td>
-        </ng-container>
-        
-        <ng-container matColumnDef="currentAmount">
-            <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;&nbsp; Available Amount &nbsp;&nbsp;</th>
-            <td mat-cell *matCellDef="let element">{{getTotalForCurrencyType(element.currency) | number}}</td>
-        </ng-container>
+            <ng-container matColumnDef="transactionAmount">
+                <th mat-header-cell *matHeaderCellDef>Amount To {{type}}</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                        <div style="font-size: 13px">
+                            <mat-form-field appearance="fill">
+                                <input 
+                                numeric
+                                required 
+                                type="number"
+                                (click)="clearZeroAmount($event)"
+                                (focusout)="onFocusOutEvent($event)"  
+                                matInput 
+                                [formControlName]="dataSource[i].currency" 
+                                name="Amount" 
+                                [placeholder]="getLabelForAmountField()">
+                                <div *ngIf="isInvalidAmount(element.currency)">
+                                    <mat-error >
+                                        Invalid Amount
+                                    </mat-error>
+                                </div>
+                            </mat-form-field>
+                        </div>
+                </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="currentAmount">
+                <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp;&nbsp; Available Amount &nbsp;&nbsp;</th>
+                <td mat-cell *matCellDef="let element">{{getTotalForCurrencyType(element.currency) | number}}</td>
+            </ng-container>
 
-        <ng-container matColumnDef="valueInSilver">
-            <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp; Value In Silver &nbsp;&nbsp;</th>
-            <td mat-cell *matCellDef="let element">{{element.valueInSilver}}</td>
-        </ng-container>
+            <ng-container matColumnDef="valueInSilver">
+                <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp; Value In Silver &nbsp;&nbsp;</th>
+                <td mat-cell *matCellDef="let element">{{element.valueInSilver}}</td>
+            </ng-container>
 
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
 
-    <div *ngIf="isFieldsEmpty && submitAttempted" class="orange emptyTransaction">
-        Cannot Submit Empty Transaction
-    </div>
-    <div class="emptyTransaction">
-        Value of {{type}} in Silver
-        <img src="../../../assets/silver.png" class="smallMoneyIcon">
-        {{ getTransactionValueInSilver() | number:'1.2-2' }}
-    </div>
-   
-    <mat-form-field appearance="fill" class="description">
-        <mat-label>Reason For {{type}}</mat-label>
-        <textarea
-        matInput 
-        [formControl]="description" 
-        cols="40" 
-        rows="4"
-        required>
-        </textarea>
-    </mat-form-field>
+        <div *ngIf="isFieldsEmpty && submitAttempted" class="orange emptyTransaction">
+            Cannot Submit Empty Transaction
+        </div>
+        <div class="emptyTransaction">
+            Value of {{type}} in Silver
+            <img src="../../../assets/silver.png" class="smallMoneyIcon">
+            {{ getTransactionValueInSilver() | number:'1.2-2' }}
+        </div>
+    
+        <mat-form-field appearance="fill" class="description">
+            <mat-label>Reason For {{type}}</mat-label>
+            <textarea
+            matInput 
+            formControlName="description" 
+            cols="40" 
+            rows="4"
+            required>
+            </textarea>
+        </mat-form-field>
 
-    <span class="br"> </span>
+        <span class="br"> </span>
 
-    <div class="textBoxTitle">
-        <span *ngIf="description.value == '' && submitAttempted" class="orange">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Please Enter A Reason
-        </span>
-    </div>
+    </form>
  
     <div class="button-row">
         <button 

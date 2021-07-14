@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
@@ -15,7 +15,7 @@ export class TransactionModalComponent implements OnInit {
   latestTransaction!: MonetaryTransaction;
   displayedColumns: string[] = ['currency', 'transactionAmount', 'currentAmount', 'valueInSilver'];
   dataSource: any = [];
-  description: FormControl = new FormControl;
+  transactionFormGroup!: FormGroup;
   selectedUser!: string;
   type!: string;
   processingTransaction: boolean = false;
@@ -29,6 +29,7 @@ export class TransactionModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.populateColumns();
+    this.generateFormGroup();
   }
 
   populateColumns(): void {
@@ -49,12 +50,31 @@ export class TransactionModalComponent implements OnInit {
     });
   }
 
-  isInvalidAmount(currency: string, amount: number): boolean {
+  generateFormGroup() {
+    const group: any = {};
+    group["description"] = new FormControl('', Validators.required);
+    this.dataSource.forEach((element: { currency: string; }) => {
+      group[element.currency] = new FormControl('0', Validators.required);  
+    });
+    this.transactionFormGroup = new FormGroup(group);
+  }
+
+  isInvalidAmount(currency: string): boolean {
+    let amount: number = this.transactionFormGroup.get(currency)!.value;
     let currentTotal: number = this.getTotalForCurrencyType(currency);
+    let result: boolean = false;
     if (this.type === "Withdraw") {
-      return (currentTotal - amount) < 0;
+      result = (currentTotal - amount) < 0;
+    } else {
+      result = amount < 0;
     }
-    return amount < 0;
+
+    if(result) {
+      this.transactionFormGroup.get(currency)!.setErrors({'incorrect': true});
+    } else {
+      this.transactionFormGroup.get(currency)!.setErrors(null);
+    }
+    return result;
   }
 
   getTotalForCurrencyType(currency: string): number {
@@ -74,7 +94,9 @@ export class TransactionModalComponent implements OnInit {
     }
   }
 
-  getTransactionTotalForCurrencyType(currency: string, transaction: any, adjustmentAmount: number): void {
+  getTransactionTotalForCurrencyType(currency: string, transaction: any): void {
+    const adjustmentAmount: number = this.transactionFormGroup.get(currency)!.value;
+
     if (currency === "Platinum") {
       transaction.platinumDeposited = adjustmentAmount;
       if (this.type === "Withdraw") {
@@ -126,7 +148,7 @@ export class TransactionModalComponent implements OnInit {
       if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
   
-        newTransaction.description = this.description.value;
+        newTransaction.description = this.transactionFormGroup.get('description')!.value;
         newTransaction.type = this.type;
         newTransaction.createdOn = Date.now();
         newTransaction.createdBy = this.selectedUser;
@@ -141,12 +163,14 @@ export class TransactionModalComponent implements OnInit {
   }
 
   validateTransaction(transaction: MonetaryTransactionDTO): boolean {
+    this.transactionFormGroup.markAllAsTouched();
     this.submitAttempted = true;
     this.updateAvailableAmounts();
     this.dataSource.forEach((element: { currency: string; transactionAmount: number; }) => {
-      this.getTransactionTotalForCurrencyType(element.currency, transaction, element.transactionAmount);
+      this.getTransactionTotalForCurrencyType(element.currency, transaction);
     });
-    return (!this.isEmptyTransaction(transaction) && this.description.value != '' && this.isTransactionAmountsValid());
+    console.log(transaction)
+    return (!this.isEmptyTransaction(transaction) && this.isTransactionAmountsValid());
   }
 
   updateAvailableAmounts(): void {
@@ -173,7 +197,7 @@ export class TransactionModalComponent implements OnInit {
     let isValid: boolean = true;
 
     this.dataSource.forEach((element: any) => {
-      if(this.isInvalidAmount(element.currency, element.transactionAmount)) {
+      if(this.isInvalidAmount(element.currency)) {
         isValid = false;
       };
     });
@@ -241,5 +265,9 @@ export class TransactionModalComponent implements OnInit {
       }
    });
   }    
+}
+
+getLabelForAmountField(): string {
+  return "Amount To " + this.type;
 }
 }
