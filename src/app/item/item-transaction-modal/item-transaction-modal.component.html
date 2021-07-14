@@ -83,24 +83,10 @@
 
                 <div>
                     <button mat-raised-button color="light-blue" matStepperPrevious>Back</button>&nbsp;&nbsp;
-                    <button mat-raised-button color="light-blue" matStepperNext>Next</button>
+                    <button mat-raised-button color="light-blue" (click)="depositItem()">Deposit Item</button>&nbsp;&nbsp;
+                    <button mat-raised-button color="light-blue" (click)="closeModal()">Close</button>
                 </div>
             </form>
         </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>Done</ng-template>
-            <div class="button container">
-                {{secondFormGroup.get("name")!.value | titlecase}}<br>
-                {{secondFormGroup.get("type")!.value | titlecase}}<br>
-                {{secondFormGroup.get("rarity")!.value | titlecase}}<br>
-                {{secondFormGroup.get("description")!.value}}<br>
-                {{getItemValue()}}
-            </div>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
-            </div>
-        </mat-step>
     </mat-stepper>
-
 </mat-dialog-content>

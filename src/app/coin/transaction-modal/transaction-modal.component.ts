@@ -54,7 +54,7 @@ export class TransactionModalComponent implements OnInit {
     const group: any = {};
     group["description"] = new FormControl('', Validators.required);
     this.dataSource.forEach((element: { currency: string; }) => {
-      group[element.currency] = new FormControl('0', Validators.required);  
+      group[element.currency] = new FormControl('0', Validators.required);
     });
     this.transactionFormGroup = new FormGroup(group);
   }
@@ -69,8 +69,8 @@ export class TransactionModalComponent implements OnInit {
       result = amount < 0;
     }
 
-    if(result) {
-      this.transactionFormGroup.get(currency)!.setErrors({'incorrect': true});
+    if (result) {
+      this.transactionFormGroup.get(currency)!.setErrors({ 'incorrect': true });
     } else {
       this.transactionFormGroup.get(currency)!.setErrors(null);
     }
@@ -144,22 +144,22 @@ export class TransactionModalComponent implements OnInit {
 
     this.firestoreService.getLatestTransaction().subscribe(res => {
       const response = <MonetaryTransaction[]>res;
-      this.latestTransaction = response[0];    
+      this.latestTransaction = response[0];
       if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
-  
+
         newTransaction.description = this.transactionFormGroup.get('description')!.value;
         newTransaction.type = this.type;
         newTransaction.createdOn = Date.now();
         newTransaction.createdBy = this.selectedUser;
-  
+
         const data = Object.assign({}, newTransaction);
-  
+
         this.firestoreService.createCurrencyTransaction(data);
-  
+
         this.closeDialog();
-      } 
-   });
+      }
+    });
   }
 
   validateTransaction(transaction: MonetaryTransactionDTO): boolean {
@@ -197,7 +197,7 @@ export class TransactionModalComponent implements OnInit {
     let isValid: boolean = true;
 
     this.dataSource.forEach((element: any) => {
-      if(this.isInvalidAmount(element.currency)) {
+      if (this.isInvalidAmount(element.currency)) {
         isValid = false;
       };
     });
@@ -211,13 +211,13 @@ export class TransactionModalComponent implements OnInit {
 
 
   onFocusOutEvent(event: any): void {
-    if (event.target.value == '')  {
+    if (event.target.value == '') {
       event.target.value = 0;
     }
   }
 
   clearZeroAmount(event: any): void {
-    if (event.target.value == 0)  {
+    if (event.target.value == 0) {
       event.target.value = undefined;
     }
   }
@@ -248,26 +248,27 @@ export class TransactionModalComponent implements OnInit {
   }
 
   confirmAction(): void {
-    if(this.validateTransaction(new MonetaryTransactionDTO)) {
+    if (this.validateTransaction(new MonetaryTransactionDTO)) {
 
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      maxWidth: "400px",
-      data: {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        maxWidth: "400px",
+        data: {
           confirm: "confirm " + this.type,
           cancel: "go back",
-          message: "complete " + this.type + "?"
+          title: "complete " + this.type + "?",
+          message: ""
         }
-    });
-  
-    dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult) {
-        this.completeTransaction();
-      }
-   });
-  }    
-}
+      });
 
-getLabelForAmountField(): string {
-  return "Amount To " + this.type;
-}
+      dialogRef.afterClosed().subscribe(dialogResult => {
+        if (dialogResult) {
+          this.completeTransaction();
+        }
+      });
+    }
+  }
+
+  getLabelForAmountField(): string {
+    return "Amount To " + this.type;
+  }
 }

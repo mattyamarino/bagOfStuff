@@ -1,12 +1,14 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ItemConstants } from 'src/app/config/ItemConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
 import { Item } from 'src/app/models/Item';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-item-transaction-modal',
@@ -17,11 +19,10 @@ export class ItemTransactionModalComponent implements OnInit {
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   externalItems: ExternalItem[] = [];
-  itemToCreate: Item = new Item;
   itemTypes: string[] = ItemConstants.itemTypes;
   rarityTypes: string[] = ItemConstants.rarityTypes;
 
-  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe) { }
+  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -53,12 +54,12 @@ export class ItemTransactionModalComponent implements OnInit {
 
   getPregeneratedItem(event: any) {
     const query: string = this.firstFormGroup.get("itemName")?.value.toLowerCase();
-    if(query.indexOf("scroll of") !== -1) {
+    if (query.indexOf("scroll of") !== -1) {
       this.getScrolls(query);
-    } else if(query.length > 3 && (this.externalItems.length == 0 || event.key === 'Backspace')) {
+    } else if (query.length > 3 && (this.externalItems.length == 0 || event.key === 'Backspace')) {
       this.getMagicItems(query);
     } else {
-      if(query.length <= 3) {
+      if (query.length <= 3) {
         this.externalItems = [];
       }
       this.filterExternalItems(query);
@@ -79,7 +80,7 @@ export class ItemTransactionModalComponent implements OnInit {
 
   addMagicWeapons(weapons: any[]) {
     weapons.forEach(weapon => {
-      for(let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 3; i++) {
         let item = {
           name: weapon.name + " +" + i,
           level_int: i,
@@ -91,17 +92,17 @@ export class ItemTransactionModalComponent implements OnInit {
       }
     });
     weapons.sort(function (a, b) {
-      return a.name.localeCompare(b.name); 
+      return a.name.localeCompare(b.name);
     });
   }
 
   getScrolls(query: string): void {
     const rawQuery = query.split(" ");
-    if(rawQuery.length == 3) {
+    if (rawQuery.length == 3) {
       this.httpService.getScrolls(rawQuery[2]).subscribe(res => {
         const items: ExternalOpen5EResponse = res;
         items.results.forEach(item => {
-          item.name = "Scroll Of " + item.name; 
+          item.name = "Scroll Of " + item.name;
         });
         this.externalItems = items.results;
       });
@@ -123,38 +124,71 @@ export class ItemTransactionModalComponent implements OnInit {
       return element.name === itemName;
     });
 
-    if(externalItem?.school) {
+    if (externalItem?.school) {
       externalItem.type = "scroll"
       externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
-      externalItem.desc = "--- Level " + externalItem.level_int! + " " + externalItem.school + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + 
-      " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " --- " + "\n" + externalItem.desc;
+      externalItem.desc = "=== Level " + externalItem.level_int! + " " + externalItem.school + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! +
+        " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " === " + "\n\n" + externalItem.desc;
     }
 
-     if(externalItem?.category){
+    if (externalItem?.category) {
       externalItem.type = "weapon";
       externalItem.rarity = externalItem.level_int ? ItemConstants.magicWeaponMap.get(externalItem.level_int)! : "common";
       const magicWeaponDesc = externalItem.level_int ? "Magic Weapon +" + externalItem.level_int : "";
-      externalItem.desc = magicWeaponDesc + " --- " + externalItem.category.slice(0, -1) + " ---" + externalItem.damage_dice + " " + this.titleCasePipe.transform(externalItem.damage_type);
+      externalItem.desc = magicWeaponDesc + " === " + externalItem.category.slice(0, -1) + " ===" + externalItem.damage_dice + " " + this.titleCasePipe.transform(externalItem.damage_type);
       externalItem.cost = externalItem.cost ? externalItem.cost!.replace(/[^\d.-]/g, '') : "";
     }
 
-    const type: string[] = externalItem!.type.toLowerCase().split(" ");
+    const type: string[] = externalItem!.type.toLowerCase().split("(");
+    const rarity: string = ItemConstants.rarityTypes.indexOf(externalItem!.rarity) !== -1 ? externalItem!.rarity : "";
 
-    this.secondFormGroup.get("cost")?.setValue( externalItem!.cost ? Number(externalItem!.cost!) : 0 );
-    this.secondFormGroup.get("description")?.setValue( externalItem!.desc);
-    this.secondFormGroup.get("name")?.setValue( externalItem!.name.toLowerCase());
-    this.secondFormGroup.get("rarity")?.setValue( externalItem!.rarity.toLowerCase());
-    this.secondFormGroup.get("type")?.setValue(type[0]);
+    this.secondFormGroup.get("cost")?.setValue(externalItem!.cost);
+    this.secondFormGroup.get("description")?.setValue(externalItem!.desc);
+    this.secondFormGroup.get("name")?.setValue(externalItem!.name.toLowerCase());
+    this.secondFormGroup.get("rarity")?.setValue(rarity);
+    this.secondFormGroup.get("type")?.setValue(type[0].trim());
 
   }
 
   clearSelection(): void {
-    if(!this.secondFormGroup.get("name")?.value) {
+    if (!this.secondFormGroup.get("name")?.value) {
       this.firstFormGroup.get("itemName")?.setValue(undefined);
     }
   }
 
   getItemValue(): string {
     return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "——"
+  }
+
+  depositItem(): void {
+    if(this.secondFormGroup.valid) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        maxWidth: "80vw",
+        data: {
+          confirm: "confirm",
+          cancel: "go back",
+          title: "complete deposit of this item?",
+          message: "Name: " + this.secondFormGroup.get("name")?.value + "\n" +
+          "Type: " + this.secondFormGroup.get("type")?.value + "\n" +
+          "Rarity: " + this.secondFormGroup.get("rarity")?.value + "\n" +
+          "Value In Silver: " + this.getItemValue() + "\n" +
+          "Description: " + this.secondFormGroup.get("description")?.value 
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(dialogResult => {
+        if (dialogResult) {
+          this.completeTransaction();
+        }
+      });
+    }
+  }
+
+  completeTransaction(): void {
+    
+  }
+
+  closeModal(): void {
+    this.dialog.closeAll();
   }
 }

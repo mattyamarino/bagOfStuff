@@ -1,7 +1,11 @@
-.confirm-message{
+.confirm-title{
     font-size: 30px;
     text-align: center;
     font-weight: bolder;
+}
+
+.confirm-message{
+    font-size: 15px;
 }
 
 .center {
