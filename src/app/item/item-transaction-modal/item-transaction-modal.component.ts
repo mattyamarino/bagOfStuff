@@ -1,12 +1,14 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
-import { ItemConstants } from 'src/app/config/ItemConstants';
+import { ItemActions, ItemConstants } from 'src/app/config/ItemConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
 import { Item } from 'src/app/models/Item';
+import { ItemHistory } from 'src/app/models/ItemHistory';
+import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { HttpService } from 'src/app/services/http/http.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 
@@ -22,7 +24,9 @@ export class ItemTransactionModalComponent implements OnInit {
   itemTypes: string[] = ItemConstants.itemTypes;
   rarityTypes: string[] = ItemConstants.rarityTypes;
 
-  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog) { }
+  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog, 
+    public dialogRef: MatDialogRef<ItemTransactionModalComponent>,  @Inject(MAT_DIALOG_DATA) public data: any,
+    public firestoreService: FirestoreService) {}
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -134,8 +138,8 @@ export class ItemTransactionModalComponent implements OnInit {
     if (externalItem?.category) {
       externalItem.type = "weapon";
       externalItem.rarity = externalItem.level_int ? ItemConstants.magicWeaponMap.get(externalItem.level_int)! : "common";
-      const magicWeaponDesc = externalItem.level_int ? "Magic Weapon +" + externalItem.level_int : "";
-      externalItem.desc = magicWeaponDesc + " === " + externalItem.category.slice(0, -1) + " ===" + externalItem.damage_dice + " " + this.titleCasePipe.transform(externalItem.damage_type);
+      const magicWeaponDesc = externalItem.level_int ? "Magic +" + externalItem.level_int : "";
+      externalItem.desc = magicWeaponDesc  + externalItem.category.slice(0, -1) + " ===" + externalItem.damage_dice + " " + this.titleCasePipe.transform(externalItem.damage_type);
       externalItem.cost = externalItem.cost ? externalItem.cost!.replace(/[^\d.-]/g, '') : "";
     }
 
@@ -157,13 +161,12 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   getItemValue(): string {
-    return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "——"
+    return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "— —"
   }
 
   depositItem(): void {
     if(this.secondFormGroup.valid) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        maxWidth: "80vw",
         data: {
           confirm: "confirm",
           cancel: "go back",
@@ -185,7 +188,31 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   completeTransaction(): void {
-    
+    const itemData = Object.assign({}, this.buildItem());
+    const itemHistoryData = Object.assign({}, this.buildItemHistory());
+    this.firestoreService.createItem(itemData, itemHistoryData);
+    this.closeModal();
+  }
+
+  buildItem(): Item {
+    let newItem: Item = new Item;
+    newItem.name = this.secondFormGroup.get("name")?.value;
+    newItem.rarity = this.secondFormGroup.get("rarity")?.value;
+    newItem.type = this.secondFormGroup.get("type")?.value;
+    newItem.cost = this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : null;
+    newItem.description = this.secondFormGroup.get("description")?.value;
+    newItem.owner = this.data.createdFor;
+    newItem.lastUpdatedOn = Date.now();
+    return newItem;
+  }
+
+  buildItemHistory(): ItemHistory {
+    let newItemHistory: ItemHistory =  new ItemHistory;
+    newItemHistory.action = ItemActions.CREATE;
+    newItemHistory.createdBy = this.data.user;
+    newItemHistory.createdOn = Date.now();
+    newItemHistory.currentOwner = this.data.createdFor;
+    return newItemHistory;
   }
 
   closeModal(): void {

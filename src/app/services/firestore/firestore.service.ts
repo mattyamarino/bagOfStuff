@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreConstants } from 'src/app/config/FirestoreConstants';
+import { Item } from 'src/app/models/Item';
 import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 
 @Injectable({
@@ -14,6 +15,7 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.users).valueChanges();
   }
 
+  // CURRENCY FUNCTIONS
   getCurrencyTransactions(queryDate: number) {
     return this.firestore.collection(FirestoreConstants.currencyTransactions,
       ref => ref.where("createdOn", ">=", queryDate)).get();
@@ -74,4 +76,47 @@ export class FirestoreService {
     transaction.totalValueInSilver += (transaction.copperDeposited / 10);
     transaction.totalValueInSilver += (transaction.goldDeposited / 10);
   }
+
+  // ITEM FUNCTIONS
+  createItem(itemData: any, itemHistory: any) {
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection(FirestoreConstants.items)
+        .add(itemData)
+        .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+          this.createItemHistory(itemHistory, docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    });
+  }
+
+  private createItemHistory(itemHistory: any, itemId: string) {
+    itemHistory.itemId = itemId;
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection(FirestoreConstants.itemHistory)
+        .add(itemHistory)
+        .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    });
+  }
+
+  getItems(owner: string) {
+    return this.firestore.collection(FirestoreConstants.items,
+      ref => ref.where("owner", "==", owner)).valueChanges();
+  }
+
+  sortItemsDescendingByLastUpdatedOn(items: Item[]): void {
+    items.sort(function (x, y) {
+      return y.lastUpdatedOn - x.lastUpdatedOn;
+    });
+  }
+
 }

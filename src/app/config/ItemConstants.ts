@@ -42,7 +42,9 @@ export class ItemConstants {
     ];
 }
 
-
+export enum ItemActions {
+    CREATE = "created"
+}
 
 export class ScrollStatistic {
     rarity!: string;

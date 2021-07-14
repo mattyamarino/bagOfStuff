@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Item } from 'src/app/models/Item';
+import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 
 @Component({
   selector: 'app-item-table',
@@ -11,7 +12,7 @@ import { Item } from 'src/app/models/Item';
   styleUrls: ['./item-table.component.css']
 })
 export class ItemTableComponent implements OnInit {
-  @Input() items!: Item[];
+  @Input() user!: string;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Item>([]);
@@ -28,16 +29,24 @@ export class ItemTableComponent implements OnInit {
     type: '', rarity: ''
   };
   
-  constructor() { }
+  constructor(private firestoreService: FirestoreService) { }
   
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.dataSource.data = this.items;
+    this.getItems();
   }
 
   ngOnInit(): void {
     this.dataSource.filterPredicate = this.customFilterPredicate();
+  }
+
+  getItems(): void {
+    this.firestoreService.getItems(this.user).subscribe(res => {
+      this.firestoreService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
+      this.dataSource.data = <Item[]><unknown>res;
+    });
+
   }
 
   // **************BEGIN FILTER METHODS**************

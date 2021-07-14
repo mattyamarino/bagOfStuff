@@ -7,5 +7,5 @@ export class Item{
     cost?: number;
     quantity?: number;
     owner!: string;
-    
+    lastUpdatedOn!: number
 }
