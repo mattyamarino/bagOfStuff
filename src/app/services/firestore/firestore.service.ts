@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreConstants } from 'src/app/config/FirestoreConstants';
+import { ExternalItem } from 'src/app/models/ExternalItem';
 import { Item } from 'src/app/models/Item';
 import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 
@@ -116,6 +117,12 @@ export class FirestoreService {
   sortItemsDescendingByLastUpdatedOn(items: Item[]): void {
     items.sort(function (x, y) {
       return y.lastUpdatedOn - x.lastUpdatedOn;
+    });
+  }
+
+  sortItemsAsscendingByName(items: ExternalItem[]): void {
+    items.sort(function (y, x) {
+      return y.name.toLowerCase().localeCompare(x.name.toLowerCase());
     });
   }
 

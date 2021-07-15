@@ -23,4 +23,8 @@ export class HttpService {
   getWeapons(query: string) {
     return this.http.get<any>(ExternalUrl.weaponUrl + this.jsonFormat + query);
   }
+
+  getGemstones() {
+    return this.http.get("assets/gemstones.json");
+  }
 }

@@ -1,0 +1,233 @@
+[
+    {
+        "name": "Alexandrite",
+        "cost": 500,
+        "desc": "A transparent dark green gemstone worth 500 gold pieces",
+        "rarity": "uncommon" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Amber",
+        "cost": 100,
+        "desc": "A transparent watery gold to rich gold gemstone worth 100 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"             
+    },
+    {
+        "name": "Amethyst",
+        "cost": 100,
+        "desc": "A transparent deep purple gemstone worth 100 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Aquamarine",
+        "cost": 500,
+        "desc": "A transparent pale blue-green gemstone worth 500 gold pieces.",
+        "rarity": "uncommon" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Azurite",
+        "cost": 10,
+        "desc": "An opaque mottled deep blue gemstone worth 10 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Banded Agate",
+        "cost": 10,
+        "desc": "A translucent striped brown, blue, white, or red gemstone worth 10 gold pieces",
+        "rarity": "common" ,               
+        "type": "gemstone"
+    },
+    {
+        "name": "Black Opal",
+        "cost": 1000,
+        "desc": "A translucent dark green with black mottling and golden flecks gemstone worth 1,000 gold pieces",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Black Pearl",
+        "cost": 500,
+        "desc": "An opaque pure black gemstone worth 500 gold pieces.",
+        "rarity": "uncommon" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Black Sapphire",
+        "cost": 5000,
+        "desc": "A translucent lustrous black gemstone with glowing highlights worth 5,000 gold pieces.",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Blue quartz",
+        "cost": 10,
+        "desc": "A transparent pale blue gemstone worth 10 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Blue Sapphire",
+        "cost": 1000,
+        "desc": "A transparent blue-white to medium blue gemstone worth 1,000 gold pieces.",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Chalcedony",
+        "cost": 50,
+        "desc": "An opaque white gemstone worth 50 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Chrysoberyl",
+        "cost": 100,
+        "desc": "A transparent yellow-green to pale green gemstone worth 100 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Citrine",
+        "cost": 50,
+        "desc": "A transparent pale yellow-brown gemstone worth 50 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Coral",
+        "cost": 100,
+        "desc": "An opaque crimson gemstone worth 100 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Diamond",
+        "cost": 5000,
+        "desc": "An opaque crimson gemstone worth 100 gold pieces",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Emerald",
+        "cost": 1000,
+        "desc": "A transparent deep bright green gemstone worth 1,000 gold pieces",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Eye agate",
+        "cost": 10,
+        "desc": "A translucent gemstone with circles of gray, white, brown, blue, or green worth 10 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Fire Opal",
+        "cost": 1000,
+        "desc": "A translucent fiery red Gemstone worth 1,000 gold pieces.",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Garnet",
+        "cost": 100,
+        "desc": "A transparent red, brown-green, or violet gemstone worth 100 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Jade",
+        "cost": 100,
+        "desc": "A translucent light green, deep green, or white gemstone worth 100 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Jet",
+        "cost": 100,
+        "desc": "An opaque deep black gemstone worth 100 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Lapis Lazuli",
+        "cost": 10,
+        "desc": "An opaque light and dark blue gemstone with yellow flecks worth 10 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Obsidian",
+        "cost": 10,
+        "desc": "An opaque black gemstone worth 10 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Onyx",
+        "cost": 50,
+        "desc": "An opaque gemstone with bands of black and white, or pure black or white worth 50 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Opal",
+        "cost": 1000,
+        "desc": "A translucent pale blue with green and golden mottling gemstone worth 1,000 gold pieces",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Pearl",
+        "cost": 100,
+        "desc": "An opaque lustrous white, yellow, or pink gemstone worth 100 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Quartz",
+        "cost": 50,
+        "desc": "A transparent white, smoky gray, or yellow gemstone worth 50 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Ruby",
+        "cost": 5000,
+        "desc": "A transparent clear red to deep crimson gemstone worth 5,000 gold pieces",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Star Sapphire",
+        "cost": 1000,
+        "desc": "A translucent blue sapphire gemstone with a white star-shaped center worth 1,000 gold pieces.",
+        "rarity": "rare" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Topaz",
+        "cost": 500,
+        "desc": "A transparent golden yellow gemstone worth 500 gold pieces",
+        "rarity": "uncommon" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Turquoise",
+        "cost": 10,
+        "desc": "An opaque light blue-green gemstone worth 10 gold pieces",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    },
+    {
+        "name": "Zircon",
+        "cost": 50,
+        "desc": "A transparent pale blue-green gemstone worth 50 gold pieces.",
+        "rarity": "common" ,                
+        "type": "gemstone"
+    }
+]

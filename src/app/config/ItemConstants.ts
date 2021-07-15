@@ -46,6 +46,15 @@ export enum ItemActions {
     CREATE = "created"
 }
 
+export enum ItemValueByRarity {
+    COMMON = 45,
+    UNCOMMON = 350,
+    RARE = 11000,
+    VERYRARE = 35000,
+    LEGENDARY = 175000,
+    ARTIFACT = 500000
+}
+
 export class ScrollStatistic {
     rarity!: string;
     DC!: number;

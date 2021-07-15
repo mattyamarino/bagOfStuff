@@ -46,8 +46,8 @@ export class ItemTableComponent implements OnInit {
       this.firestoreService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
       this.dataSource.data = <Item[]><unknown>res;
     });
-
   }
+
 
   // **************BEGIN FILTER METHODS**************
   customFilterPredicate() {

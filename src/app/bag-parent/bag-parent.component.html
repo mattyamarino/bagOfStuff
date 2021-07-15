@@ -13,11 +13,11 @@
             <app-money [currencyTransaction]="latestTransaction"></app-money>
             <div class="button-container">
                 <br>
-                <span *ngIf="userComponent?.selectedUser == 'DM (Chris)'">
-                    <button mat-raised-button color="light-blue" (click)="openDepositDialog()">Deposit</button>
+                <span *ngIf="userComponent?.selectedUser == getDM()">
+                    <button mat-raised-button color="light-blue" (click)="openDepositDialog()">Deposit Coin</button>
                     &nbsp;&nbsp;&nbsp;
                 </span>
-                <button mat-raised-button color="light-blue" (click)="openWithdrawDialog()">Withdraw</button>
+                <button mat-raised-button color="light-blue" (click)="openWithdrawDialog()">Withdraw Coin</button>
                 &nbsp;&nbsp;&nbsp;
                 <button mat-raised-button color="light-blue" (click)="openMonetaryHistoryDialog()">Transaction History</button>
             </div>
@@ -25,7 +25,7 @@
         </div>
         <br><br><br>
         <div *ngIf="userComponent?.selectedUser !== undefined" class="moneyCard">
-            <app-item-container user="this.userComponent?.selectedUser"></app-item-container>
+            <app-item-container [user]="this.userComponent?.selectedUser"></app-item-container>
         </div>
     </div>
     <br><br><br>

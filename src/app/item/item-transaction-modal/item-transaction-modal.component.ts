@@ -3,7 +3,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
-import { ItemActions, ItemConstants } from 'src/app/config/ItemConstants';
+import { ItemActions, ItemConstants, ItemValueByRarity } from 'src/app/config/ItemConstants';
+import { UserConstants } from 'src/app/config/UserConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
 import { Item } from 'src/app/models/Item';
@@ -36,9 +37,10 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup = new FormGroup({
       name: new FormControl('', Validators.required),
       type: new FormControl('', Validators.required),
-      cost: new FormControl(''),
+      cost: new FormControl(''), 
       description: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
+      quantity: new FormControl('')
     });
 
     this.isValidatorsRequireditemName();
@@ -71,14 +73,18 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   getMagicItems(query: string): void {
+    let gemstones = this.httpService.getGemstones();
     let weapons = this.httpService.getWeapons(query)
     let magicItems = this.httpService.getMagicItems(query)
 
-    forkJoin([weapons, magicItems]).subscribe(res => {
+    forkJoin([weapons, magicItems, gemstones]).subscribe(res => {
       const resWeapons: ExternalOpen5EResponse = res[0];
       this.addMagicWeapons(resWeapons.results);
       const resMagicItems: ExternalOpen5EResponse = res[1];
-      this.externalItems = resWeapons.results.concat(resMagicItems.results);
+      const resGemstones: ExternalItem[] = <ExternalItem[]>res[2];
+      this.externalItems = resWeapons.results.concat(resMagicItems.results.concat(resGemstones));
+      this.filterExternalItems(query);
+      this.firestoreService.sortItemsAsscendingByName(this.externalItems);
     });
   }
 
@@ -160,8 +166,53 @@ export class ItemTransactionModalComponent implements OnInit {
     }
   }
 
+  getDM(): string {
+    return UserConstants.DM
+  }
+
   getItemValue(): string {
     return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "— —"
+  }
+
+  getSuggestedCost(): number {
+    let multiplier: number = 1;
+
+    if(this.secondFormGroup.get('type')?.value.toLowerCase() === "potion" || this.secondFormGroup.get('type')?.value.toLowerCase() === "scroll") {
+      multiplier = 0.5;
+    }
+
+    switch (this.secondFormGroup.get("rarity")!.value.toLowerCase()) {
+      case "common":
+        return ItemValueByRarity.COMMON * multiplier;
+      case "uncommon":
+        return ItemValueByRarity.UNCOMMON * multiplier;
+      case "rare":
+        return ItemValueByRarity.RARE * multiplier;
+      case "very rare":
+        return ItemValueByRarity.VERYRARE * multiplier;
+      case "legendary":
+        return ItemValueByRarity.LEGENDARY * multiplier;
+      case "artifact":
+        return ItemValueByRarity.ARTIFACT * multiplier;
+      default:
+        return 0;
+    }
+  }
+
+  shouldDisplaySuggestedCost(): boolean {
+    return this.secondFormGroup.get('rarity')?.value && 
+    !(this.secondFormGroup.get('type')?.value == 'gemstone' || (this.secondFormGroup.get('type')?.value == 'weapon' && this.secondFormGroup.get('rarity')?.value == 'common'));
+  }
+
+  isAllowedQuantity(): boolean {
+    switch (this.secondFormGroup.get("type")!.value.toLowerCase()) {
+      case "adventuring gear":
+        return true;
+      case "gemstone":
+        return true;
+      default:
+        return false;
+    }
   }
 
   depositItem(): void {
@@ -200,6 +251,7 @@ export class ItemTransactionModalComponent implements OnInit {
     newItem.rarity = this.secondFormGroup.get("rarity")?.value;
     newItem.type = this.secondFormGroup.get("type")?.value;
     newItem.cost = this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : null;
+    newItem.quantity = this.secondFormGroup.get("quantity")?.value ? this.secondFormGroup.get("quantity")?.value : 1;
     newItem.description = this.secondFormGroup.get("description")?.value;
     newItem.owner = this.data.createdFor;
     newItem.lastUpdatedOn = Date.now();
