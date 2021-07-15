@@ -72,15 +72,14 @@ text-align: center;
  }
 
 /* MAT TAB STYLING */
-app-item-container .mat-tab-label.mat-tab-label-active {
+.mat-tab-label.mat-tab-label-active {
    text-align: center;
    font-family: 'Lobster', cursive;
    font-size: 30px;
    color: white;
    opacity: 100%;
 }
-
-app-item-container .mat-tab-label{
+.mat-tab-label{
    text-align: center;
    font-family: 'Lobster', cursive;
    font-size: 30px;
