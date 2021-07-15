@@ -25,9 +25,9 @@ export class ItemTransactionModalComponent implements OnInit {
   itemTypes: string[] = ItemConstants.itemTypes;
   rarityTypes: string[] = ItemConstants.rarityTypes;
 
-  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog, 
-    public dialogRef: MatDialogRef<ItemTransactionModalComponent>,  @Inject(MAT_DIALOG_DATA) public data: any,
-    public firestoreService: FirestoreService) {}
+  constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog,
+    public dialogRef: MatDialogRef<ItemTransactionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+    public firestoreService: FirestoreService) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -37,7 +37,7 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup = new FormGroup({
       name: new FormControl('', Validators.required),
       type: new FormControl('', Validators.required),
-      cost: new FormControl(''), 
+      cost: new FormControl(''),
       description: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
       quantity: new FormControl('')
@@ -60,7 +60,7 @@ export class ItemTransactionModalComponent implements OnInit {
 
   getPregeneratedItem(event: any) {
     const query: string = this.firstFormGroup.get("itemName")?.value.toLowerCase();
-    if (query.indexOf("scroll of") !== -1) {
+    if (query.toLowerCase().indexOf("scroll of") !== -1) {
       this.getScrolls(query);
     } else if (query.length > 3 && (this.externalItems.length == 0 || event.key === 'Backspace')) {
       this.getMagicItems(query);
@@ -96,7 +96,8 @@ export class ItemTransactionModalComponent implements OnInit {
           level_int: i,
           damage_type: weapon.damage_type,
           damage_dice: weapon.damage_dice,
-          category: weapon.category
+          category: weapon.category,
+          properties: weapon.properties
         }
         weapons.push(item)
       }
@@ -107,16 +108,15 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   getScrolls(query: string): void {
-    const rawQuery = query.split(" ");
-    if (rawQuery.length == 3) {
-      this.httpService.getScrolls(rawQuery[2]).subscribe(res => {
+    const rawQuery = query.split("scroll of");
+      this.httpService.getScrolls(rawQuery[1]).subscribe(res => {
+        console.log(res)
         const items: ExternalOpen5EResponse = res;
         items.results.forEach(item => {
           item.name = "Scroll Of " + item.name;
         });
         this.externalItems = items.results;
       });
-    }
   }
 
   filterExternalItems(query: string): void {
@@ -135,18 +135,11 @@ export class ItemTransactionModalComponent implements OnInit {
     });
 
     if (externalItem?.school) {
-      externalItem.type = "scroll"
-      externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
-      externalItem.desc = "=== Level " + externalItem.level_int! + " " + externalItem.school + " Spell Scroll with (if applicable) a Save DC of " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! +
-        " and an Atk Bonus of +" + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + " === " + "\n\n" + externalItem.desc;
+      this.buildScroll(externalItem);
     }
 
     if (externalItem?.category) {
-      externalItem.type = "weapon";
-      externalItem.rarity = externalItem.level_int ? ItemConstants.magicWeaponMap.get(externalItem.level_int)! : "common";
-      const magicWeaponDesc = externalItem.level_int ? "Magic +" + externalItem.level_int : "";
-      externalItem.desc = magicWeaponDesc  + externalItem.category.slice(0, -1) + " ===" + externalItem.damage_dice + " " + this.titleCasePipe.transform(externalItem.damage_type);
-      externalItem.cost = externalItem.cost ? externalItem.cost!.replace(/[^\d.-]/g, '') : "";
+      this.buildWeapon(externalItem)
     }
 
     const type: string[] = externalItem!.type.toLowerCase().split("(");
@@ -158,6 +151,39 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup.get("rarity")?.setValue(rarity);
     this.secondFormGroup.get("type")?.setValue(type[0].trim());
 
+  }
+
+  buildScroll(externalItem: ExternalItem): void {
+    externalItem.type = "scroll"
+    externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
+    externalItem.desc = "Spell Scroll\n" +
+      "Casting Time: " + externalItem.casting_time + "\n" +
+      "Range: " + externalItem.range + "\n" +
+      "Duration: " + externalItem.duration + "\n" +
+      "Save DC (if applicable): " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.DC! + "\n" +
+      "Attack Bonus (if applicable): " + ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.attackBonus! + "\n\n" +
+      externalItem.desc;
+  }
+
+  buildWeapon(externalItem: ExternalItem): void {
+    externalItem.type = "weapon";
+    externalItem.rarity = externalItem.level_int ? ItemConstants.magicWeaponMap.get(externalItem.level_int)! : "common";
+
+    if(externalItem.level_int) {
+      externalItem.properties!.push("magic");
+    }
+    let properties: string = "";
+    externalItem.properties?.forEach(property => {
+      let comma = properties === "" ? "" : ", "
+      properties = properties + comma + this.titleCasePipe.transform(property)
+    });
+
+    const magicWeaponModifier = externalItem.level_int ? " +" + externalItem.level_int : "";
+    externalItem.desc = "Category: " + externalItem.category!.slice(0, -1) + "\n" +
+    "Damage: " + externalItem.damage_dice + magicWeaponModifier + "\n" +
+    "Damage Type: " + this.titleCasePipe.transform(externalItem.damage_type) + "\n" +
+    "Properties: " + properties!
+    externalItem.cost = externalItem.cost ? externalItem.cost!.replace(/[^\d.-]/g, '') : "";
   }
 
   clearSelection(): void {
@@ -177,7 +203,7 @@ export class ItemTransactionModalComponent implements OnInit {
   getSuggestedCost(): number {
     let multiplier: number = 1;
 
-    if(this.secondFormGroup.get('type')?.value.toLowerCase() === "potion" || this.secondFormGroup.get('type')?.value.toLowerCase() === "scroll") {
+    if (this.secondFormGroup.get('type')?.value.toLowerCase() === "potion" || this.secondFormGroup.get('type')?.value.toLowerCase() === "scroll") {
       multiplier = 0.5;
     }
 
@@ -200,8 +226,8 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   shouldDisplaySuggestedCost(): boolean {
-    return this.secondFormGroup.get('rarity')?.value && 
-    !(this.secondFormGroup.get('type')?.value == 'gemstone' || (this.secondFormGroup.get('type')?.value == 'weapon' && this.secondFormGroup.get('rarity')?.value == 'common'));
+    return this.secondFormGroup.get('rarity')?.value &&
+      !(this.secondFormGroup.get('type')?.value == 'gemstone' || (this.secondFormGroup.get('type')?.value == 'weapon' && this.secondFormGroup.get('rarity')?.value == 'common'));
   }
 
   isAllowedQuantity(): boolean {
@@ -216,20 +242,20 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   depositItem(): void {
-    if(this.secondFormGroup.valid) {
+    if (this.secondFormGroup.valid) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         data: {
           confirm: "confirm",
           cancel: "go back",
           title: "complete deposit of this item?",
-          message: "Name: " + this.secondFormGroup.get("name")?.value + "\n" +
-          "Type: " + this.secondFormGroup.get("type")?.value + "\n" +
-          "Rarity: " + this.secondFormGroup.get("rarity")?.value + "\n" +
-          "Value In Silver: " + this.getItemValue() + "\n" +
-          "Description: " + this.secondFormGroup.get("description")?.value 
+          message: "Name: " + this.titleCasePipe.transform(this.secondFormGroup.get("name")?.value) + "\n" +
+            "Type: " + this.titleCasePipe.transform(this.secondFormGroup.get("type")?.value) + "\n" +
+            "Rarity: " + this.titleCasePipe.transform(this.secondFormGroup.get("rarity")?.value) + "\n" +
+            "Value In Silver: " + this.getItemValue() + "\n" +
+            this.secondFormGroup.get("description")?.value
         }
       });
-  
+
       dialogRef.afterClosed().subscribe(dialogResult => {
         if (dialogResult) {
           this.completeTransaction();
@@ -241,6 +267,7 @@ export class ItemTransactionModalComponent implements OnInit {
   completeTransaction(): void {
     const itemData = Object.assign({}, this.buildItem());
     const itemHistoryData = Object.assign({}, this.buildItemHistory());
+    console.log(itemData, itemHistoryData)
     this.firestoreService.createItem(itemData, itemHistoryData);
     this.closeModal();
   }
@@ -259,7 +286,7 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   buildItemHistory(): ItemHistory {
-    let newItemHistory: ItemHistory =  new ItemHistory;
+    let newItemHistory: ItemHistory = new ItemHistory;
     newItemHistory.action = ItemActions.CREATE;
     newItemHistory.createdBy = this.data.user;
     newItemHistory.createdOn = Date.now();

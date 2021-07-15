@@ -1,14 +1,8 @@
 <mat-card class="mat-elevation-z0">
-    <mat-tab-group mat-align-tabs="center">
+    <mat-tab-group mat-align-tabs="center" dynamicHeight>
         <mat-tab label="Party Coin Bank">
             <br>
-            <div class="lobsterText">
-                <div class="bigLobsterText">
-                    Total Value in Silver &nbsp;&nbsp;
-                    <img src="../../../assets/silver.png" class="bigMoneyIcon">
-                    {{ currencyTransaction?.totalValueInSilver | number:'1.2-2' }}
-                    <br><br>
-                </div>
+            <div class="money-text">
                 <img src="../../../assets/platinum.png" class="moneyIcon">
                 Platinum &nbsp;
                 {{ currencyTransaction?.platinumTotal | number }} &nbsp;&nbsp;
@@ -24,6 +18,10 @@
                 <img src="../../../assets/gold.png" class="moneyIcon">
                 Gold &nbsp;
                 {{ currencyTransaction?.goldTotal | number }} &nbsp;&nbsp;
+                <br>
+                Total Value in Silver &nbsp;&nbsp;
+                <img src="../../../assets/silver.png" class="moneyIcon">
+                {{ currencyTransaction?.totalValueInSilver | number:'1.2-2' }}
             </div>
         </mat-tab>
     </mat-tab-group>

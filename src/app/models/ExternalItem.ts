@@ -9,5 +9,9 @@ export class ExternalItem {
     damage_dice?: string;
     damage_type?: string;
     cost?: string;
-    school?: string
+    school?: string;
+    range?: string;
+    duration?: string;
+    casting_time?: string;
+    properties?: string[];
 }
