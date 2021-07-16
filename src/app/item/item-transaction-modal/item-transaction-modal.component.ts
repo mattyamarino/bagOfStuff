@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
-import { ItemActions, ItemConstants, ItemValueByRarity } from 'src/app/config/ItemConstants';
+import { ItemActions, ItemConstants, ItemValueByRarity, MaxQuanityAllowed } from 'src/app/config/ItemConstants';
 import { UserConstants } from 'src/app/config/UserConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
@@ -40,10 +40,11 @@ export class ItemTransactionModalComponent implements OnInit {
       cost: new FormControl(''),
       description: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
-      quantity: new FormControl('1', [Validators.required, Validators.min(1), Validators.max(50), Validators.pattern('^(0|[1-9][0-9]*)$')])
+      quantity: new FormControl('1', [Validators.required, Validators.min(1), Validators.max(5), Validators.pattern('^(0|[1-9][0-9]*)$')])
     });
 
     this.isValidatorsRequireditemName();
+    this.setMaxQuanityValidator();
   }
 
 
@@ -55,6 +56,21 @@ export class ItemTransactionModalComponent implements OnInit {
         this.firstFormGroup.controls['itemName'].clearValidators();
       }
       this.firstFormGroup.controls['itemName'].updateValueAndValidity();
+    });
+  }
+
+  setMaxQuanityValidator(): void  {
+    this.secondFormGroup.get("type")?.valueChanges.subscribe(val => {
+      if(val === "gemstone") {
+        this.secondFormGroup.controls['quantity'].setValidators([Validators.required, Validators.min(1), Validators.max(MaxQuanityAllowed.GEMSTONE), Validators.pattern('^(0|[1-9][0-9]*)$')]);
+      } else {
+        if(!this.isAllowedQuantity()) {
+          this.secondFormGroup.get("quantity")?.setValue(1);
+          console.log(this.secondFormGroup)
+        }
+        this.secondFormGroup.controls['quantity'].setValidators([Validators.required, Validators.min(1), Validators.max(MaxQuanityAllowed.ALL_OTHERS), Validators.pattern('^(0|[1-9][0-9]*)$')]);
+      }
+      this.secondFormGroup.controls['quantity'].updateValueAndValidity();
     });
   }
 
@@ -196,6 +212,13 @@ export class ItemTransactionModalComponent implements OnInit {
     return UserConstants.DM
   }
 
+  getMaxAllowedQuantity(): number {
+    if(this.secondFormGroup.get('type')?.value === 'gemstone') {
+      return MaxQuanityAllowed.GEMSTONE;
+    }
+    return MaxQuanityAllowed.ALL_OTHERS;
+  }
+
   getItemValue(): string {
     return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "— —"
   }
@@ -237,6 +260,11 @@ export class ItemTransactionModalComponent implements OnInit {
 
   depositItem(): void {
     if (this.secondFormGroup.valid) {
+      let amountToCreate: string = "";
+      if(this.secondFormGroup.get('quantity')?.value > 1) {
+        amountToCreate = "Quantity To Create: " + this.secondFormGroup.get("quantity")?.value + "\n";
+      }
+
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         data: {
           confirm: "confirm",
@@ -246,6 +274,7 @@ export class ItemTransactionModalComponent implements OnInit {
             "Type: " + this.titleCasePipe.transform(this.secondFormGroup.get("type")?.value) + "\n" +
             "Rarity: " + this.titleCasePipe.transform(this.secondFormGroup.get("rarity")?.value) + "\n" +
             "Value In Silver: " + this.getItemValue() + "\n" +
+            amountToCreate +
             this.secondFormGroup.get("description")?.value
         }
       });

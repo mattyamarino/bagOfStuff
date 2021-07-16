@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CurrencyConstants } from 'src/app/config/CurrencyConstants';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
@@ -54,9 +55,10 @@ export class TransactionModalComponent implements OnInit {
     const group: any = {};
     group["description"] = new FormControl('', Validators.required);
     this.dataSource.forEach((element: { currency: string; }) => {
-      group[element.currency] = new FormControl('0', Validators.required);
+      group[element.currency] = new FormControl('11', Validators.max(1));
     });
     this.transactionFormGroup = new FormGroup(group);
+    this.transactionFormGroup.updateValueAndValidity()
   }
 
   isInvalidAmount(currency: string): boolean {
@@ -170,7 +172,7 @@ export class TransactionModalComponent implements OnInit {
       this.getTransactionTotalForCurrencyType(element.currency, transaction);
     });
     console.log(transaction)
-    return (!this.isEmptyTransaction(transaction) && this.isTransactionAmountsValid());
+    return (!this.isEmptyTransaction(transaction) && this.transactionFormGroup.valid && this.isTransactionAmountsValid());
   }
 
   updateAvailableAmounts(): void {
@@ -214,6 +216,7 @@ export class TransactionModalComponent implements OnInit {
     if (event.target.value == '') {
       event.target.value = 0;
     }
+    console.log(this.transactionFormGroup)
   }
 
   clearZeroAmount(event: any): void {
@@ -247,6 +250,14 @@ export class TransactionModalComponent implements OnInit {
     }
   }
 
+  getTransactionSymbol(): string {
+    return this.type === "Withdraw" ? "-" : "+";
+  }
+
+  getTransactionSummaryForCurrency(currency: string): string {
+    return this.transactionFormGroup.get(currency)?.value > 0 ? this.getTransactionSymbol() + this.transactionFormGroup.get(currency)!.value.toString() + " " + currency + "\n" : "";
+  }
+
   confirmAction(): void {
     if (this.validateTransaction(new MonetaryTransactionDTO)) {
 
@@ -256,7 +267,11 @@ export class TransactionModalComponent implements OnInit {
           confirm: "confirm " + this.type,
           cancel: "go back",
           title: "complete " + this.type + "?",
-          message: ""
+          message: this.getTransactionSummaryForCurrency("Platinum") +
+          this.getTransactionSummaryForCurrency("Electrum") +
+          this.getTransactionSummaryForCurrency("Silver") +
+          this.getTransactionSummaryForCurrency("Copper") +
+          this.getTransactionSummaryForCurrency("Gold")
         }
       });
 

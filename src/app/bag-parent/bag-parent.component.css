@@ -2,9 +2,9 @@
     background-image: url('../../assets/wallpaper.jpg');
     background-repeat: repeat;
     background-attachment: fixed;
-    height: 100vh;
-    min-height: 1800px;
-    overflow-x: visible;
+    height: fit-content;
+    min-height: calc(100vh + 300px);
+    overflow-y: visible;
 }
 
 .centerDie{

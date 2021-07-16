@@ -80,14 +80,26 @@
                     </mat-form-field><br>
                 </div>
 
-                <div *ngIf="isAllowedQuantity()">
+                <div *ngIf="isAllowedQuantity() && data.user == getDM()">
                     <mat-form-field appearance="fill" class="field">
-                        <mat-label>Item Quantity</mat-label>
+                        <mat-label>Item Quantity (max allowed: {{getMaxAllowedQuantity()}})</mat-label>
                         <input matInput 
                         numeric 
                         type="number"
                         formControlName="quantity" 
                         placeholder="Enter Quantity">
+                        <div *ngIf="secondFormGroup.controls['quantity'].invalid && (secondFormGroup.controls['quantity'].dirty || secondFormGroup.controls['quantity'].touched)">
+                            <div *ngIf="secondFormGroup.controls['quantity'].errors.max">
+                                <mat-error>
+                                    Exceeded Max Allowed Quantity
+                                </mat-error>
+                            </div>
+                            <div *ngIf="secondFormGroup.controls['quantity'].errors.min">
+                                <mat-error>
+                                    Minimum Quantity of 1 Required
+                                </mat-error>
+                            </div>
+                        </div>
                     </mat-form-field><br>
                 </div>
 

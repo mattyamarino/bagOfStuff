@@ -32,6 +32,13 @@
                                         Invalid Amount
                                     </mat-error>
                                 </div>
+                                <div *ngIf="transactionFormGroup.controls[element.currency].invalid">
+                                    <!-- <div *ngIf="transactionFormGroup.controls[element.currency].errors.max"> -->
+                                        <mat-error>
+                                            Exceeded Max Allowed Quantity
+                                        </mat-error>
+                                    <!-- </div> -->
+                                </div>
                             </mat-form-field>
                         </div>
                 </td>

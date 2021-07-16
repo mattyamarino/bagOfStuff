@@ -1,8 +1,4 @@
-Phase 1
-Call Service To Update Currency Totals
-Make Sure New Adjustment Amounts are Valid
-
-
-
-Phase 2
-Item Bank
+FIX coin and item bank are different widths on smaller screens
+FIX max amount validator on Currency transaction not working
+ADD ability to stack similar gems
+ADD ability to split gem stacks 
