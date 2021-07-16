@@ -33,11 +33,11 @@
                                     </mat-error>
                                 </div>
                                 <div *ngIf="transactionFormGroup.controls[element.currency].invalid">
-                                    <!-- <div *ngIf="transactionFormGroup.controls[element.currency].errors.max"> -->
+                                    <div *ngIf="transactionFormGroup.controls[element.currency].errors.max">
                                         <mat-error>
-                                            Exceeded Max Allowed Quantity
+                                            Exceeded Maximum {{type}}
                                         </mat-error>
-                                    <!-- </div> -->
+                                    </div>
                                 </div>
                             </mat-form-field>
                         </div>

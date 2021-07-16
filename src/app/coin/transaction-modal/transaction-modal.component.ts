@@ -55,7 +55,7 @@ export class TransactionModalComponent implements OnInit {
     const group: any = {};
     group["description"] = new FormControl('', Validators.required);
     this.dataSource.forEach((element: { currency: string; }) => {
-      group[element.currency] = new FormControl('11', Validators.max(1));
+      group[element.currency] = new FormControl('0', Validators.required);
     });
     this.transactionFormGroup = new FormGroup(group);
     this.transactionFormGroup.updateValueAndValidity()
@@ -75,6 +75,9 @@ export class TransactionModalComponent implements OnInit {
       this.transactionFormGroup.get(currency)!.setErrors({ 'incorrect': true });
     } else {
       this.transactionFormGroup.get(currency)!.setErrors(null);
+    }
+    if (amount > CurrencyConstants.maxAmount) {
+      this.transactionFormGroup.get(currency)?.setErrors({max: {max: CurrencyConstants.maxAmount, actual: amount}})
     }
     return result;
   }
