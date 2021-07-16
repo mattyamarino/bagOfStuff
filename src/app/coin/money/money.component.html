@@ -4,22 +4,23 @@
             <br>
             <div class="money-text">
                 <img src="../../../assets/platinum.png" class="moneyIcon">
-                Platinum &nbsp;
+                Platinum: &nbsp;
                 {{ currencyTransaction?.platinumTotal | number }} &nbsp;&nbsp;
                 <img src="../../../assets/electrum.png" class="moneyIcon">
-                Electrum &nbsp;
+                Electrum: &nbsp;
                 {{ currencyTransaction?.electrumTotal | number }} &nbsp;&nbsp;
                 <img src="../../../assets/silver.png" class="moneyIcon">
-                Silver &nbsp;
+                Silver: &nbsp;
                 {{ currencyTransaction?.silverTotal | number }} &nbsp;&nbsp;
                 <img src="../../../assets/copper.png" class="moneyIcon">
-                Copper &nbsp;
+                Copper: &nbsp;
                 {{ currencyTransaction?.copperTotal | number }} &nbsp;&nbsp;
                 <img src="../../../assets/gold.png" class="moneyIcon">
-                Gold &nbsp;
+                Gold: &nbsp;
                 {{ currencyTransaction?.goldTotal | number }} &nbsp;&nbsp;
                 <br>
-                Total Value in Silver &nbsp;&nbsp;
+                <span class="br"></span>
+                Total Value in Silver: &nbsp;&nbsp;
                 <img src="../../../assets/silver.png" class="moneyIcon">
                 {{ currencyTransaction?.totalValueInSilver | number:'1.2-2' }}
             </div>

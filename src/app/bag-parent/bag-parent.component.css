@@ -21,7 +21,8 @@
 
 .moneyCard{
     margin: auto;
-    width: 60%;
+    width: fit-content;
+    min-width: 50%;
     background-color: #424242;
     border: 5px solid #000;
 }

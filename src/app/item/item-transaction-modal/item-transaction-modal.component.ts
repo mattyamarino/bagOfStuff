@@ -40,7 +40,7 @@ export class ItemTransactionModalComponent implements OnInit {
       cost: new FormControl(''),
       description: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
-      quantity: new FormControl('')
+      quantity: new FormControl('1', [Validators.required, Validators.min(1), Validators.max(50), Validators.pattern('^(0|[1-9][0-9]*)$')])
     });
 
     this.isValidatorsRequireditemName();
@@ -156,7 +156,7 @@ export class ItemTransactionModalComponent implements OnInit {
   buildScroll(externalItem: ExternalItem): void {
     externalItem.type = "scroll"
     externalItem.rarity = ItemConstants.scrollStatsMap.get(externalItem.level_int!)?.rarity!;
-    externalItem.desc = "Spell Scroll\n" +
+    externalItem.desc = "Level " + externalItem.level_int + " Spell Scroll\n" +
       "Casting Time: " + externalItem.casting_time + "\n" +
       "Range: " + externalItem.range + "\n" +
       "Duration: " + externalItem.duration + "\n" +
@@ -231,14 +231,8 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   isAllowedQuantity(): boolean {
-    switch (this.secondFormGroup.get("type")!.value.toLowerCase()) {
-      case "adventuring gear":
-        return true;
-      case "gemstone":
-        return true;
-      default:
-        return false;
-    }
+    const selectedType = this.secondFormGroup.get("type")!.value.toLowerCase()
+    return ItemConstants.typesAllowedQuantity.some(type => type === selectedType);
   }
 
   depositItem(): void {
@@ -265,23 +259,33 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   completeTransaction(): void {
-    const itemData = Object.assign({}, this.buildItem());
+    const isGem = this.secondFormGroup.get("type")!.value.toLowerCase() === "gemstone"
+
+    const itemData = Object.assign({}, this.buildItem(isGem));
     const itemHistoryData = Object.assign({}, this.buildItemHistory());
-    console.log(itemData, itemHistoryData)
-    this.firestoreService.createItem(itemData, itemHistoryData);
+    
+    let counter: number = 0;
+    let amountToCreate: number = isGem ? 1 : this.secondFormGroup.get("quantity")!.value;
+
+    while(counter < amountToCreate) {
+      this.firestoreService.createItem(itemData, itemHistoryData);
+      counter++;
+    }
     this.closeModal();
   }
 
-  buildItem(): Item {
+  buildItem(isGem: boolean): Item {
     let newItem: Item = new Item;
     newItem.name = this.secondFormGroup.get("name")?.value;
     newItem.rarity = this.secondFormGroup.get("rarity")?.value;
     newItem.type = this.secondFormGroup.get("type")?.value;
     newItem.cost = this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : null;
-    newItem.quantity = this.secondFormGroup.get("quantity")?.value ? this.secondFormGroup.get("quantity")?.value : 1;
     newItem.description = this.secondFormGroup.get("description")?.value;
     newItem.owner = this.data.createdFor;
     newItem.lastUpdatedOn = Date.now();
+    if(isGem) {
+      newItem.quantity = this.secondFormGroup.get("quantity")?.value;
+    }
     return newItem;
   }
 

@@ -14,7 +14,10 @@
 
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td mat-cell *matCellDef="let element">{{element.name | titlecase}}</td>
+            <td mat-cell *matCellDef="let element">
+                {{element.name | titlecase}}
+                <span *ngIf="element.quantity > 1">({{element.quantity}})</span>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="type">
@@ -44,19 +47,23 @@
         </ng-container>
 
         <ng-container matColumnDef="withdraw">
-            <th mat-header-cell *matHeaderCellDef></th>
+            <th mat-header-cell *matHeaderCellDef>Move Item</th>
             <td mat-cell *matCellDef="let element">
                 <div class="button-container">
-                    <button class="small-button" mat-raised-button color="light-blue" (click)="moveItem()">Withdraw</button>
+                    <button class="small-button" mat-raised-button color="light-blue" (click)="moveItem()">
+                        <mat-icon>reply</mat-icon>
+                    </button>
                 </div>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef></th>
+            <th mat-header-cell *matHeaderCellDef>Delete Item</th>
             <td mat-cell *matCellDef="let element">
                 <div class="button-container">
-                    <button class="small-button" mat-raised-button color="orange" (click)="deleteItem()">Delete</button>
+                    <button class="small-button" mat-raised-button color="orange" (click)="deleteItem()">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
                 </div>
             </td>
         </ng-container>

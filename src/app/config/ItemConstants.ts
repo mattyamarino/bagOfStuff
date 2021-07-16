@@ -40,6 +40,19 @@ export class ItemConstants {
         "legendary",
         "artifact"
     ];
+
+    public static typesAllowedQuantity: string[] = [
+        "adventuring gear",
+        "gemstone",
+        "potion",
+        "scroll"
+    ]
+}
+
+export class ScrollStatistic {
+    rarity!: string;
+    DC!: number;
+    attackBonus!: number;
 }
 
 export enum ItemActions {
@@ -53,10 +66,4 @@ export enum ItemValueByRarity {
     VERYRARE = 35000,
     LEGENDARY = 175000,
     ARTIFACT = 500000
-}
-
-export class ScrollStatistic {
-    rarity!: string;
-    DC!: number;
-    attackBonus!: number;
 }
