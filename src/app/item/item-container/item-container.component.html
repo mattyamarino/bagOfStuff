@@ -9,7 +9,7 @@
         </div>
         <br><span class="br"></span>
         <div class="center-table">
-            <app-item-table user="bank"></app-item-table>
+            <app-item-table [user]="user" [isForBank]=true></app-item-table>
         </div>
     </mat-tab>
     <mat-tab label="My Items">
@@ -17,6 +17,7 @@
         <div class="button-container">
             <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">Transaction History</button>
         </div>
-        <app-item-table [user]="user"></app-item-table>
+        <br><span class="br"></span>
+        <app-item-table [user]="user" [isForBank]=false></app-item-table>
     </mat-tab>
 </mat-tab-group>

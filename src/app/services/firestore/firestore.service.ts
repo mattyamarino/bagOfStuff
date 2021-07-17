@@ -110,6 +110,7 @@ export class FirestoreService {
   }
 
   getItems(owner: string) {
+    console.log(owner)
     return this.firestore.collection(FirestoreConstants.items,
       ref => ref.where("owner", "==", owner)).valueChanges({ idField: 'id' });
   }

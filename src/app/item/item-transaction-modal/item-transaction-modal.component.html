@@ -65,7 +65,7 @@
                     </mat-select>
                 </mat-form-field><br>
 
-                <div *ngIf="data.user == getDM()">
+                <div *ngIf="data.user.role === 'dm'">
                     <mat-form-field appearance="fill" class="field">
                         <mat-label>(optional) Item Value
                             <span *ngIf="shouldDisplaySuggestedCost()">
@@ -80,7 +80,7 @@
                     </mat-form-field><br>
                 </div>
 
-                <div *ngIf="isAllowedQuantity() && data.user == getDM()">
+                <div *ngIf="isAllowedQuantity() && data.user.role === 'dm'">
                     <mat-form-field appearance="fill" class="field">
                         <mat-label>Item Quantity (max allowed: {{getMaxAllowedQuantity()}})</mat-label>
                         <input matInput 

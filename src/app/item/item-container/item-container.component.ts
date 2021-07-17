@@ -1,7 +1,7 @@
 import { Input } from '@angular/core';
 import { Component, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Item } from 'src/app/models/Item';
+import { User } from 'src/app/models/user';
 import { ItemTransactionModalComponent } from '../item-transaction-modal/item-transaction-modal.component';
 
 @Component({
@@ -10,7 +10,7 @@ import { ItemTransactionModalComponent } from '../item-transaction-modal/item-tr
   styleUrls: ['./item-container.component.css']
 })
 export class ItemContainerComponent implements OnInit {
-  @Input() user!: string;
+  @Input() user!: User;
 
   constructor(public dialog: MatDialog) { }
 

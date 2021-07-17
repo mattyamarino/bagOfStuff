@@ -8,7 +8,7 @@
         <app-money [currencyTransaction]="latestTransaction"></app-money>
         <div class="button-container">
             <br>
-            <span *ngIf="userComponent?.selectedUser == getDM()">
+            <span *ngIf="userComponent?.selectedUser.role == 'dm'">
                 <button mat-raised-button color="light-blue" (click)="openDepositDialog()">Deposit Coin</button>
                 &nbsp;&nbsp;&nbsp;
             </span>

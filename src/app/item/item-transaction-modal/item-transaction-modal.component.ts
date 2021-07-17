@@ -4,7 +4,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { ItemActions, ItemConstants, ItemValueByRarity, MaxQuanityAllowed } from 'src/app/config/ItemConstants';
-import { UserConstants } from 'src/app/config/UserConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
 import { Item } from 'src/app/models/Item';
@@ -208,10 +207,6 @@ export class ItemTransactionModalComponent implements OnInit {
     }
   }
 
-  getDM(): string {
-    return UserConstants.DM
-  }
-
   getMaxAllowedQuantity(): number {
     if(this.secondFormGroup.get('type')?.value === 'gemstone') {
       return MaxQuanityAllowed.GEMSTONE;
@@ -321,7 +316,7 @@ export class ItemTransactionModalComponent implements OnInit {
   buildItemHistory(): ItemHistory {
     let newItemHistory: ItemHistory = new ItemHistory;
     newItemHistory.action = ItemActions.CREATE;
-    newItemHistory.createdBy = this.data.user;
+    newItemHistory.createdBy = this.data.user.character + " (" + this.data.user.player + ")";
     newItemHistory.createdOn = Date.now();
     newItemHistory.currentOwner = this.data.createdFor;
     return newItemHistory;

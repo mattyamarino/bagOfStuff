@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Item } from 'src/app/models/Item';
+import { User } from 'src/app/models/user';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemDescriptionComponent } from '../item-description/item-description.component';
 
@@ -14,7 +15,8 @@ import { ItemDescriptionComponent } from '../item-description/item-description.c
   styleUrls: ['./item-table.component.css']
 })
 export class ItemTableComponent implements OnInit {
-  @Input() user!: string;
+  @Input() user?: User;
+  @Input() isForBank!: boolean;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<Item>([]);
@@ -44,7 +46,9 @@ export class ItemTableComponent implements OnInit {
   }
 
   getItems(): void {
-    this.firestoreService.getItems(this.user).subscribe(res => {
+    const query =  this.isForBank ? "bank" : this.user!.character!
+
+    this.firestoreService.getItems(query).subscribe(res => {
       this.firestoreService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
       this.dataSource.data = <Item[]><unknown>res;
     });

@@ -2,6 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CurrencyConstants } from 'src/app/config/CurrencyConstants';
+import { User } from 'src/app/models/user';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
@@ -17,7 +18,7 @@ export class TransactionModalComponent implements OnInit {
   displayedColumns: string[] = ['currency', 'transactionAmount', 'currentAmount', 'valueInSilver'];
   dataSource: any = [];
   transactionFormGroup!: FormGroup;
-  selectedUser!: string;
+  selectedUser!: User;
   type!: string;
   processingTransaction: boolean = false;
   submitAttempted: boolean = false;
@@ -156,7 +157,7 @@ export class TransactionModalComponent implements OnInit {
         newTransaction.description = this.transactionFormGroup.get('description')!.value;
         newTransaction.type = this.type;
         newTransaction.createdOn = Date.now();
-        newTransaction.createdBy = this.selectedUser;
+        newTransaction.createdBy = this.selectedUser.character + " (" + this.selectedUser.player + ")";
 
         const data = Object.assign({}, newTransaction);
 

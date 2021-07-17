@@ -8,7 +8,7 @@ import { User } from '../models/user';
 })
 export class UserComponent implements OnInit {
   @Input() users!: User[];
-  selectedUser?: string;
+  selectedUser?: User;
 
   constructor() { }
 

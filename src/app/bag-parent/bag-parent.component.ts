@@ -6,8 +6,6 @@ import { UserComponent } from '../user/user.component';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
 import { MonetaryHistoryComponent } from '../coin/monetary-history/monetary-history.component';
 import { FirestoreService } from '../services/firestore/firestore.service';
-import { UserConstants } from '../config/UserConstants';
-
 @Component({
   selector: 'app-bag-parent',
   templateUrl: './bag-parent.component.html',
@@ -75,10 +73,6 @@ export class BagParentComponent implements OnInit {
         }
       });
     });
-  }
-
-  getDM(): string {
-    return UserConstants.DM
   }
 
 }
