@@ -1,4 +1,5 @@
 export class MonetaryTransaction{
+    id!: string;
     platinumDeposited!: number;
     electrumDeposited!: number;
     silverDeposited!: number;

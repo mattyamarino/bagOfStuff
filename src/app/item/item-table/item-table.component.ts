@@ -1,10 +1,12 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Item } from 'src/app/models/Item';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { ItemDescriptionComponent } from '../item-description/item-description.component';
 
 @Component({
   selector: 'app-item-table',
@@ -29,7 +31,7 @@ export class ItemTableComponent implements OnInit {
     type: '', rarity: ''
   };
   
-  constructor(private firestoreService: FirestoreService) { }
+  constructor(private firestoreService: FirestoreService, private dialog: MatDialog) { }
   
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -83,21 +85,21 @@ export class ItemTableComponent implements OnInit {
   }
   // **************END FILTER METHODS**************
 
+  openItemDescription(item: Item): void {
+    console.log(item)
+    this.dialog.open(ItemDescriptionComponent, {
+      data: {
+        item: item
+      }
+    });
+  }
+
   moveItem(): void {
 
   }
 
   deleteItem(): void {
 
-  }
-
-  getRarity(rarity: string): string {
-    switch (rarity) {
-      case "very rare":
-        return 'very-rare';
-      default:
-        return rarity;
-    }
   }
 
   getItemIcon(type: string): string {

@@ -13,7 +13,7 @@ export class FirestoreService {
   constructor(private firestore: AngularFirestore) { }
 
   getUsers() {
-    return this.firestore.collection(FirestoreConstants.users).valueChanges();
+    return this.firestore.collection(FirestoreConstants.users).valueChanges({ idField: 'id' });
   }
 
   // CURRENCY FUNCTIONS
@@ -24,7 +24,7 @@ export class FirestoreService {
 
   getLatestTransaction() {
     return this.firestore.collection(FirestoreConstants.currencyTransactions,
-      ref => ref.orderBy("createdOn", "desc").limit(1)).valueChanges();
+      ref => ref.orderBy("createdOn", "desc").limit(1)).valueChanges({ idField: 'id' });
   }
 
   createCurrencyTransaction(data: any) {
@@ -111,7 +111,7 @@ export class FirestoreService {
 
   getItems(owner: string) {
     return this.firestore.collection(FirestoreConstants.items,
-      ref => ref.where("owner", "==", owner)).valueChanges();
+      ref => ref.where("owner", "==", owner)).valueChanges({ idField: 'id' });
   }
 
   sortItemsDescendingByLastUpdatedOn(items: Item[]): void {
@@ -124,6 +124,15 @@ export class FirestoreService {
     items.sort(function (y, x) {
       return y.name.toLowerCase().localeCompare(x.name.toLowerCase());
     });
+  }
+
+  getRarity(rarity: string): string {
+    switch (rarity) {
+      case "very rare":
+        return 'very-rare';
+      default:
+        return rarity;
+    }
   }
 
 }

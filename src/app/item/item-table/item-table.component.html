@@ -8,40 +8,52 @@
         <ng-container matColumnDef="icon">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-                <img [src]='"../../../assets/"+getItemIcon(element.type)+".jpg"' class="item-icon">
+                <div (click)="openItemDescription(element)">
+                    <img [src]='"../../../assets/"+getItemIcon(element.type)+".jpg"' class="item-icon">
+                </div>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
             <td mat-cell *matCellDef="let element">
-                {{element.name | titlecase}}
-                <span *ngIf="element.quantity > 1">({{element.quantity}})</span>
+                <div (click)="openItemDescription(element)">
+                    <span [ngClass]="firestoreService.getRarity(element.rarity)">
+                        {{element.name | titlecase}}
+                        <span *ngIf="element.quantity > 1">({{element.quantity}})</span>
+                    </span>
+                </div>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="type">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-            <td mat-cell *matCellDef="let element">{{element.type | titlecase}}</td>
+            <td mat-cell *matCellDef="let element">
+                <div (click)="openItemDescription(element)">
+                    {{element.type | titlecase}}
+                </div>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="rarity">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Rarity</th>
             <td mat-cell *matCellDef="let element">
-                <span [ngClass]="getRarity(element.rarity)">
+                <div (click)="openItemDescription(element)">
                     {{element.rarity | titlecase}}
-                </span>
+                </div>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="cost">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Value in SP</th>
             <td mat-cell *matCellDef="let element">
-                <div *ngIf="element.cost != null">
-                    {{element.cost | number}}
-                </div>
-                <div *ngIf="element.cost == null">
-                    — —
+                <div (click)="openItemDescription(element)">
+                    <div *ngIf="element.cost != null">
+                        {{element.cost | number}}
+                    </div>
+                    <div *ngIf="element.cost == null">
+                        — —
+                    </div>
                 </div>
             </td>
         </ng-container>
@@ -51,7 +63,9 @@
             <td mat-cell *matCellDef="let element">
                 <div class="button-container">
                     <button class="small-button" mat-raised-button color="light-blue" (click)="moveItem()">
-                        <mat-icon>reply</mat-icon>
+                        <div class="center-icon">
+                            <mat-icon>forward</mat-icon>
+                        </div>
                     </button>
                 </div>
             </td>
@@ -62,7 +76,9 @@
             <td mat-cell *matCellDef="let element">
                 <div class="button-container">
                     <button class="small-button" mat-raised-button color="orange" (click)="deleteItem()">
-                        <mat-icon>delete_forever</mat-icon>
+                        <div class="center-icon">
+                            <mat-icon>delete_forever</mat-icon>
+                        </div>
                     </button>
                 </div>
             </td>

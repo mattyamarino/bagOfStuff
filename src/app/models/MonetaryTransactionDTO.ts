@@ -1,4 +1,5 @@
 export class MonetaryTransactionDTO{
+    id!: string;
     platinumDeposited!: number;
     electrumDeposited!: number;
     silverDeposited!: number;

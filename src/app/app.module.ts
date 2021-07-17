@@ -38,6 +38,8 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { TitleCasePipe } from '@angular/common';
+import { ItemDescriptionComponent } from './item/item-description/item-description.component';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { TitleCasePipe } from '@angular/common';
     ConfirmationDialogComponent,
     FilterMenuComponent,
     ItemTransactionModalComponent,
+    ItemDescriptionComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,8 @@ import { TitleCasePipe } from '@angular/common';
     MatButtonToggleModule,
     MatStepperModule,
     MatRadioModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDividerModule,
   ],
   providers: [MatDatepickerModule, TitleCasePipe],
   bootstrap: [AppComponent],

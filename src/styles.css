@@ -71,6 +71,30 @@ text-align: center;
    display: flex;
  }
 
+ .common {
+   color: rgb(182, 182, 182);
+}
+
+.uncommon {
+   color: rgb(56, 219, 6);
+}
+
+.rare {
+   color: rgb(0, 119, 255);
+}
+
+.very-rare {
+   color: rgb(178, 122, 230);
+}
+
+.legendary {
+   color: orange;
+}
+
+.artifact {
+   color: peru;
+}
+
 /* MAT TAB STYLING */
 .mat-tab-label.mat-tab-label-active {
    text-align: center;

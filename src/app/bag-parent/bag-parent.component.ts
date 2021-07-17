@@ -16,48 +16,29 @@ import { UserConstants } from '../config/UserConstants';
 export class BagParentComponent implements OnInit {
   users: User[] = [];
   latestTransaction!: MonetaryTransaction;
-  loading!: boolean;
-  userLoading!: boolean;
-  currencyLoading!: boolean;
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
   tempNumber: number = 0;
 
   constructor(private firestoreService: FirestoreService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.loading = true;
     this.getCurrencyTotals();
     this.getUsers();
   }
 
   getCurrencyTotals(): void {
-    this.currencyLoading = true;
     this.firestoreService.getLatestTransaction().subscribe(res => {
       const resArray = <MonetaryTransaction[]>res;
       this.latestTransaction = resArray[0];
       this.firestoreService.calculateTotalValueInSilver(this.latestTransaction);
-      this.currencyLoading = false;
+
     });
   }
 
   getUsers(): void {
-    this.userLoading = true;
     this.firestoreService.getUsers().subscribe(async res => {
       this.users = <User[]>res;
-      await this.delay(1200);
-      this.userLoading = false;
     });
-  }
-
-  private delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-   checkLoading(): boolean {
-    if (!this.userLoading && !this.currencyLoading) {
-      return false;
-    }
-    return true;
   }
 
     openDepositDialog(): void {

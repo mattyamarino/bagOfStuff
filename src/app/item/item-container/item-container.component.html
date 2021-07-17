@@ -14,6 +14,9 @@
     </mat-tab>
     <mat-tab label="My Items">
         <br>
+        <div class="button-container">
+            <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">Transaction History</button>
+        </div>
         <app-item-table [user]="user"></app-item-table>
     </mat-tab>
 </mat-tab-group>

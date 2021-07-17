@@ -1,0 +1,26 @@
+<mat-dialog-content>
+    <mat-card class="mat-elevation-z0" class="card-width">
+        <mat-card-header>
+            <img mat-card-avatar [src]='"../../../assets/"+getItemIcon(data.item.type)+".jpg"' class="item-icon">
+            <mat-card-title>
+                <span [ngClass]="firestoreService.getRarity(data.item.rarity)">
+                    {{data.item.name | titlecase}}
+                </span>
+            </mat-card-title>
+            <mat-card-subtitle>
+                {{data.item.rarity | titlecase}} {{data.item.type | titlecase}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <br>
+        <mat-card-content>
+            <div style="white-space: pre-line">
+                {{data.item.description}}
+            </div>
+            <div *ngIf="data.item.quantity > 1">
+                <br>
+                Quantity: {{data.item.quantity}}
+            </div>
+        </mat-card-content>
+    </mat-card>
+</mat-dialog-content>
