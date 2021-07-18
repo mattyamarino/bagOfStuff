@@ -23,6 +23,7 @@ export class ItemTransactionModalComponent implements OnInit {
   externalItems: ExternalItem[] = [];
   itemTypes: string[] = ItemConstants.itemTypes;
   rarityTypes: string[] = ItemConstants.rarityTypes;
+  pregeneratedItem: Item = new Item;
 
   constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog,
     public dialogRef: MatDialogRef<ItemTransactionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
@@ -165,7 +166,9 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup.get("name")?.setValue(externalItem!.name.toLowerCase());
     this.secondFormGroup.get("rarity")?.setValue(rarity);
     this.secondFormGroup.get("type")?.setValue(type[0].trim());
+    console.log(this.secondFormGroup)
 
+    this.pregeneratedItem = this.buildItem(false);
   }
 
   buildScroll(externalItem: ExternalItem): void {
@@ -285,7 +288,10 @@ export class ItemTransactionModalComponent implements OnInit {
   completeTransaction(): void {
     const isGem = this.secondFormGroup.get("type")!.value.toLowerCase() === "gemstone"
 
-    const itemData = Object.assign({}, this.buildItem(isGem));
+    let itemData = Object.assign({}, this.buildItem(isGem));
+    if(!this.isPregeneratedItem(itemData)) {
+      itemData.name = itemData.name + "*"
+    }
     const itemHistoryData = Object.assign({}, this.buildItemHistory());
     
     let counter: number = 0;
@@ -320,6 +326,23 @@ export class ItemTransactionModalComponent implements OnInit {
     newItemHistory.createdOn = Date.now();
     newItemHistory.currentOwner = this.data.createdFor;
     return newItemHistory;
+  }
+
+  isPregeneratedItem(itemToCheck: Item): boolean {
+    let rarityMatch: boolean = true;
+    let costsMatch: boolean = true;
+    if(this.pregeneratedItem.rarity) {
+      rarityMatch = itemToCheck.rarity === this.pregeneratedItem.rarity 
+    }
+
+    if(this.pregeneratedItem.cost) {
+      costsMatch = itemToCheck.cost === this.pregeneratedItem.cost 
+    }
+
+    return itemToCheck.name === this.pregeneratedItem.name && 
+    itemToCheck.type === this.pregeneratedItem.type &&
+    itemToCheck.description === this.pregeneratedItem.description &&
+    rarityMatch && costsMatch
   }
 
   closeModal(): void {

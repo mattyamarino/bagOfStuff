@@ -110,7 +110,6 @@ export class FirestoreService {
   }
 
   getItems(owner: string) {
-    console.log(owner)
     return this.firestore.collection(FirestoreConstants.items,
       ref => ref.where("owner", "==", owner)).valueChanges({ idField: 'id' });
   }
@@ -136,4 +135,33 @@ export class FirestoreService {
     }
   }
 
+  stackPregeneratedItems(items: Item[]): Item[] {
+    let itemsMap = new Map<string, Item>();
+    items.forEach(item => {
+      item.duplicateItems = [];
+      const key = item.name + " " + item.rarity;
+      if (item.name.slice(-1) === "*" || itemsMap.get(key) == null) {
+        itemsMap.set(key, item)
+      } else {
+        itemsMap.get(key)!.duplicateItems!.push(item)
+      }
+    });
+    return Array.from(itemsMap.values())
+  }
+
+  getQuantity(item: Item): number {
+    let quantity: number;
+    if(item.type === "gemstone") {
+      quantity = item.quantity!
+      item.duplicateItems.forEach(item => {
+        quantity += item.quantity!;
+      });
+    } else {
+      quantity = 1;
+      item.duplicateItems.forEach(item => {
+        quantity++;
+      });
+    }
+    return quantity;
+  }
 }

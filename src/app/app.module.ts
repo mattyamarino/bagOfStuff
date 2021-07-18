@@ -40,6 +40,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { TitleCasePipe } from '@angular/common';
 import { ItemDescriptionComponent } from './item/item-description/item-description.component';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import {MatDividerModule} from '@angular/material/divider';
     MatRadioModule,
     MatAutocompleteModule,
     MatDividerModule,
+    MatTooltipModule,
   ],
   providers: [MatDatepickerModule, TitleCasePipe],
   bootstrap: [AppComponent],

@@ -20,7 +20,7 @@
                 <div (click)="openItemDescription(element)">
                     <span [ngClass]="firestoreService.getRarity(element.rarity)">
                         {{element.name | titlecase}}
-                        <span *ngIf="element.quantity > 1">({{element.quantity}})</span>
+                        <span *ngIf="element.duplicateItems.length > 0 || element.quantity > 1">({{getQuantity(element)}})</span>
                     </span>
                 </div>
             </td>
@@ -59,10 +59,13 @@
         </ng-container>
 
         <ng-container matColumnDef="withdraw">
-            <th mat-header-cell *matHeaderCellDef>Move Item</th>
+            <th mat-header-cell *matHeaderCellDef>Move</th>
             <td mat-cell *matCellDef="let element">
                 <div class="button-container">
-                    <button class="small-button" mat-raised-button color="light-blue" (click)="moveItem()">
+                    <button class="small-button" 
+                    mat-raised-button color="light-blue" 
+                    matTooltip="Move Item(s) To My Bank"
+                    (click)="moveItem()">
                         <div class="center-icon">
                             <mat-icon>forward</mat-icon>
                         </div>
@@ -72,10 +75,13 @@
         </ng-container>
 
         <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef>Delete Item</th>
+            <th mat-header-cell *matHeaderCellDef>Discard</th>
             <td mat-cell *matCellDef="let element">
                 <div class="button-container">
-                    <button class="small-button" mat-raised-button color="orange" (click)="deleteItem()">
+                    <button class="small-button" 
+                    mat-raised-button color="orange"
+                    matTooltip="Discard Item(s) that are sold, consumed, stolen, etc..."
+                    (click)="deleteItem()">
                         <div class="center-icon">
                             <mat-icon>delete_forever</mat-icon>
                         </div>

@@ -50,10 +50,13 @@ export class ItemTableComponent implements OnInit {
 
     this.firestoreService.getItems(query).subscribe(res => {
       this.firestoreService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
-      this.dataSource.data = <Item[]><unknown>res;
+      this.dataSource.data = this.firestoreService.stackPregeneratedItems(<Item[]><unknown>res);
     });
   }
 
+  getQuantity(item: Item): number {
+    return this.firestoreService.getQuantity(item);
+  }
 
   // **************BEGIN FILTER METHODS**************
   customFilterPredicate() {
