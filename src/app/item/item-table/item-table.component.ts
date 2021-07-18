@@ -42,6 +42,7 @@ export class ItemTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
@@ -93,7 +94,6 @@ export class ItemTableComponent implements OnInit {
   // **************END FILTER METHODS**************
 
   openItemDescription(item: Item): void {
-    console.log(item)
     this.dialog.open(ItemDescriptionComponent, {
       data: {
         item: item

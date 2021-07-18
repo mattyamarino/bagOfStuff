@@ -6,3 +6,7 @@
   margin: 0px !important;
   padding: 0px !important;
 }
+
+.mat-card-title {
+  font-family: 'Poppins', sans-serif;
+}

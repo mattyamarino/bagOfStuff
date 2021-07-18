@@ -39,6 +39,7 @@ export class ItemTransactionModalComponent implements OnInit {
       type: new FormControl('', Validators.required),
       cost: new FormControl(''),
       description: new FormControl('', Validators.required),
+      origin: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
       quantity: new FormControl('1', [Validators.required, Validators.min(1), Validators.max(5), Validators.pattern('^(0|[1-9][0-9]*)$')])
     });
@@ -66,7 +67,6 @@ export class ItemTransactionModalComponent implements OnInit {
       } else {
         if(!this.isAllowedQuantity()) {
           this.secondFormGroup.get("quantity")?.setValue(1);
-          console.log(this.secondFormGroup)
         }
         this.secondFormGroup.controls['quantity'].setValidators([Validators.required, Validators.min(1), Validators.max(MaxQuanityAllowed.ALL_OTHERS), Validators.pattern('^(0|[1-9][0-9]*)$')]);
       }
@@ -126,7 +126,6 @@ export class ItemTransactionModalComponent implements OnInit {
   getScrolls(query: string): void {
     const rawQuery = query.split("scroll of");
       this.httpService.getScrolls(rawQuery[1]).subscribe(res => {
-        console.log(res)
         const items: ExternalOpen5EResponse = res;
         items.results.forEach(item => {
           item.name = "Scroll Of " + item.name;
@@ -166,7 +165,6 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup.get("name")?.setValue(externalItem!.name.toLowerCase());
     this.secondFormGroup.get("rarity")?.setValue(rarity);
     this.secondFormGroup.get("type")?.setValue(type[0].trim());
-    console.log(this.secondFormGroup)
 
     this.pregeneratedItem = this.buildItem(false);
   }
@@ -325,6 +323,7 @@ export class ItemTransactionModalComponent implements OnInit {
     newItemHistory.createdBy = this.data.user.character + " (" + this.data.user.player + ")";
     newItemHistory.createdOn = Date.now();
     newItemHistory.currentOwner = this.data.createdFor;
+    newItemHistory.origin = this.secondFormGroup.get("origin")?.value;
     return newItemHistory;
   }
 

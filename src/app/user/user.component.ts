@@ -15,10 +15,13 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  setAssociatedPlayerCharacters(user:User): void {
+    this.selectedUser!.associatedPlayerCharacters = user.role === "dm" ? this.users : undefined;
+  }
+
   switchUser(): void {
     if(this.selectedUser) {
       this.selectedUser = undefined;
     }
   }
-
 }

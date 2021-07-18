@@ -175,7 +175,6 @@ export class TransactionModalComponent implements OnInit {
     this.dataSource.forEach((element: { currency: string; transactionAmount: number; }) => {
       this.getTransactionTotalForCurrencyType(element.currency, transaction);
     });
-    console.log(transaction)
     return (!this.isEmptyTransaction(transaction) && this.transactionFormGroup.valid && this.isTransactionAmountsValid());
   }
 
@@ -220,7 +219,6 @@ export class TransactionModalComponent implements OnInit {
     if (event.target.value == '') {
       event.target.value = 0;
     }
-    console.log(this.transactionFormGroup)
   }
 
   clearZeroAmount(event: any): void {

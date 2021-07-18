@@ -35,15 +35,16 @@ export class BagParentComponent implements OnInit {
 
   getUsers(): void {
     this.firestoreService.getUsers().subscribe(async res => {
+      this.firestoreService.sortUsersByNameAsscending(<User[]>res);
       this.users = <User[]>res;
     });
   }
 
-    openDepositDialog(): void {
-    this.dialog.open(TransactionModalComponent, 
+  openDepositDialog(): void {
+    this.dialog.open(TransactionModalComponent,
       {
         data: {
-          latestTransaction: this.latestTransaction, 
+          latestTransaction: this.latestTransaction,
           selectedUser: this.userComponent?.selectedUser,
           type: "Deposit"
         }
@@ -51,10 +52,10 @@ export class BagParentComponent implements OnInit {
   }
 
   openWithdrawDialog(): void {
-    this.dialog.open(TransactionModalComponent, 
+    this.dialog.open(TransactionModalComponent,
       {
         data: {
-          latestTransaction: this.latestTransaction, 
+          latestTransaction: this.latestTransaction,
           selectedUser: this.userComponent?.selectedUser,
           type: "Withdraw"
         }
@@ -62,10 +63,10 @@ export class BagParentComponent implements OnInit {
   }
 
   openMonetaryHistoryDialog(): void {
-    let queryDate = new Date(new Date().setDate(new Date().getDate()-30)).getTime();
-    
+    let queryDate = new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
+
     this.firestoreService.getCurrencyTransactions(queryDate).subscribe(res => {
-      const refArray =  res.docs.map(doc => doc.data());
+      const refArray = res.docs.map(doc => doc.data());
       this.firestoreService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
       this.dialog.open(MonetaryHistoryComponent, {
         data: {

@@ -4,7 +4,7 @@
     <br>
     <app-user [users]="users" #user></app-user>
     <br><br>
-    <div class="moneyCard" *ngIf="userComponent?.selectedUser !== undefined">
+    <div class="money-card" *ngIf="userComponent?.selectedUser !== undefined">
         <app-money [currencyTransaction]="latestTransaction"></app-money>
         <div class="button-container">
             <br>
@@ -20,7 +20,7 @@
         <br>
     </div>
     <br><br><br>
-    <div *ngIf="userComponent?.selectedUser !== undefined" class="moneyCard">
+    <div *ngIf="userComponent?.selectedUser !== undefined" class="item-card">
         <app-item-container [user]="this.userComponent?.selectedUser"></app-item-container>
     </div>
     <br><br><br>

@@ -11,10 +11,24 @@ import { ItemTransactionModalComponent } from '../item-transaction-modal/item-tr
 })
 export class ItemContainerComponent implements OnInit {
   @Input() user!: User;
+  players: User[] = [];
 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    this.populatePlayers()
+  }
+  
+  populatePlayers(): void {
+    if(this.user.role === "dm") {
+      this.players = this.user.associatedPlayerCharacters!;
+    } else {
+      this.players.push(this.user)
+    }
+  }
+
+  getPlayerBankLabel(user: User): string {
+    return user.role === "dm" ? "DM's Stash" : user.character.split(" ")[0] + "'s Items";
   }
 
   openDepositDialog(): void {

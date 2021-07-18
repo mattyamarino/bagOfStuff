@@ -64,7 +64,8 @@
                 <div class="button-container">
                     <button class="small-button" 
                     mat-raised-button color="light-blue" 
-                    matTooltip="Move Item(s) To My Bank"
+                    matTooltip="Move Item(s) To Personal Bank"
+                    [matTooltipShowDelay]="500"
                     (click)="moveItem()">
                         <div class="center-icon">
                             <mat-icon>forward</mat-icon>
@@ -81,6 +82,7 @@
                     <button class="small-button" 
                     mat-raised-button color="orange"
                     matTooltip="Discard Item(s) that are sold, consumed, stolen, etc..."
+                    [matTooltipShowDelay]="500"
                     (click)="deleteItem()">
                         <div class="center-icon">
                             <mat-icon>delete_forever</mat-icon>

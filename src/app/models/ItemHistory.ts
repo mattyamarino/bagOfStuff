@@ -4,6 +4,7 @@ export class ItemHistory {
     action!: string;
     createdOn!: number;
     createdBy!: string;
+    origin?: string;
     transactionQuantity?: string;
     currentQuantity?: string;
     previousCost?: number;

@@ -4,6 +4,7 @@ import { FirestoreConstants } from 'src/app/config/FirestoreConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { Item } from 'src/app/models/Item';
 import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
+import { User } from 'src/app/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,15 @@ export class FirestoreService {
 
   constructor(private firestore: AngularFirestore) { }
 
+  // USER FUNCTIONS
   getUsers() {
     return this.firestore.collection(FirestoreConstants.users).valueChanges({ idField: 'id' });
+  }
+
+  sortUsersByNameAsscending(users: User[]): void {
+    users.sort(function (y, x) {
+      return y.character.toLowerCase().localeCompare(x.character.toLowerCase());
+    });
   }
 
   // CURRENCY FUNCTIONS

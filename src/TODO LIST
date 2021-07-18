@@ -1,4 +1,9 @@
 FIX coin and item bank are different widths on smaller screens
-FIX max amount validator on Currency transaction not working
-ADD ability to stack similar gems
+
+FIX page height to not shrink if content becomes smaller
+
+ADD dynamic tooltip label for move action (ex move to MY bank, move to PARTY bank)
+
 ADD ability to split gem stacks 
+
+REFACTOR player label for item bank to be unique if duplicate characters with same first name.

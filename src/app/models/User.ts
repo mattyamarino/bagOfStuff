@@ -3,4 +3,5 @@ export class User{
     player!: string;
     character!: string;
     role!: string;
+    associatedPlayerCharacters?: User[];
 }

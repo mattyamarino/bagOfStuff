@@ -19,12 +19,21 @@
     width: 25%;
 }
 
-.moneyCard{
+.money-card{
     margin: auto;
     width: fit-content;
     min-width: 50%;
     background-color: #424242;
     border: 5px solid #000;
+}
+
+.item-card{
+    margin: auto;
+    width: fit-content;
+    min-width: 50%;
+    background-color: #424242;
+    border: 5px solid #000;
+    max-width: 80vw;
 }
 
 
