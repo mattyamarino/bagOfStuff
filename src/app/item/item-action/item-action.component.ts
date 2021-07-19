@@ -5,6 +5,7 @@ import { ItemActions } from 'src/app/config/ItemConstants';
 import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { ItemService } from 'src/app/services/item/item.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -17,7 +18,8 @@ export class ItemActionComponent implements OnInit {
   destination!: string;
   quantity: FormControl = new FormControl;
 
-  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private firestoreService: FirestoreService) { }
+  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, 
+  private firestoreService: FirestoreService, public itemService: ItemService) { }
 
   ngOnInit(): void {
     this.setDestination();
@@ -25,7 +27,7 @@ export class ItemActionComponent implements OnInit {
   }
 
   setDestination(): void {
-    this.destination = this.data.item.owner === "bank" ? this.data.user.character : "bank"
+    this.destination = this.data.item.owner === "bank" ? this.data.user.character : this.data.action === "delete" ? "deleted" : "bank"
     this.destinationLabel = this.data.item.owner === "bank" ? this.data.user.short + "'s Item Vault" : "Party Item Vault";
   }
 
@@ -65,10 +67,17 @@ export class ItemActionComponent implements OnInit {
       if(existingItem.owner === this.data.item.owner && existingItem.quantity! >= this.data.item.quantity - this.quantity.value) {
         if(existingItem.quantity === this.quantity.value) {
           this.firestoreService.updateItemOwner(this.data.item.id, this.destination);
-          this.firestoreService.createItemHistory(this.buildItemHistory(), this.data.item.id);
+          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("owner")), this.data.item.id);
+        } else if (this.data.action === "delete" && this.data.item.quantity - this.quantity.value > 0) {
+          this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.quantity.value);
+          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
+        } else if (this.data.action === "delete") {
+          this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "deleted", this.data.item.quantity - this.quantity.value);
+          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
         } else {
-          this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.quantity.value)
-          // this.firestoreService.createItemHistory(this.build)
+          this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.quantity.value);
+          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("quantity")), this.data.item.id);
+          this.firestoreService.createItem(this.itemService.transformToObject(this.buildItem()), this.itemService.transformToObject(this.buildItemHistory("create")))
         }
       } else {
         console.log("???? FAIL I GUESS ???? FIX PLS")
@@ -77,8 +86,29 @@ export class ItemActionComponent implements OnInit {
     });
   }
 
-  buildItemHistory(): ItemHistory {
-    return new ItemHistory;
+  buildItem(): Item {
+    return this.itemService.buildItem(
+      this.data.item.name,
+      this.data.item.rarity,
+      this.data.item.type,
+      this.data.item.cost,
+      this.data.item.description,
+      this.destination,
+      this.quantity.value
+    );
+  }
+
+  buildItemHistory(updateType: string): ItemHistory {
+    return this.itemService.buildItemHistory(
+      this.data.item.id,
+      this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE: ItemActions.DELETE,
+      this.data.user.character,
+      updateType === "owner" ? this.data.item.owner : undefined,
+      updateType === "delete" ? "deleted" : updateType === "owner" || updateType === "create" ? this.destination : undefined,
+      updateType === "quantity" || updateType === "delete" ? this.data.item.quantity : undefined,
+      updateType === "quantity" || updateType === "delete" ? this.data.item.quantity - this.quantity.value : updateType === "create" ? this.quantity.value : undefined,
+      updateType === "create" ? this.data.item.id : undefined
+    )
   }
 
   closeModal(): void {

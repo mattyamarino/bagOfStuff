@@ -10,6 +10,10 @@ export class ItemService {
 
   constructor() { }
 
+  transformToObject(item: any) {
+    return Object.assign({}, item);
+  }
+
   buildItem(name: string, rarity: string, type: string, cost: number, description: string, owner: string, quantity: number): Item {
     let newItem: Item = new Item;
     newItem.name = name;
@@ -27,7 +31,7 @@ export class ItemService {
   buildItemHistory(id: any, action: string, createdBy: string, previousOwner: any, currentOwner: any, 
     previousQuantity: any, currentQuantity: any, origin: any): ItemHistory {
     let newItemHistory: ItemHistory = new ItemHistory;
-    if(id) {newItemHistory.id = id;}
+    if(id) {newItemHistory.itemId = id;}
     newItemHistory.action = action
     newItemHistory.createdBy = createdBy
     newItemHistory.createdOn = Date.now();

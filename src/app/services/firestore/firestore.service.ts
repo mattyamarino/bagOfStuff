@@ -108,4 +108,18 @@ export class FirestoreService {
         console.error("Error updating document: ", error);
       });
   }
+
+  updateItemOwnerAndQuantity(id: string, owner: string, quantity: number) {
+    return this.firestore.collection(FirestoreConstants.items).doc(id).update({
+      owner: owner,
+      quantity: quantity,
+      lastUpdatedOn: Date.now()
+    })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  }
 }

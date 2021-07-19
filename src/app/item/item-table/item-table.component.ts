@@ -111,8 +111,14 @@ export class ItemTableComponent implements OnInit {
     });
   }
 
-  deleteItem(): void {
-
+  deleteItem(item: Item): void {
+    this.dialog.open(ItemActionComponent, {
+      data: {
+       item: item,
+       user: this.user,
+       action: "delete"
+      }
+    });
   }
 
   getItemIcon(type: string): string {

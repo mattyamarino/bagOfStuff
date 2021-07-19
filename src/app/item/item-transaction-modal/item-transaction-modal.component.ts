@@ -287,18 +287,16 @@ export class ItemTransactionModalComponent implements OnInit {
   completeTransaction(): void {
     const isGem = this.secondFormGroup.get("type")!.value.toLowerCase() === "gemstone"
 
-    let itemData = Object.assign({}, this.buildItem());
+    let itemData = this.itemService.transformToObject(this.buildItem())
     if(!this.isPregeneratedItem(itemData)) {
       itemData.name = itemData.name + "*"
     }
-    const itemHistoryData = Object.assign({}, this.buildItemHistory());
-    console.log(itemHistoryData)
     
     let counter: number = 0;
     let amountToCreate: number = isGem ? 1 : this.secondFormGroup.get("quantity")!.value;
 
     while(counter < amountToCreate) {
-      this.firestoreService.createItem(itemData, itemHistoryData);
+      this.firestoreService.createItem(itemData, this.itemService.transformToObject(this.buildItemHistory()));
       counter++;
     }
     this.closeModal();
@@ -324,7 +322,7 @@ export class ItemTransactionModalComponent implements OnInit {
     undefined,
     this.data.createdFor,
     undefined,
-    undefined,
+    this.secondFormGroup.get("quantity")?.value,
     this.secondFormGroup.get("origin")?.value
     );
   }

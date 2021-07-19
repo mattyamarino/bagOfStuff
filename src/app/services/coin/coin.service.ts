@@ -8,6 +8,10 @@ export class CoinService {
 
   constructor() { }
 
+  transformToObject(transaction: MonetaryTransaction): Object {
+    return Object.assign({}, transaction);
+  }
+
   sortTransactionsDescendingByDate(currencyTransactions: MonetaryTransaction[]): void {
     currencyTransactions.sort(function (x, y) {
       return y.createdOn - x.createdOn;
