@@ -3,7 +3,7 @@
         <mat-card-header>
             <img mat-card-avatar [src]='"../../../assets/"+getItemIcon(data.item.type)+".jpg"' class="item-icon">
             <mat-card-title>
-                <span [ngClass]="firestoreService.getRarity(data.item.rarity)">
+                <span [ngClass]="itemService.getRarity(data.item.rarity)">
                     {{data.item.name | titlecase}}
                 </span>
             </mat-card-title>

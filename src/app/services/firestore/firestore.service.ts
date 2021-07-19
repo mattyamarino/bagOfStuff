@@ -18,12 +18,6 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.users).valueChanges({ idField: 'id' });
   }
 
-  sortUsersByNameAsscending(users: User[]): void {
-    users.sort(function (y, x) {
-      return y.character.toLowerCase().localeCompare(x.character.toLowerCase());
-    });
-  }
-
   // CURRENCY FUNCTIONS
   getCurrencyTransactions(queryDate: number) {
     return this.firestore.collection(FirestoreConstants.currencyTransactions,
@@ -49,43 +43,6 @@ export class FirestoreService {
     });
   }
 
-  getLatestTransactionFromList(currencyTransactions: MonetaryTransaction[]): MonetaryTransaction {
-    if (currencyTransactions.length === 0) {
-      let transaction: MonetaryTransaction = new MonetaryTransaction;
-      transaction.platinumTotal = 0;
-      transaction.electrumTotal = 0;
-      transaction.silverTotal = 0;
-      transaction.copperTotal = 0;
-      transaction.goldTotal = 0;
-      return transaction;
-    } else {
-      this.sortTransactionsDescendingByDate(currencyTransactions);
-      return currencyTransactions[0];
-    }
-  }
-
-  sortTransactionsDescendingByDate(currencyTransactions: MonetaryTransaction[]): void {
-    currencyTransactions.sort(function (x, y) {
-      return y.createdOn - x.createdOn;
-    });
-  }
-
-  calculateTotalValueInSilver(transaction: MonetaryTransaction): void {
-    transaction.totalValueInSilver = (transaction.platinumTotal * 100);
-    transaction.totalValueInSilver += (transaction.electrumTotal * 50);
-    transaction.totalValueInSilver += transaction.silverTotal;
-    transaction.totalValueInSilver += (transaction.copperTotal / 10);
-    transaction.totalValueInSilver += (transaction.goldTotal / 10);
-  }
-
-  calculateTransactionValueInSilver(transaction: MonetaryTransaction): void {
-    transaction.totalValueInSilver = (transaction.platinumDeposited * 100);
-    transaction.totalValueInSilver += (transaction.electrumDeposited * 50);
-    transaction.totalValueInSilver += transaction.silverDeposited;
-    transaction.totalValueInSilver += (transaction.copperDeposited / 10);
-    transaction.totalValueInSilver += (transaction.goldDeposited / 10);
-  }
-
   // ITEM FUNCTIONS
   createItem(itemData: any, itemHistory: any) {
     return new Promise<any>((resolve, reject) => {
@@ -102,7 +59,7 @@ export class FirestoreService {
     });
   }
 
-  private createItemHistory(itemHistory: any, itemId: string) {
+  createItemHistory(itemHistory: any, itemId: string) {
     itemHistory.itemId = itemId;
     return new Promise<any>((resolve, reject) => {
       this.firestore
@@ -122,54 +79,33 @@ export class FirestoreService {
       ref => ref.where("owner", "==", owner)).valueChanges({ idField: 'id' });
   }
 
-  sortItemsDescendingByLastUpdatedOn(items: Item[]): void {
-    items.sort(function (x, y) {
-      return y.lastUpdatedOn - x.lastUpdatedOn;
-    });
+  getItem(id: string) {
+    return this.firestore.collection(FirestoreConstants.items).doc(id).get();
   }
 
-  sortItemsAsscendingByName(items: ExternalItem[]): void {
-    items.sort(function (y, x) {
-      return y.name.toLowerCase().localeCompare(x.name.toLowerCase());
-    });
-  }
-
-  getRarity(rarity: string): string {
-    switch (rarity) {
-      case "very rare":
-        return 'very-rare';
-      default:
-        return rarity;
-    }
-  }
-
-  stackPregeneratedItems(items: Item[]): Item[] {
-    let itemsMap = new Map<string, Item>();
-    items.forEach(item => {
-      item.duplicateItems = [];
-      const key = item.name + " " + item.rarity;
-      if (item.name.slice(-1) === "*" || itemsMap.get(key) == null) {
-        itemsMap.set(key, item)
-      } else {
-        itemsMap.get(key)!.duplicateItems!.push(item)
-      }
-    });
-    return Array.from(itemsMap.values())
-  }
-
-  getQuantity(item: Item): number {
-    let quantity: number;
-    if(item.type === "gemstone") {
-      quantity = item.quantity!
-      item.duplicateItems.forEach(item => {
-        quantity += item.quantity!;
+  updateItemQuantity(id: string, quantity: number) {
+    return this.firestore.collection(FirestoreConstants.items).doc(id).update({
+      quantity: quantity,
+      lastUpdatedOn: Date.now()
+    })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
       });
-    } else {
-      quantity = 1;
-      item.duplicateItems.forEach(item => {
-        quantity++;
+  }
+
+  updateItemOwner(id: string, owner: string) {
+    return this.firestore.collection(FirestoreConstants.items).doc(id).update({
+      owner: owner,
+      lastUpdatedOn: Date.now()
+    })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
       });
-    }
-    return quantity;
   }
 }

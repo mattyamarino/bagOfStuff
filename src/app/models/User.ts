@@ -3,5 +3,6 @@ export class User{
     player!: string;
     character!: string;
     role!: string;
+    short!: string;
     associatedPlayerCharacters?: User[];
 }

@@ -6,4 +6,12 @@ ADD dynamic tooltip label for move action (ex move to MY bank, move to PARTY ban
 
 ADD ability to split gem stacks 
 
+ADD ability for DM to duplicate existing item
+
+ADD ability for DM to move items to player banks
+
+ADD ability for DM to set or change price on existing items
+
+DISABLE ability for DM to move or delete items from player banks?
+
 REFACTOR player label for item bank to be unique if duplicate characters with same first name.

@@ -28,7 +28,7 @@ export class ItemContainerComponent implements OnInit {
   }
 
   getPlayerBankLabel(user: User): string {
-    return user.role === "dm" ? "DM's Stash" : user.character.split(" ")[0] + "'s Items";
+    return user.role === "dm" ? "DM's Stash" : user.short + "'s Items";
   }
 
   openDepositDialog(): void {

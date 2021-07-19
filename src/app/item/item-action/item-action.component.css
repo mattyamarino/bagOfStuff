@@ -1,0 +1,18 @@
+.action-title {
+    font-size: 30px;
+    text-align: center;
+    font-weight: bolder;
+}
+
+.dialog-size {
+    height: fit-content;
+    max-height: 60vh;
+}
+
+.mat-dialog-content {
+    overflow: visible;
+}
+
+.mat-form-field {
+    display: inline;
+}

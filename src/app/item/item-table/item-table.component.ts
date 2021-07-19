@@ -7,6 +7,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Item } from 'src/app/models/Item';
 import { User } from 'src/app/models/user';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { ItemService } from 'src/app/services/item/item.service';
+import { ItemActionComponent } from '../item-action/item-action.component';
 import { ItemDescriptionComponent } from '../item-description/item-description.component';
 
 @Component({
@@ -33,7 +35,7 @@ export class ItemTableComponent implements OnInit {
     type: '', rarity: ''
   };
   
-  constructor(private firestoreService: FirestoreService, private dialog: MatDialog) { }
+  constructor(private firestoreService: FirestoreService, public itemService: ItemService,  private dialog: MatDialog) { }
   
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -42,21 +44,19 @@ export class ItemTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.dataSource.filterPredicate = this.customFilterPredicate();
   }
 
   getItems(): void {
-    const query =  this.isForBank ? "bank" : this.user!.character!
-
+    const query =  this.isForBank ? "bank" : this.user!.character
     this.firestoreService.getItems(query).subscribe(res => {
-      this.firestoreService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
-      this.dataSource.data = this.firestoreService.stackPregeneratedItems(<Item[]><unknown>res);
+      this.itemService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
+      this.dataSource.data = this.itemService.stackPregeneratedItems(<Item[]><unknown>res);
     });
   }
 
   getQuantity(item: Item): number {
-    return this.firestoreService.getQuantity(item);
+    return this.itemService.getQuantity(item);
   }
 
   // **************BEGIN FILTER METHODS**************
@@ -101,8 +101,14 @@ export class ItemTableComponent implements OnInit {
     });
   }
 
-  moveItem(): void {
-
+  moveItem(item: Item): void {
+    this.dialog.open(ItemActionComponent, {
+      data: {
+       item: item,
+       user: this.user,
+       action: "move"
+      }
+    });
   }
 
   deleteItem(): void {

@@ -10,6 +10,7 @@ import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { HttpService } from 'src/app/services/http/http.service';
+import { ItemService } from 'src/app/services/item/item.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -27,7 +28,7 @@ export class ItemTransactionModalComponent implements OnInit {
 
   constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog,
     public dialogRef: MatDialogRef<ItemTransactionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    public firestoreService: FirestoreService) { }
+    public firestoreService: FirestoreService, private itemService: ItemService) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -41,7 +42,7 @@ export class ItemTransactionModalComponent implements OnInit {
       description: new FormControl('', Validators.required),
       origin: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
-      quantity: new FormControl('1', [Validators.required, Validators.min(1), Validators.max(5), Validators.pattern('^(0|[1-9][0-9]*)$')])
+      quantity: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(5), Validators.pattern('^(0|[1-9][0-9]*)$')])
     });
 
     this.isValidatorsRequireditemName();
@@ -100,7 +101,7 @@ export class ItemTransactionModalComponent implements OnInit {
       const resGemstones: ExternalItem[] = <ExternalItem[]>res[2];
       this.externalItems = resWeapons.results.concat(resMagicItems.results.concat(resGemstones));
       this.filterExternalItems(query);
-      this.firestoreService.sortItemsAsscendingByName(this.externalItems);
+      this.itemService.sortItemsAsscendingByName(this.externalItems);
     });
   }
 
@@ -166,7 +167,7 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup.get("rarity")?.setValue(rarity);
     this.secondFormGroup.get("type")?.setValue(type[0].trim());
 
-    this.pregeneratedItem = this.buildItem(false);
+    this.pregeneratedItem = this.buildItem();
   }
 
   buildScroll(externalItem: ExternalItem): void {
@@ -286,11 +287,12 @@ export class ItemTransactionModalComponent implements OnInit {
   completeTransaction(): void {
     const isGem = this.secondFormGroup.get("type")!.value.toLowerCase() === "gemstone"
 
-    let itemData = Object.assign({}, this.buildItem(isGem));
+    let itemData = Object.assign({}, this.buildItem());
     if(!this.isPregeneratedItem(itemData)) {
       itemData.name = itemData.name + "*"
     }
     const itemHistoryData = Object.assign({}, this.buildItemHistory());
+    console.log(itemHistoryData)
     
     let counter: number = 0;
     let amountToCreate: number = isGem ? 1 : this.secondFormGroup.get("quantity")!.value;
@@ -302,29 +304,29 @@ export class ItemTransactionModalComponent implements OnInit {
     this.closeModal();
   }
 
-  buildItem(isGem: boolean): Item {
-    let newItem: Item = new Item;
-    newItem.name = this.secondFormGroup.get("name")?.value;
-    newItem.rarity = this.secondFormGroup.get("rarity")?.value;
-    newItem.type = this.secondFormGroup.get("type")?.value;
-    newItem.cost = this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : null;
-    newItem.description = this.secondFormGroup.get("description")?.value;
-    newItem.owner = this.data.createdFor;
-    newItem.lastUpdatedOn = Date.now();
-    if(isGem) {
-      newItem.quantity = this.secondFormGroup.get("quantity")?.value;
-    }
-    return newItem;
+  buildItem(): Item {
+    return this.itemService.buildItem(
+    this.secondFormGroup.get("name")?.value,
+    this.secondFormGroup.get("rarity")?.value,
+    this.secondFormGroup.get("type")?.value,
+    this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : null,
+    this.secondFormGroup.get("description")?.value,
+    this.data.createdFor,
+    this.secondFormGroup.get("quantity")?.value,
+    );
   }
 
   buildItemHistory(): ItemHistory {
-    let newItemHistory: ItemHistory = new ItemHistory;
-    newItemHistory.action = ItemActions.CREATE;
-    newItemHistory.createdBy = this.data.user.character + " (" + this.data.user.player + ")";
-    newItemHistory.createdOn = Date.now();
-    newItemHistory.currentOwner = this.data.createdFor;
-    newItemHistory.origin = this.secondFormGroup.get("origin")?.value;
-    return newItemHistory;
+    return this.itemService.buildItemHistory(
+    undefined,
+    ItemActions.CREATE,
+    this.data.user.character + " (" + this.data.user.player + ")",
+    undefined,
+    this.data.createdFor,
+    undefined,
+    undefined,
+    this.secondFormGroup.get("origin")?.value
+    );
   }
 
   isPregeneratedItem(itemToCheck: Item): boolean {

@@ -107,7 +107,7 @@
     {
         "name": "Diamond",
         "cost": 5000,
-        "desc": "An opaque crimson gemstone worth 100 gold pieces",
+        "desc": "A transparent blue-white, canary, pink, brown, or blue gemstone worth 5,000 gold pieces",
         "rarity": "rare" ,                
         "type": "gemstone"
     },

@@ -4,6 +4,7 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 
@@ -33,7 +34,7 @@ export class MonetaryHistoryComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService) { 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService, public coinService: CoinService) { 
     this.currencyTransactions = data.currencyTransactions;
   }
 
@@ -60,7 +61,7 @@ export class MonetaryHistoryComponent implements OnInit {
   }
 
   getTotalValueInSilver(transaction: MonetaryTransaction): number {
-    this.firestoreService.calculateTransactionValueInSilver(transaction);
+    this.coinService.calculateTransactionValueInSilver(transaction);
     return transaction.totalValueInSilver ? transaction.totalValueInSilver : 0;
   }
 
@@ -68,7 +69,7 @@ export class MonetaryHistoryComponent implements OnInit {
     if(this.selectedDate) {
       this.firestoreService.getCurrencyTransactions(this.selectedDate.getTime()).subscribe(res => {
         const refArray =  res.docs.map(doc => doc.data());
-        this.firestoreService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
+        this.coinService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
         this.dataSource.data = <MonetaryTransaction[]>refArray;
       });
     }

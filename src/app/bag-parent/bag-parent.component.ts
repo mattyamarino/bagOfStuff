@@ -6,6 +6,8 @@ import { UserComponent } from '../user/user.component';
 import { MonetaryTransaction } from '../models/MonetaryTransaction';
 import { MonetaryHistoryComponent } from '../coin/monetary-history/monetary-history.component';
 import { FirestoreService } from '../services/firestore/firestore.service';
+import { CoinService } from '../services/coin/coin.service';
+import { UserService } from '../services/user/user.service';
 @Component({
   selector: 'app-bag-parent',
   templateUrl: './bag-parent.component.html',
@@ -17,7 +19,7 @@ export class BagParentComponent implements OnInit {
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
   tempNumber: number = 0;
 
-  constructor(private firestoreService: FirestoreService, public dialog: MatDialog) { }
+  constructor(private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService, public userService: UserService) { }
 
   ngOnInit(): void {
     this.getCurrencyTotals();
@@ -28,14 +30,14 @@ export class BagParentComponent implements OnInit {
     this.firestoreService.getLatestTransaction().subscribe(res => {
       const resArray = <MonetaryTransaction[]>res;
       this.latestTransaction = resArray[0];
-      this.firestoreService.calculateTotalValueInSilver(this.latestTransaction);
+      this.coinService.calculateTotalValueInSilver(this.latestTransaction);
 
     });
   }
 
   getUsers(): void {
     this.firestoreService.getUsers().subscribe(async res => {
-      this.firestoreService.sortUsersByNameAsscending(<User[]>res);
+      this.userService.sortUsersByNameAsscending(<User[]>res);
       this.users = <User[]>res;
     });
   }
@@ -67,7 +69,7 @@ export class BagParentComponent implements OnInit {
 
     this.firestoreService.getCurrencyTransactions(queryDate).subscribe(res => {
       const refArray = res.docs.map(doc => doc.data());
-      this.firestoreService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
+      this.coinService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
       this.dialog.open(MonetaryHistoryComponent, {
         data: {
           currencyTransactions: refArray

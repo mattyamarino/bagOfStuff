@@ -7,9 +7,3 @@
 .confirm-message{
     font-size: 15px;
 }
-
-.center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }

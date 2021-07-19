@@ -41,6 +41,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ItemDescriptionComponent } from './item/item-description/item-description.component';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ItemActionComponent } from './item/item-action/item-action.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     FilterMenuComponent,
     ItemTransactionModalComponent,
     ItemDescriptionComponent,
+    ItemActionComponent,
   ],
   imports: [
     BrowserModule,
