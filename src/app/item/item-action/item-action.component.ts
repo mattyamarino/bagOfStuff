@@ -115,7 +115,7 @@ export class ItemActionComponent implements OnInit {
     return this.itemService.buildItemHistory(
       this.data.item.id,
       this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE: ItemActions.DELETE,
-      this.data.user.character,
+      this.data.user.character + " (" + this.data.user.player + ")",
       updateType === "owner" ? this.data.item.owner : undefined,
       updateType === "delete" ? "deleted" : updateType === "owner" || updateType === "create" ? this.destination : undefined,
       updateType === "quantity" || updateType === "delete" ? this.data.item.quantity : undefined,

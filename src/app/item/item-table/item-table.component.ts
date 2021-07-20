@@ -51,12 +51,8 @@ export class ItemTableComponent implements OnInit {
     const query =  this.isForBank ? "bank" : this.user!.character
     this.firestoreService.getItems(query).subscribe(res => {
       this.itemService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
-      this.dataSource.data = this.itemService.stackPregeneratedItems(<Item[]><unknown>res);
+      this.dataSource.data = <Item[]><unknown>res
     });
-  }
-
-  getQuantity(item: Item): number {
-    return this.itemService.getQuantity(item);
   }
 
   // **************BEGIN FILTER METHODS**************

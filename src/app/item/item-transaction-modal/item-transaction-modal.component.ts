@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
-import { ItemActions, ItemConstants, ItemValueByRarity, MaxQuanityAllowed } from 'src/app/config/ItemConstants';
+import { ItemActions, ItemConstants, ItemValueByRarity } from 'src/app/config/ItemConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { ExternalOpen5EResponse } from 'src/app/models/ExternalOpen5EResponse';
 import { Item } from 'src/app/models/Item';
@@ -42,11 +42,10 @@ export class ItemTransactionModalComponent implements OnInit {
       description: new FormControl('', Validators.required),
       origin: new FormControl('', Validators.required),
       rarity: new FormControl('', Validators.required),
-      quantity: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(5), Validators.pattern('^(0|[1-9][0-9]*)$')])
+      quantity: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(9999), Validators.pattern('^(0|[1-9][0-9]*)$')])
     });
 
     this.isValidatorsRequireditemName();
-    this.setMaxQuanityValidator();
   }
 
 
@@ -58,20 +57,6 @@ export class ItemTransactionModalComponent implements OnInit {
         this.firstFormGroup.controls['itemName'].clearValidators();
       }
       this.firstFormGroup.controls['itemName'].updateValueAndValidity();
-    });
-  }
-
-  setMaxQuanityValidator(): void  {
-    this.secondFormGroup.get("type")?.valueChanges.subscribe(val => {
-      if(val === "gemstone") {
-        this.secondFormGroup.controls['quantity'].setValidators([Validators.required, Validators.min(1), Validators.max(MaxQuanityAllowed.GEMSTONE), Validators.pattern('^(0|[1-9][0-9]*)$')]);
-      } else {
-        if(!this.isAllowedQuantity()) {
-          this.secondFormGroup.get("quantity")?.setValue(1);
-        }
-        this.secondFormGroup.controls['quantity'].setValidators([Validators.required, Validators.min(1), Validators.max(MaxQuanityAllowed.ALL_OTHERS), Validators.pattern('^(0|[1-9][0-9]*)$')]);
-      }
-      this.secondFormGroup.controls['quantity'].updateValueAndValidity();
     });
   }
 
@@ -209,13 +194,6 @@ export class ItemTransactionModalComponent implements OnInit {
     }
   }
 
-  getMaxAllowedQuantity(): number {
-    if(this.secondFormGroup.get('type')?.value === 'gemstone') {
-      return MaxQuanityAllowed.GEMSTONE;
-    }
-    return MaxQuanityAllowed.ALL_OTHERS;
-  }
-
   getItemValue(): string {
     return this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : "— —"
   }
@@ -250,11 +228,6 @@ export class ItemTransactionModalComponent implements OnInit {
       !(this.secondFormGroup.get('type')?.value == 'gemstone' || (this.secondFormGroup.get('type')?.value == 'weapon' && this.secondFormGroup.get('rarity')?.value == 'common'));
   }
 
-  isAllowedQuantity(): boolean {
-    const selectedType = this.secondFormGroup.get("type")!.value.toLowerCase()
-    return ItemConstants.typesAllowedQuantity.some(type => type === selectedType);
-  }
-
   depositItem(): void {
     if (this.secondFormGroup.valid) {
       let amountToCreate: string = "";
@@ -266,7 +239,7 @@ export class ItemTransactionModalComponent implements OnInit {
         data: {
           confirm: "confirm",
           cancel: "go back",
-          title: "complete deposit of this item?",
+          title: "complete deposit of " + this.secondFormGroup.get("quantity")?.value + " item(s)?",
           message: "Name: " + this.titleCasePipe.transform(this.secondFormGroup.get("name")?.value) + "\n" +
             "Type: " + this.titleCasePipe.transform(this.secondFormGroup.get("type")?.value) + "\n" +
             "Rarity: " + this.titleCasePipe.transform(this.secondFormGroup.get("rarity")?.value) + "\n" +
@@ -285,21 +258,26 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   completeTransaction(): void {
-    const isGem = this.secondFormGroup.get("type")!.value.toLowerCase() === "gemstone"
-
-    let itemData = this.itemService.transformToObject(this.buildItem())
-    if(!this.isPregeneratedItem(itemData)) {
+    let itemData = this.itemService.transformToObject(this.buildItem());
+    const isPregen = this.isPregeneratedItem(itemData);
+    if(!isPregen) {
       itemData.name = itemData.name + "*"
     }
-    
-    let counter: number = 0;
-    let amountToCreate: number = isGem ? 1 : this.secondFormGroup.get("quantity")!.value;
 
-    while(counter < amountToCreate) {
-      this.firestoreService.createItem(itemData, this.itemService.transformToObject(this.buildItemHistory()));
-      counter++;
-    }
-    this.closeModal();
+    this.firestoreService.getItemsByNameTypeAndOwner(itemData.name, itemData.type, this.data.createdFor).subscribe(res => {
+      const duplicateItem: Item = <Item>res.docs[0]?.data();
+      const duplicateItemId = res.docs[0]?.id
+
+      if(duplicateItem !== undefined && isPregen) {
+        this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity);
+        this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory(duplicateItemId, duplicateItem)), duplicateItemId);
+      } else {
+        this.firestoreService.createItem(itemData, this.itemService.transformToObject(this.buildItemHistory()));
+      }
+
+      this.closeModal();
+    })
+
   }
 
   buildItem(): Item {
@@ -314,15 +292,15 @@ export class ItemTransactionModalComponent implements OnInit {
     );
   }
 
-  buildItemHistory(): ItemHistory {
+  buildItemHistory(duplicateItemId?: string, duplicateItem?: Item): ItemHistory {
     return this.itemService.buildItemHistory(
-    undefined,
+    duplicateItemId,
     ItemActions.CREATE,
     this.data.user.character + " (" + this.data.user.player + ")",
     undefined,
     this.data.createdFor,
-    undefined,
-    this.secondFormGroup.get("quantity")?.value,
+    duplicateItem?.quantity,
+    duplicateItem ? this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity : this.secondFormGroup.get("quantity")?.value,
     this.secondFormGroup.get("origin")?.value
     );
   }

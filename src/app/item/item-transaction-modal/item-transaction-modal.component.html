@@ -80,9 +80,9 @@
                     </mat-form-field><br>
                 </div>
 
-                <div *ngIf="isAllowedQuantity() && data.user.role === 'dm'">
+                <div *ngIf="data.user.role === 'dm'">
                     <mat-form-field appearance="fill" class="field">
-                        <mat-label>Item Quantity (max allowed: {{getMaxAllowedQuantity()}})</mat-label>
+                        <mat-label>Item Quantity (max allowed: 9999)</mat-label>
                         <input matInput 
                         numeric 
                         type="number"

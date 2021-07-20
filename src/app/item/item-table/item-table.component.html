@@ -20,7 +20,7 @@
                 <div (click)="openItemDescription(element)">
                     <span [ngClass]="itemService.getRarity(element.rarity)">
                         {{element.name | titlecase}}
-                        <span *ngIf="element.duplicateItems.length > 0 || element.quantity > 1">({{getQuantity(element)}})</span>
+                        <span *ngIf="element.quantity > 1">({{element.quantity}})</span>
                     </span>
                 </div>
             </td>

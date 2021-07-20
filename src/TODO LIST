@@ -15,3 +15,11 @@ ADD ability for DM to set or change price on existing items
 DISABLE ability for DM to move or delete items from player banks?
 
 REFACTOR player label for item bank to be unique if duplicate characters with same first name.
+
+
+PROVIDE DOCUMENTATION
+current dm only actions:
+deposit coin
+deposit item with custom cost
+deposit item with quantity > 1
+ability to view all item vaults
