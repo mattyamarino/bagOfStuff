@@ -4,8 +4,6 @@ FIX page height to not shrink if content becomes smaller
 
 ADD dynamic tooltip label for move action (ex move to MY bank, move to PARTY bank)
 
-ADD ability to split gem stacks 
-
 ADD ability for DM to duplicate existing item
 
 ADD ability for DM to move items to player banks

@@ -55,6 +55,11 @@ export class ItemTableComponent implements OnInit {
     });
   }
 
+  getTooltipLabel(): string {
+    const destination = this.isForBank ? "Personal Vault" : "Party Item Vault"
+    return "Move Item(s) To " + destination
+  }
+
   // **************BEGIN FILTER METHODS**************
   customFilterPredicate() {
     const myFilterPredicate = (data: Item, filter: string): boolean => {

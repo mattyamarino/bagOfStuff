@@ -6,29 +6,39 @@
     <div class="center-text" style="white-space: pre-line">
         {{getMessage()}}
     </div><br>
-    <div *ngIf="data.item.quantity > 1">
-        <mat-form-field appearance="fill" class="field">
-            <mat-label>Select Number Of Item(s) to {{data.action | titlecase}}</mat-label>
-            <input matInput 
-            numeric 
-            type="number"
-            [formControl]="quantity" 
-            [placeholder]="'Available Quantity ' + data.item.quantity">
-            <div *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)">
-                <div *ngIf="quantity.errors.max">
-                    <mat-error>
-                        Exceeded Item Quantity
-                    </mat-error>
+    <form [formGroup]="actionFormGroup">
+        <div *ngIf="data.item.quantity > 1">
+            <mat-form-field appearance="fill" class="field">
+                <mat-label>Select Number Of Item(s) to {{data.action | titlecase}}</mat-label>
+                <input matInput numeric type="number" formControlName="quantity"
+                    [placeholder]="'Available Quantity ' + data.item.quantity">
+                <div
+                    *ngIf="this.actionFormGroup.get('quantity').invalid && (this.actionFormGroup.get('quantity').dirty || this.actionFormGroup.get('quantity').touched)">
+                    <div *ngIf="this.actionFormGroup.get('quantity').errors.max">
+                        <mat-error>
+                            Exceeded Item Quantity
+                        </mat-error>
+                    </div>
+                    <div *ngIf="this.actionFormGroup.get('quantity').errors.min">
+                        <mat-error>
+                            Minimum Quantity of 1 Required
+                        </mat-error>
+                    </div>
                 </div>
-                <div *ngIf="quantity.errors.min">
-                    <mat-error>
-                        Minimum Quantity of 1 Required
-                    </mat-error>
-                </div>
-            </div>
-        </mat-form-field>
-        <br>
-    </div>
+            </mat-form-field>
+        </div>
+        <div *ngIf="data.user.role === 'dm'">
+            <mat-form-field appearance="fill" class="field">
+                <mat-label>Vault To Move Item To</mat-label>
+                <mat-select placeholder="Select Player to Send Item" formControlName="destination" required>
+                    <mat-option *ngFor="let player of players" [value]="player.character">
+                        {{player.character | titlecase}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+    <br>
     <div class="center">
         <button mat-raised-button color="light-blue" (click)="moveDeleteItem()">{{data.action | titlecase}}</button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -64,7 +64,7 @@
                 <div class="button-container">
                     <button class="small-button" 
                     mat-raised-button color="light-blue" 
-                    matTooltip="Move Item(s) To Personal Bank"
+                    [matTooltip]="getTooltipLabel()"
                     [matTooltipShowDelay]="500"
                     (click)="moveItem(element)">
                         <div class="center-icon">
