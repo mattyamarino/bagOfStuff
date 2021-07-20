@@ -103,6 +103,7 @@ export class ItemTableComponent implements OnInit {
 
   moveItem(item: Item): void {
     this.dialog.open(ItemActionComponent, {
+      width: "385px",
       data: {
        item: item,
        user: this.user,
@@ -113,6 +114,7 @@ export class ItemTableComponent implements OnInit {
 
   deleteItem(item: Item): void {
     this.dialog.open(ItemActionComponent, {
+      width: "385px",
       data: {
        item: item,
        user: this.user,

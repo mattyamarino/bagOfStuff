@@ -31,15 +31,15 @@ export class ItemService {
   buildItemHistory(id: any, action: string, createdBy: string, previousOwner: any, currentOwner: any, 
     previousQuantity: any, currentQuantity: any, origin: any): ItemHistory {
     let newItemHistory: ItemHistory = new ItemHistory;
-    if(id) {newItemHistory.itemId = id;}
+    if(id !== undefined) {newItemHistory.itemId = id;}
     newItemHistory.action = action
     newItemHistory.createdBy = createdBy
     newItemHistory.createdOn = Date.now();
-    if(previousOwner) {newItemHistory.previousOwner = previousOwner;}
-    if(currentOwner) {newItemHistory.currentOwner = currentOwner;}
-    if(previousQuantity) {newItemHistory.previousQuantity = previousQuantity;}
-    if(currentQuantity) {newItemHistory.currentQuantity = currentQuantity;}
-    if(origin) {newItemHistory.origin = origin;}
+    if(previousOwner !==  undefined) {newItemHistory.previousOwner = previousOwner;}
+    if(currentOwner !==  undefined) {newItemHistory.currentOwner = currentOwner;}
+    if(previousQuantity !==  undefined) {newItemHistory.previousQuantity = previousQuantity;}
+    if(currentQuantity !==  undefined) {newItemHistory.currentQuantity = currentQuantity;}
+    if(origin !==  undefined) {newItemHistory.origin = origin;}
     return newItemHistory;
   }
 

@@ -3,6 +3,9 @@
     <div class="bigLobsterText" style="white-space: pre-line">
         {{getTitle()}}
     </div><br>
+    <div class="center-text" style="white-space: pre-line">
+        {{getMessage()}}
+    </div><br>
     <div *ngIf="data.item.quantity > 1">
         <mat-form-field appearance="fill" class="field">
             <mat-label>Select Number Of Item(s) to {{data.action | titlecase}}</mat-label>
@@ -28,7 +31,7 @@
     </div>
     <div class="center">
         <button mat-raised-button color="light-blue" (click)="moveDeleteItem()">{{data.action | titlecase}}</button>
-        &nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button mat-raised-button color="orange" (click)="closeModal()">Cancel</button>
     </div>
 </mat-dialog-content>

@@ -79,6 +79,14 @@ export class FirestoreService {
       ref => ref.where("owner", "==", owner)).valueChanges({ idField: 'id' });
   }
 
+  getItemsByNameTypeAndOwner(name: string, type: string, owner: string) {
+    return this.firestore.collection(FirestoreConstants.items,
+      ref => ref.where("name", "==", name)
+      .where("type", "==" , type)
+      .where("owner", "==", owner)
+      ).get();
+  }
+
   getItem(id: string) {
     return this.firestore.collection(FirestoreConstants.items).doc(id).get();
   }

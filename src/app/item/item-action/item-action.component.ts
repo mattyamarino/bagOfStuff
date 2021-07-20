@@ -39,7 +39,11 @@ export class ItemActionComponent implements OnInit {
   }
 
   getTitle(): string {
-    return this.data.action === "move" ? "Move Item(s) to \n\n" + this.destinationLabel : "Discard Item(s)"  
+    return this.data.action === "move" ? "Move Item(s)" : "Discard Item(s)";  
+  }
+
+  getMessage(): string {
+    return this.data.action === "move" ? "Send to " + this.destinationLabel : "Remove due to being sold, consumed, stolen, etc..";
   }
 
   moveDeleteItem(): void {
@@ -65,19 +69,28 @@ export class ItemActionComponent implements OnInit {
     this.firestoreService.getItem(this.data.item.id).subscribe(res => {
       const existingItem = <Item>res.data();
       if(existingItem.owner === this.data.item.owner && existingItem.quantity! >= this.data.item.quantity - this.quantity.value) {
-        if(existingItem.quantity === this.quantity.value) {
-          this.firestoreService.updateItemOwner(this.data.item.id, this.destination);
-          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("owner")), this.data.item.id);
-        } else if (this.data.action === "delete" && this.data.item.quantity - this.quantity.value > 0) {
-          this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.quantity.value);
-          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
-        } else if (this.data.action === "delete") {
+        if(this.data.action === "delete" && existingItem.quantity === this.quantity.value) {
           this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "deleted", this.data.item.quantity - this.quantity.value);
           this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
-        } else {
+        } else if (this.data.action === "delete") {
           this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.quantity.value);
-          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("quantity")), this.data.item.id);
-          this.firestoreService.createItem(this.itemService.transformToObject(this.buildItem()), this.itemService.transformToObject(this.buildItemHistory("create")))
+          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
+        } else if (existingItem.quantity === this.quantity.value) {
+          this.firestoreService.updateItemOwner(this.data.item.id, this.destination);
+          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("owner")), this.data.item.id);
+        } else {
+          this.firestoreService.getItemsByNameTypeAndOwner(this.data.item.name, this.data.item.type, this.destination).subscribe(res => {
+            const duplicateItem: Item = <Item>res.docs[0]?.data();
+            const duplicateItemId = res.docs[0]?.id
+            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.quantity.value);
+            this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("quantity")), this.data.item.id);
+            if(duplicateItem !== undefined) {
+              this.firestoreService.updateItemQuantity(duplicateItemId, duplicateItem.quantity! + this.quantity.value);
+              this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistoryForExistingItem(duplicateItemId, duplicateItem)), duplicateItemId);
+            } else {
+              this.firestoreService.createItem(this.itemService.transformToObject(this.buildItem()), this.itemService.transformToObject(this.buildItemHistory("create")));
+            }
+          })
         }
       } else {
         console.log("???? FAIL I GUESS ???? FIX PLS")
@@ -109,6 +122,19 @@ export class ItemActionComponent implements OnInit {
       updateType === "quantity" || updateType === "delete" ? this.data.item.quantity - this.quantity.value : updateType === "create" ? this.quantity.value : undefined,
       updateType === "create" ? this.data.item.id : undefined
     )
+  }
+
+  buildItemHistoryForExistingItem(itemId: string, item: Item) {
+    return this.itemService.buildItemHistory(
+      itemId,
+      ItemActions.MOVE,
+      this.data.user.character,
+      this.data.item.owner,
+      item.owner,
+      item.quantity,
+      item.quantity + this.quantity.value,
+      undefined
+    );
   }
 
   closeModal(): void {
