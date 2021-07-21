@@ -105,6 +105,7 @@ export class FirestoreService {
   }
 
   updateItemOwner(id: string, owner: string) {
+    console.log(owner)
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       owner: owner,
       lastUpdatedOn: Date.now()

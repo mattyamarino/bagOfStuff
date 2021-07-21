@@ -18,6 +18,7 @@ import { ItemDescriptionComponent } from '../item-description/item-description.c
 })
 export class ItemTableComponent implements OnInit {
   @Input() user?: User;
+  @Input() vault?: User;
   @Input() isForBank!: boolean;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -48,7 +49,7 @@ export class ItemTableComponent implements OnInit {
   }
 
   getItems(): void {
-    const query =  this.isForBank ? "bank" : this.user!.character
+    const query =  this.isForBank ? "bank" : this.vault!.character
     this.firestoreService.getItems(query).subscribe(res => {
       this.itemService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
       this.dataSource.data = <Item[]><unknown>res
@@ -108,7 +109,8 @@ export class ItemTableComponent implements OnInit {
       data: {
        item: item,
        user: this.user,
-       action: "move"
+       action: "move",
+       vault: this.vault
       }
     });
   }
@@ -119,7 +121,8 @@ export class ItemTableComponent implements OnInit {
       data: {
        item: item,
        user: this.user,
-       action: "delete"
+       action: "delete",
+       vault: this.vault
       }
     });
   }

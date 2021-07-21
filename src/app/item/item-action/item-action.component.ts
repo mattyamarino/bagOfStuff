@@ -17,10 +17,10 @@ import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/
 export class ItemActionComponent implements OnInit {
   destinationLabel!: string;
   actionFormGroup!: FormGroup;
-  players!: User[];
+  players: User[] = [];
 
-  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, 
-  private firestoreService: FirestoreService, public itemService: ItemService) { }
+  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+    private firestoreService: FirestoreService, public itemService: ItemService) { }
 
   ngOnInit(): void {
     this.setDestination();
@@ -37,17 +37,25 @@ export class ItemActionComponent implements OnInit {
       quantity: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.data.item.quantity), Validators.pattern('^(0|[1-9][0-9]*)$')]),
       destination: new FormControl(this.data.user.character, Validators.required)
     });
-    if(this.data.item.quantity === 1) {
+    if (this.data.item.quantity === 1) {
       this.actionFormGroup.get("quantity")!.setValue(1);
     }
   }
 
   setPlayers(): void {
-    this.players = this.data.user.associatedPlayerCharacters
+    if (this.data.user.role === "dm") {
+      let bank = new User;
+      bank.character = "bank";
+      bank.player = "";
+      this.players.push(bank);
+      this.data.user.associatedPlayerCharacters.map((val: any) => this.players.push(Object.assign({}, val)));
+      const idx = this.players.indexOf(this.data.vault);
+      this.players.splice(idx, 1);
+    }
   }
 
   getTitle(): string {
-    return this.data.action === "move" ? "Move Item(s)" : "Discard Item(s)";  
+    return this.data.action === "move" ? "Move Item(s)" : "Discard Item(s)";
   }
 
   getMessage(): string {
@@ -55,7 +63,7 @@ export class ItemActionComponent implements OnInit {
   }
 
   moveDeleteItem(): void {
-    if(this.actionFormGroup.valid) {
+    if (this.actionFormGroup.valid) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         data: {
           confirm: "confirm",
@@ -64,7 +72,7 @@ export class ItemActionComponent implements OnInit {
           message: ""
         }
       });
-  
+
       dialogRef.afterClosed().subscribe(dialogResult => {
         if (dialogResult) {
           this.completeAction();
@@ -76,35 +84,54 @@ export class ItemActionComponent implements OnInit {
   completeAction(): void {
     this.firestoreService.getItem(this.data.item.id).subscribe(res => {
       const existingItem = <Item>res.data();
-      if(existingItem.owner === this.data.item.owner && existingItem.quantity! >= this.data.item.quantity - this.actionFormGroup.get("quantity")!.value) {
-        if(this.data.action === "delete" && existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
-          this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "deleted", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
-          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
-        } else if (this.data.action === "delete") {
-          this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
-          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
-        } else if (existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
-          this.firestoreService.updateItemOwner(this.data.item.id, this.actionFormGroup.get("destination")?.value);
-          this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("owner")), this.data.item.id);
-        } else {
-          this.firestoreService.getItemsByNameTypeAndOwner(this.data.item.name, this.data.item.type, this.actionFormGroup.get("destination")?.value).subscribe(res => {
-            const duplicateItem: Item = <Item>res.docs[0]?.data();
-            const duplicateItemId = res.docs[0]?.id
+      if (existingItem.owner === this.data.item.owner && existingItem.quantity! >= this.data.item.quantity - this.actionFormGroup.get("quantity")!.value) {
+        this.firestoreService.getItemsByNameTypeAndOwner(this.data.item.name, this.data.item.type, this.actionFormGroup.get("destination")?.value).subscribe(res => {
+          const duplicateItem: Item = <Item>res.docs[0]?.data();
+          const duplicateItemId = res.docs[0]?.id
+          // DELETE FULL STACK
+          if (this.data.action === "delete" && existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
+            this.deleteItemAndSetQuantityToZero()
+          } else if (this.data.action === "delete") {
+            // DELETE PARTIAL STACK
+            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
+          } else if (existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
+            // MOVE FULL STACK TO DUPLICATE ITEM AT DESTINATION
+            if (duplicateItem !== undefined && this.data.item.name.charAt(this.data.item.name.length - 1) !== '*') {
+              this.deleteItemAndSetQuantityToZero()
+              this.updateQuantityOnDuplicateItemAtDestination(duplicateItemId, duplicateItem);
+              // MOVE FULL STACK
+            } else {
+              this.firestoreService.updateItemOwner(this.data.item.id, this.actionFormGroup.get("destination")?.value);
+              this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("owner")), this.data.item.id);
+            }
+            // MOVE PARTIAL STACK
+          } else {
             this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
             this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("quantity")), this.data.item.id);
-            if(duplicateItem !== undefined) {
-              this.firestoreService.updateItemQuantity(duplicateItemId, duplicateItem.quantity! + this.actionFormGroup.get("quantity")!.value);
-              this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistoryForExistingItem(duplicateItemId, duplicateItem)), duplicateItemId);
+            // MOVE PARTIAL STACK TO DUPLICATE ITEM AT DESTINATION 
+            if (duplicateItem !== undefined && this.data.item.name.charAt(this.data.item.name.length - 1) !== '*') {
+              this.updateQuantityOnDuplicateItemAtDestination(duplicateItemId, duplicateItem);
             } else {
               this.firestoreService.createItem(this.itemService.transformToObject(this.buildItem()), this.itemService.transformToObject(this.buildItemHistory("create")));
             }
-          })
-        }
+          }
+        });
       } else {
         console.log("???? FAIL I GUESS ???? FIX PLS")
       }
       this.closeModal();
     });
+  }
+
+  deleteItemAndSetQuantityToZero() {
+    this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "deleted", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+    this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
+  }
+
+  updateQuantityOnDuplicateItemAtDestination(duplicateItemId: string, duplicateItem: Item) {
+    this.firestoreService.updateItemQuantity(duplicateItemId, duplicateItem.quantity! + this.actionFormGroup.get("quantity")!.value);
+    this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistoryForExistingItem(duplicateItemId, duplicateItem)), duplicateItemId);
   }
 
   buildItem(): Item {
@@ -114,7 +141,7 @@ export class ItemActionComponent implements OnInit {
       this.data.item.type,
       this.data.item.cost,
       this.data.item.description,
-      this.actionFormGroup.get("destination")?.value,
+      this.actionFormGroup.get("destination")!.value,
       this.actionFormGroup.get("quantity")!.value
     );
   }
@@ -122,7 +149,7 @@ export class ItemActionComponent implements OnInit {
   buildItemHistory(updateType: string): ItemHistory {
     return this.itemService.buildItemHistory(
       this.data.item.id,
-      this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE: ItemActions.DELETE,
+      this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE : ItemActions.DELETE,
       this.data.user.character + " (" + this.data.user.player + ")",
       updateType === "owner" ? this.data.item.owner : undefined,
       updateType === "delete" ? "deleted" : updateType === "owner" || updateType === "create" ? this.actionFormGroup.get("destination")?.value : undefined,

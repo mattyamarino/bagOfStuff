@@ -19,7 +19,7 @@
                 <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">Transaction History</button>
             </div>
             <br><span class="br"></span>
-            <app-item-table [user]="player" [isForBank]=false></app-item-table>
+            <app-item-table [user]="getVaultUser(player)" [isForBank]=false [vault]="player"></app-item-table>
         </mat-tab>
     </div>
 </mat-tab-group>

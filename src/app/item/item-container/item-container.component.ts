@@ -31,6 +31,10 @@ export class ItemContainerComponent implements OnInit {
     return user.role === "dm" ? "DM's Stash" : user.short + "'s Items";
   }
 
+  getVaultUser(playerCharacter: User): User {
+    return this.user.role === "dm" ? this.user : playerCharacter;
+  }
+
   openDepositDialog(): void {
     this.dialog.open(ItemTransactionModalComponent, {
       data: {

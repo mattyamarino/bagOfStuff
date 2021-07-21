@@ -2,11 +2,11 @@ FIX coin and item bank are different widths on smaller screens
 
 FIX page height to not shrink if content becomes smaller
 
-ADD dynamic tooltip label for move action (ex move to MY bank, move to PARTY bank)
+FIX error case where item is moved before user can confirm
+
+ADD ability to stack duplicate custom items (they would still be seperate objects, but combined to one row on the table)
 
 ADD ability for DM to duplicate existing item
-
-ADD ability for DM to move items to player banks
 
 ADD ability for DM to set or change price on existing items
 
@@ -21,3 +21,4 @@ deposit coin
 deposit item with custom cost
 deposit item with quantity > 1
 ability to view all item vaults
+move items to any vault

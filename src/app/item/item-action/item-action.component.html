@@ -32,7 +32,7 @@
                 <mat-label>Vault To Move Item To</mat-label>
                 <mat-select placeholder="Select Player to Send Item" formControlName="destination" required>
                     <mat-option *ngFor="let player of players" [value]="player.character">
-                        {{player.character | titlecase}}
+                        {{player.character | titlecase}} ({{player.player | titlecase}})
                     </mat-option>
                 </mat-select>
             </mat-form-field>
