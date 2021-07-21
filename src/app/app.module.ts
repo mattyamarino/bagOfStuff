@@ -42,6 +42,7 @@ import { ItemDescriptionComponent } from './item/item-description/item-descripti
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ItemActionComponent } from './item/item-action/item-action.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { ItemActionComponent } from './item/item-action/item-action.component';
     MatAutocompleteModule,
     MatDividerModule,
     MatTooltipModule,
+    MatSnackBarModule,
   ],
   providers: [MatDatepickerModule, TitleCasePipe],
   bootstrap: [AppComponent],

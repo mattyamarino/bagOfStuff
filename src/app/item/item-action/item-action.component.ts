@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ItemActions } from 'src/app/config/ItemConstants';
 import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
@@ -20,7 +21,7 @@ export class ItemActionComponent implements OnInit {
   players: User[] = [];
 
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private firestoreService: FirestoreService, public itemService: ItemService) { }
+    private firestoreService: FirestoreService, public itemService: ItemService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.setDestination();
@@ -118,7 +119,7 @@ export class ItemActionComponent implements OnInit {
           }
         });
       } else {
-        console.log("???? FAIL I GUESS ???? FIX PLS")
+        this.openSnackbar();
       }
       this.closeModal();
     });
@@ -170,6 +171,14 @@ export class ItemActionComponent implements OnInit {
       item.quantity + this.actionFormGroup.get("quantity")!.value,
       undefined
     );
+  }
+
+  openSnackbar(): void {
+    this.snackBar.open("", "Another User Has Already Moved That Item", {
+      duration: 4000,
+      horizontalPosition: "center",
+      verticalPosition: "top"
+    });
   }
 
   closeModal(): void {
