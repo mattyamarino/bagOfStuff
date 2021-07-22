@@ -1,0 +1,113 @@
+<mat-dialog-content>
+    <div class="bigLobsterText">
+        <br>
+        Item Transaction History
+    </div>
+    <div class="center-text">
+        <span class="br-big"></span>
+        for: {{getTitle() | titlecase}}
+    </div>
+    <span class="br"></span>
+    <br>
+
+    <!-- <mat-grid-list cols="2" rowHeight="70px">
+        <mat-grid-tile>
+            <div class="grid-left">
+                <mat-form-field #pickerForm appearance="fill" class="form">
+                    <mat-label>Get Transactions After Date:</mat-label>
+                    <input readonly matInput [matDatepicker]="picker" [(ngModel)]="selectedDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="grid-right">
+                <button 
+                mat-raised-button 
+                color="light-blue"
+                class="centerButton tall-button"
+                [disabled]="isDateUnchanged()" 
+                (click)="updateTransactions()">
+                  Update From Selected Date
+                </button>
+            </div>
+        </mat-grid-tile>
+      </mat-grid-list> -->
+    
+    <table 
+    mat-table 
+    matSort 
+    [dataSource]="dataSource" 
+    class="mat-elevation-z0">
+    
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
+        <td mat-cell *matCellDef="let element">
+            <div (click)="openItemDescription(element.itemId)">
+                <span [ngClass]="itemService.getRarity(element.rarity)">
+                    {{element.name | titlecase}}
+                </span>
+            </div>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+            <span [ngClass]="element.action">
+                {{element.action | titlecase}}
+            </span>
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="history">
+        <th mat-header-cell *matHeaderCellDef>Change</th>
+        <td mat-cell *matCellDef="let element">
+            <div *ngIf="element.action === 'created'">
+                {{element.origin}}
+            </div>
+            <div *ngIf="element.action !== 'created'">
+                <mat-grid-list cols="5" rowHeight=20px>
+                    <mat-grid-tile [colspan]=2>
+                        {{getBeforeAction(element)}}
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]=1>
+                        <img src="../../../assets/arrow.png" class="moneyIcon">
+                    </mat-grid-tile>
+                    <mat-grid-tile [colspan]=2>
+                        {{getAfterAction(element)}}
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </div>
+        </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Transacted By</th>
+        <td mat-cell *matCellDef="let element">{{element.createdBy}}</td>
+    </ng-container>
+    
+    <ng-container matColumnDef="createdOn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Transacted On</th>
+        <td mat-cell *matCellDef="let element">{{getTransactionDate(element.createdOn)}}</td>
+    </ng-container>
+    
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<mat-paginator [pageSizeOptions]="[7, 15, 30]" showFirstLastButtons></mat-paginator>
+
+<br>
+
+<button 
+mat-raised-button 
+color="light-blue"
+class="centerButton" 
+(click)="closeDialog()">
+Close History Table
+</button>
+
+</mat-dialog-content>

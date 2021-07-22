@@ -49,6 +49,12 @@ export class ItemService {
     });
   }
 
+  sortItemsHistoryDescendingByLastUpdatedOn(histories: ItemHistory[]): void {
+    histories.sort(function (x, y) {
+      return y.createdOn - x.createdOn;
+    });
+  }
+
   sortItemsAsscendingByName(items: ExternalItem[]): void {
     items.sort(function (y, x) {
       return y.name.toLowerCase().localeCompare(x.name.toLowerCase());

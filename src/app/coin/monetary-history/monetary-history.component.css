@@ -50,7 +50,7 @@ text-align: center !important;
 }
 
 .mat-column-description { 
-padding: 5px;
+padding: 7px;
 width: 300px !important;
 max-width: 300px !important;
 text-align: center !important;
@@ -74,11 +74,6 @@ text-align: center !important;
     opacity: 0.54 !important;
     transform: translateY(0px) !important;
   }
-
-  /* STYLE TO ALTERNATE COLOR ON TABLE ROWS */
-/* .mat-row:nth-child(odd){
-    background-color: rgb(58, 58, 58);
-} */
 
 ::ng-deep mat-datepicker-toggle.mat-datepicker-toggle button.mat-focus-indicator.mat-icon-button.mat-button-base {
     display: inherit;

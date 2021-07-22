@@ -43,6 +43,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ItemActionComponent } from './item/item-action/item-action.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { ItemHistoryComponent } from './item/item-history/item-history.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     ItemTransactionModalComponent,
     ItemDescriptionComponent,
     ItemActionComponent,
+    ItemHistoryComponent,
   ],
   imports: [
     BrowserModule,

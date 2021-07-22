@@ -14,7 +14,6 @@ import { MonetaryTransaction } from '../../models/MonetaryTransaction';
   styleUrls: ['./monetary-history.component.css']
 })
 export class MonetaryHistoryComponent implements OnInit {
-  currencyTransactions!: MonetaryTransaction[];
   selectedDate: Date =new Date(new Date().setDate(new Date().getDate()-30));
   originalDate: Date = this.selectedDate;
   dataSource = new MatTableDataSource<MonetaryTransaction>([]);
@@ -35,13 +34,12 @@ export class MonetaryHistoryComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService, public coinService: CoinService) { 
-    this.currencyTransactions = data.currencyTransactions;
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.dataSource.data = this.currencyTransactions;
+    this.dataSource.data = this.data.currencyTransactions;
   }
 
   ngOnInit(): void {

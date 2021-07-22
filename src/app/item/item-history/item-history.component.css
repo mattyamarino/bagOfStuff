@@ -1,0 +1,76 @@
+.mat-column-name { 
+width: 200px !important;
+text-align: center !important;
+}
+
+.mat-column-action { 
+width: 90px !important;
+text-align: center !important;
+}
+
+.mat-column-history { 
+width: 800px !important;
+text-align: center !important;
+max-width: 800px !important;
+padding: 7px;
+}
+
+.mat-column-createdBy { 
+width: 200px !important;
+text-align: center !important;
+}
+
+.mat-column-createdOn { 
+width: 130px !important;
+text-align: center !important;
+}
+
+.center-text {
+text-align: center !important;
+font-family: 'Poppins', sans-serif;
+font-size: 23px;
+color: rgb(182, 182, 182);
+}
+
+.centerButton {
+display: flex;
+margin: auto;
+}
+
+.moved {
+color: #4699c7; 
+}
+
+.deleted {
+color: orangered;
+}
+
+.sold {
+color: rgb(255, 0, 179);
+}
+
+.grid-left {
+margin-left: 43%;
+}
+
+.grid-right {
+margin-right: 43%;
+}
+
+.mat-column {
+border: none;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+display: flex;
+justify-content: center;
+}
+
+::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+opacity: 0.54 !important;
+transform: translateY(0px) !important;
+}
+
+::ng-deep mat-datepicker-toggle.mat-datepicker-toggle button.mat-focus-indicator.mat-icon-button.mat-button-base {
+display: inherit;
+}

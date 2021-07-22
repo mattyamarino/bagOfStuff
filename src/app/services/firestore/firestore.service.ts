@@ -59,21 +59,6 @@ export class FirestoreService {
     });
   }
 
-  createItemHistory(itemHistory: any, itemId: string) {
-    itemHistory.itemId = itemId;
-    return new Promise<any>((resolve, reject) => {
-      this.firestore
-        .collection(FirestoreConstants.itemHistory)
-        .add(itemHistory)
-        .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-        });
-    });
-  }
-
   getItems(owner: string) {
     return this.firestore.collection(FirestoreConstants.items,
       ref => ref.where("owner", "==", owner)).valueChanges({ idField: 'id' });
@@ -130,5 +115,26 @@ export class FirestoreService {
       .catch((error) => {
         console.error("Error updating document: ", error);
       });
+  }
+
+  // ITEM HISTORY FUNCTIONS
+  createItemHistory(itemHistory: any, itemId: string) {
+    itemHistory.itemId = itemId;
+    return new Promise<any>((resolve, reject) => {
+      this.firestore
+        .collection(FirestoreConstants.itemHistory)
+        .add(itemHistory)
+        .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    });
+  }
+
+  getItemHistories(queryDate: number) {
+    return this.firestore.collection(FirestoreConstants.itemHistory,
+      ref => ref.where("createdOn", ">=", queryDate)).get();
   }
 }

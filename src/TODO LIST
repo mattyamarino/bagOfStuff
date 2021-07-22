@@ -2,7 +2,9 @@ FIX coin and item bank are different widths on smaller screens
 
 FIX page height to not shrink if content becomes smaller
 
-FIX error case where item is moved before user can confirm
+ADD snackbar confirmation or error whenever user deposits/moves/deletes item
+
+ADD Armor and Adventuring Gear to item search
 
 ADD ability to stack duplicate custom items (they would still be seperate objects, but combined to one row on the table)
 
