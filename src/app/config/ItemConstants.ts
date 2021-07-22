@@ -50,8 +50,10 @@ export class ScrollStatistic {
 
 export enum ItemActions {
     CREATE = "created",
+    DELETE = "deleted",
     MOVE = "moved",
-    DELETE = "deleted"
+    SELL = "sold",
+    UPDATE = "updated"
 }
 
 export enum ItemValueByRarity {

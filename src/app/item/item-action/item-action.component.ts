@@ -167,13 +167,13 @@ export class ItemActionComponent implements OnInit {
       itemId,
       this.data.item.name,
       this.data.item.rarity,
-      ItemActions.MOVE,
+      ItemActions.UPDATE,
       this.data.user.character,
       this.data.item.owner,
       item.owner,
       item.quantity,
       item.quantity + this.actionFormGroup.get("quantity")!.value,
-      undefined
+      itemId
     );
   }
 

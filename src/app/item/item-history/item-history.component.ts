@@ -37,7 +37,6 @@ export class ItemHistoryComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.data)
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.data = this.data.histories;
@@ -58,7 +57,6 @@ export class ItemHistoryComponent implements OnInit {
   }
 
   openModal(item: Item): void {
-    console.log(item)
     this.dialog.open(ItemDescriptionComponent, {
       data: {
         item: item
