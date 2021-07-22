@@ -295,6 +295,8 @@ export class ItemTransactionModalComponent implements OnInit {
   buildItemHistory(duplicateItemId?: string, duplicateItem?: Item): ItemHistory {
     return this.itemService.buildItemHistory(
     duplicateItemId,
+    this.secondFormGroup.get("name")?.value,
+    this.secondFormGroup.get("rarity")?.value,
     ItemActions.CREATE,
     this.data.user.character + " (" + this.data.user.player + ")",
     undefined,

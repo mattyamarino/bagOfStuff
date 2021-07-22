@@ -150,6 +150,8 @@ export class ItemActionComponent implements OnInit {
   buildItemHistory(updateType: string): ItemHistory {
     return this.itemService.buildItemHistory(
       this.data.item.id,
+      this.data.item.name,
+      this.data.item.rarity,
       this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE : ItemActions.DELETE,
       this.data.user.character + " (" + this.data.user.player + ")",
       updateType === "owner" ? this.data.item.owner : undefined,
@@ -163,6 +165,8 @@ export class ItemActionComponent implements OnInit {
   buildItemHistoryForExistingItem(itemId: string, item: Item) {
     return this.itemService.buildItemHistory(
       itemId,
+      this.data.item.name,
+      this.data.item.rarity,
       ItemActions.MOVE,
       this.data.user.character,
       this.data.item.owner,

@@ -28,12 +28,14 @@ export class ItemService {
     return newItem;
   }
 
-  buildItemHistory(id: any, action: string, createdBy: string, previousOwner: any, currentOwner: any,
+  buildItemHistory(id: any, itemName: string, itemRarity: string, action: string, createdBy: string, previousOwner: any, currentOwner: any,
     previousQuantity: any, currentQuantity: any, origin: any): ItemHistory {
     let newItemHistory: ItemHistory = new ItemHistory;
     if (id !== undefined) { newItemHistory.itemId = id; }
-    newItemHistory.action = action
-    newItemHistory.createdBy = createdBy
+    newItemHistory.itemName = itemName;
+    newItemHistory.itemRarity = itemRarity;
+    newItemHistory.action = action;
+    newItemHistory.createdBy = createdBy;
     newItemHistory.createdOn = Date.now();
     if (previousOwner !== undefined) { newItemHistory.previousOwner = previousOwner; }
     if (currentOwner !== undefined) { newItemHistory.currentOwner = currentOwner; }

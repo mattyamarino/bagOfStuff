@@ -45,8 +45,8 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
         <td mat-cell *matCellDef="let element">
             <div (click)="openItemDescription(element.itemId)">
-                <span [ngClass]="itemService.getRarity(element.rarity)">
-                    {{element.name | titlecase}}
+                <span [ngClass]="itemService.getRarity(element.itemRarity)">
+                    {{element.itemName | titlecase}}
                 </span>
             </div>
         </td>
@@ -55,42 +55,54 @@
     <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef>Action</th>
         <td mat-cell *matCellDef="let element">
-            <span [ngClass]="element.action">
-                {{element.action | titlecase}}
-            </span>
+            <div (click)="openItemDescription(element.itemId)">
+                <span [ngClass]="element.action">
+                    {{element.action | titlecase}}
+                </span>
+            </div>
         </td>
     </ng-container>
     
     <ng-container matColumnDef="history">
         <th mat-header-cell *matHeaderCellDef>Change</th>
         <td mat-cell *matCellDef="let element">
-            <div *ngIf="element.action === 'created'">
-                {{element.origin}}
-            </div>
-            <div *ngIf="element.action !== 'created'">
-                <mat-grid-list cols="5" rowHeight=20px>
-                    <mat-grid-tile [colspan]=2>
-                        {{getBeforeAction(element)}}
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]=1>
-                        <img src="../../../assets/arrow.png" class="moneyIcon">
-                    </mat-grid-tile>
-                    <mat-grid-tile [colspan]=2>
-                        {{getAfterAction(element)}}
-                    </mat-grid-tile>
-                </mat-grid-list>
+            <div (click)="openItemDescription(element.itemId)">
+                <div *ngIf="showGrid(element)">
+                    <mat-grid-list cols="5" rowHeight=35px>
+                        <mat-grid-tile [colspan]=2>
+                            {{getBeforeAction(element) | titlecase}}
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]=1>
+                            <img src="../../../assets/arrow.png" class="moneyIcon">
+                        </mat-grid-tile>
+                        <mat-grid-tile [colspan]=2>
+                            {{getAfterAction(element) | titlecase}}
+                        </mat-grid-tile>
+                    </mat-grid-list>
+                </div>
+                <div *ngIf="showParagraph(element)">
+                    {{element.origin}}
+                </div>
             </div>
         </td>
     </ng-container>
     
     <ng-container matColumnDef="createdBy">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Transacted By</th>
-        <td mat-cell *matCellDef="let element">{{element.createdBy}}</td>
+        <td mat-cell *matCellDef="let element">
+            <div (click)="openItemDescription(element.itemId)">
+                {{element.createdBy}}
+            </div>
+        </td>
     </ng-container>
     
     <ng-container matColumnDef="createdOn">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Transacted On</th>
-        <td mat-cell *matCellDef="let element">{{getTransactionDate(element.createdOn)}}</td>
+        <td mat-cell *matCellDef="let element">
+            <div (click)="openItemDescription(element.itemId)">
+                {{getTransactionDate(element.createdOn)}}
+            </div>
+        </td>
     </ng-container>
     
     

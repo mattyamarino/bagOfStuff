@@ -1,6 +1,8 @@
 export class ItemHistory {
     id!: string;
     itemId!: string;
+    itemName!: string;
+    itemRarity!: string
     action!: string;
     createdOn!: number;
     createdBy!: string;
