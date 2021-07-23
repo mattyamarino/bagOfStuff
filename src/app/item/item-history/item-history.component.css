@@ -1,6 +1,6 @@
 .mat-column-name { 
 width: 200px !important;
-text-align: center !important;
+text-align: left !important;
 }
 
 .mat-column-action { 
@@ -38,15 +38,18 @@ margin: auto;
 }
 
 .moved {
+font-weight: bold;
 color: #4699c7; 
 }
 
 .deleted {
+font-weight: bold;
 color: orangered;
 }
 
 .sold {
-color: rgb(255, 0, 179);
+font-weight: bold;
+color: rgb(255, 0, 200);
 }
 
 .grid-left {

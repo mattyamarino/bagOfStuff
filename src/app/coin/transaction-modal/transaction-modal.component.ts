@@ -7,7 +7,6 @@ import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
-import { MonetaryTransactionDTO } from '../../models/MonetaryTransactionDTO';
 
 @Component({
   selector: 'app-transaction-modal',
@@ -57,7 +56,7 @@ export class TransactionModalComponent implements OnInit {
     const group: any = {};
     group["description"] = new FormControl('', Validators.required);
     this.dataSource.forEach((element: { currency: string; }) => {
-      group[element.currency] = new FormControl('0', Validators.required);
+      group[element.currency] = new FormControl(0, Validators.required);
     });
     this.transactionFormGroup = new FormGroup(group);
     this.transactionFormGroup.updateValueAndValidity()
@@ -101,7 +100,7 @@ export class TransactionModalComponent implements OnInit {
     }
   }
 
-  getTransactionTotalForCurrencyType(currency: string, transaction: any): void {
+  getTransactionTotalForCurrencyType(currency: string, transaction: MonetaryTransaction): void {
     const adjustmentAmount: number = this.transactionFormGroup.get(currency)!.value;
 
     if (currency === "Platinum") {
@@ -147,7 +146,7 @@ export class TransactionModalComponent implements OnInit {
   }
 
   async completeTransaction() {
-    let newTransaction: MonetaryTransactionDTO = new MonetaryTransactionDTO;
+    let newTransaction: MonetaryTransaction = new MonetaryTransaction;
 
     this.firestoreService.getLatestTransaction().subscribe(res => {
       const response = <MonetaryTransaction[]>res;
@@ -167,7 +166,7 @@ export class TransactionModalComponent implements OnInit {
     });
   }
 
-  validateTransaction(transaction: MonetaryTransactionDTO): boolean {
+  validateTransaction(transaction: MonetaryTransaction): boolean {
     this.transactionFormGroup.markAllAsTouched();
     this.submitAttempted = true;
     this.updateAvailableAmounts();
@@ -185,7 +184,7 @@ export class TransactionModalComponent implements OnInit {
     this.dataSource[4].currentAmount = this.latestTransaction.goldTotal;
   }
 
-  isEmptyTransaction(transaction: MonetaryTransactionDTO): boolean {
+  isEmptyTransaction(transaction: MonetaryTransaction): boolean {
     if (transaction.platinumDeposited == 0 &&
       transaction.electrumDeposited == 0 &&
       transaction.silverDeposited == 0 &&
@@ -260,7 +259,7 @@ export class TransactionModalComponent implements OnInit {
   }
 
   confirmAction(): void {
-    if (this.validateTransaction(new MonetaryTransactionDTO)) {
+    if (this.validateTransaction(new MonetaryTransaction)) {
 
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         maxWidth: "400px",

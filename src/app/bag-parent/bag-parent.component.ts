@@ -28,8 +28,7 @@ export class BagParentComponent implements OnInit {
 
   getCurrencyTotals(): void {
     this.firestoreService.getLatestTransaction().subscribe(res => {
-      const resArray = <MonetaryTransaction[]>res;
-      this.latestTransaction = resArray[0];
+      this.latestTransaction = res[0] !== undefined ? <MonetaryTransaction>res[0] : this.coinService.buildEmptyMonertaryTransaction();
       this.coinService.calculateTotalValueInSilver(this.latestTransaction);
 
     });

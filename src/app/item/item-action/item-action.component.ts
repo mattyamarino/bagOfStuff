@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -5,9 +6,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ItemActions } from 'src/app/config/ItemConstants';
 import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
+import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 import { User } from 'src/app/models/user';
+import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemService } from 'src/app/services/item/item.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -21,7 +25,8 @@ export class ItemActionComponent implements OnInit {
   players: User[] = [];
 
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    private firestoreService: FirestoreService, public itemService: ItemService, private snackBar: MatSnackBar) { }
+    private firestoreService: FirestoreService, public itemService: ItemService, public coinService: CoinService, public userService: UserService, 
+    private snackBar: MatSnackBar,  public titleCasePipe: TitleCasePipe) { }
 
   ngOnInit(): void {
     this.setDestination();
@@ -36,7 +41,7 @@ export class ItemActionComponent implements OnInit {
   setFormGroup(): void {
     this.actionFormGroup = new FormGroup({
       quantity: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.data.item.quantity), Validators.pattern('^(0|[1-9][0-9]*)$')]),
-      destination: new FormControl(this.data.user.character, Validators.required)
+      destination: new FormControl(this.data.vault !== undefined ? this.userService.getUserLabel(this.data.vault) : "bank", Validators.required)
     });
     if (this.data.item.quantity === 1) {
       this.actionFormGroup.get("quantity")!.setValue(1);
@@ -56,11 +61,11 @@ export class ItemActionComponent implements OnInit {
   }
 
   getTitle(): string {
-    return this.data.action === "move" ? "Move Item(s)" : "Discard Item(s)";
+    return this.data.action === "move" ? "Move Item(s)" : this.data.action === "delete" ? "Discard Item(s)" : this.data.action === "sell" ? "Sell Item(s)" : "";
   }
 
   getMessage(): string {
-    return this.data.action === "move" ? "Send to " + this.destinationLabel : "Remove due to being sold, consumed, stolen, etc..";
+    return this.data.action === "move" ? "Send to " + this.destinationLabel : this.data.action === "delete" ? "Remove due to being sold, consumed, stolen, etc.." : this.data.action === "sell" ? "Exchange item(s) for coin" : "";
   }
 
   moveDeleteItem(): void {
@@ -92,12 +97,22 @@ export class ItemActionComponent implements OnInit {
           // DELETE FULL STACK
           if (this.data.action === "delete" && existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
             this.deleteItemAndSetQuantityToZero()
-          } else if (this.data.action === "delete") {
             // DELETE PARTIAL STACK
+          } else if (this.data.action === "delete") {
             this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
             this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
-          } else if (existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
+            // SELL FULL STACK
+          } else if (this.data.action === "sell" && existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
+            this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "sold", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("sell")), this.data.item.id);
+            this.sellItem();
+            // SELL PARTIAL STACK
+          } else if (this.data.action === "sell") {
+            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("sell")), this.data.item.id);
+            this.sellItem();
             // MOVE FULL STACK TO DUPLICATE ITEM AT DESTINATION
+          } else if (existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
             if (duplicateItem !== undefined && this.data.item.name.charAt(this.data.item.name.length - 1) !== '*') {
               this.deleteItemAndSetQuantityToZero()
               this.updateQuantityOnDuplicateItemAtDestination(duplicateItemId, duplicateItem);
@@ -152,12 +167,12 @@ export class ItemActionComponent implements OnInit {
       this.data.item.id,
       this.data.item.name,
       this.data.item.rarity,
-      this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE : ItemActions.DELETE,
-      this.data.user.character + " (" + this.data.user.player + ")",
+      this.data.action === "move" ? ItemActions.MOVE : updateType === "create" ? ItemActions.CREATE : updateType === "sell" ? ItemActions.SELL : ItemActions.DELETE,
+      this.userService.getUserLabel(this.data.user),
       updateType === "owner" ? this.data.item.owner : undefined,
-      updateType === "delete" ? "deleted" : updateType === "owner" || updateType === "create" ? this.actionFormGroup.get("destination")?.value : undefined,
-      updateType === "quantity" || updateType === "delete" ? this.data.item.quantity : undefined,
-      updateType === "quantity" || updateType === "delete" ? this.data.item.quantity - this.actionFormGroup.get("quantity")!.value : updateType === "create" ? this.actionFormGroup.get("quantity")!.value : undefined,
+      updateType === "delete" ? "deleted" : updateType === "sell" ? "sold" : updateType === "owner" || updateType === "create" ? this.actionFormGroup.get("destination")?.value : undefined,
+      updateType === "quantity" || updateType === "delete" || updateType === "sell" ? this.data.item.quantity : undefined,
+      updateType === "quantity" || updateType === "delete" || updateType === "sell" ? this.data.item.quantity - this.actionFormGroup.get("quantity")!.value : updateType === "create" ? this.actionFormGroup.get("quantity")!.value : undefined,
       updateType === "create" ? this.data.item.id : undefined
     )
   }
@@ -168,13 +183,37 @@ export class ItemActionComponent implements OnInit {
       this.data.item.name,
       this.data.item.rarity,
       ItemActions.UPDATE,
-      this.data.user.character,
+      this.userService.getUserLabel(this.data.user),
       this.data.item.owner,
       item.owner,
       item.quantity,
       item.quantity + this.actionFormGroup.get("quantity")!.value,
       itemId
     );
+  }
+
+  sellItem(): void {
+    console.log("^^^^^ITEM TO SELL^^^^^^", this.data)
+    this.firestoreService.getLatestTransactionOnce().subscribe(res => {
+      const latestTransaction: MonetaryTransaction = res.docs.length !== 0 ? <MonetaryTransaction>res.docs[0]?.data() : this.coinService.buildEmptyMonertaryTransaction();
+      this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(this.coinService.buildMonetaryTransaction(
+        undefined,
+        0,
+        0,
+        this.data.item.cost * this.actionFormGroup.get("quantity")!.value,
+        0,
+        0,
+        latestTransaction.platinumTotal,
+        latestTransaction.electrumTotal,
+        latestTransaction.silverTotal + (this.data.item.cost * this.actionFormGroup.get("quantity")!.value),
+        latestTransaction.copperTotal,
+        latestTransaction.goldTotal,
+        "Funds gained from selling: " + this.titleCasePipe.transform(this.data.item.name) + " (" + this.actionFormGroup.get("quantity")!.value + ")",
+        this.userService.getUserLabel(this.data.user),
+        "Deposit",
+        this.data.item.id
+      )));
+    });
   }
 
   openSnackbar(): void {

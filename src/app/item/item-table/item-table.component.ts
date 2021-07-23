@@ -29,6 +29,7 @@ export class ItemTableComponent implements OnInit {
     'type',
     'rarity',
     'cost',
+    'sell',
     'withdraw',
     'delete',
   ];
@@ -99,6 +100,18 @@ export class ItemTableComponent implements OnInit {
     this.dialog.open(ItemDescriptionComponent, {
       data: {
         item: item
+      }
+    });
+  }
+
+  sellItem(item: Item): void {
+    this.dialog.open(ItemActionComponent, {
+      width: "385px",
+      data: {
+       item: item,
+       user: this.user,
+       action: "sell",
+       vault: this.vault
       }
     });
   }

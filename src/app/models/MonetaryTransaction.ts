@@ -12,7 +12,8 @@ export class MonetaryTransaction{
     goldTotal!: number;
     description?: string;
     createdBy!: string;
-    totalValueInSilver?: number;
     createdOn!: number;
     type!: string;
+    totalValueInSilver?: number;
+    soldItemId?: string
 }

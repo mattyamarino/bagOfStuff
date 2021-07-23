@@ -13,4 +13,8 @@ export class UserService {
       return y.character.toLowerCase().localeCompare(x.character.toLowerCase());
     });
   }
+
+  getUserLabel(user: User): string {
+    return user.character + " (" + user.player + ")";
+  }
 }

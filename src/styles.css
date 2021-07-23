@@ -54,12 +54,20 @@ background-color: #4699c7;
    background-color: orangered;
 }
 
+.mat-pink {
+   background-color: rgb(255, 0, 200);
+}
+
 .light-blue {
 color: #4699c7; 
 }
 
 .orange {
 color: orangered;
+}
+
+.pink {
+color: rgb(255, 0, 200);;
 }
 
 .button-container {

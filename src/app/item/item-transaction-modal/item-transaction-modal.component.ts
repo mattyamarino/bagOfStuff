@@ -11,6 +11,7 @@ import { ItemHistory } from 'src/app/models/ItemHistory';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { HttpService } from 'src/app/services/http/http.service';
 import { ItemService } from 'src/app/services/item/item.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({

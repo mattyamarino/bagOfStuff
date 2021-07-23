@@ -27,7 +27,7 @@
                 </div>
             </mat-form-field>
         </div>
-        <div *ngIf="data.user.role === 'dm'">
+        <div *ngIf="data.user.role === 'dm' && data.action === 'move'">
             <mat-form-field appearance="fill" class="field">
                 <mat-label>Vault To Move Item To</mat-label>
                 <mat-select placeholder="Select Player to Send Item" formControlName="destination" required>

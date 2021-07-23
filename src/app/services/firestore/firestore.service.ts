@@ -29,6 +29,11 @@ export class FirestoreService {
       ref => ref.orderBy("createdOn", "desc").limit(1)).valueChanges({ idField: 'id' });
   }
 
+  getLatestTransactionOnce() {
+    return this.firestore.collection(FirestoreConstants.currencyTransactions,
+      ref => ref.orderBy("createdOn", "desc").limit(1)).get();
+  }
+
   createCurrencyTransaction(data: any) {
     return new Promise<any>((resolve, reject) => {
       this.firestore
@@ -90,7 +95,6 @@ export class FirestoreService {
   }
 
   updateItemOwner(id: string, owner: string) {
-    console.log(owner)
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       owner: owner,
       lastUpdatedOn: Date.now()

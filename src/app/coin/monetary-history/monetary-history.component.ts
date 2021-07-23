@@ -4,6 +4,7 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ItemDescriptionComponent } from 'src/app/item/item-description/item-description.component';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
@@ -75,5 +76,18 @@ export class MonetaryHistoryComponent implements OnInit {
 
   isDateUnchanged() {
     return this.selectedDate == this.originalDate;
+  }
+
+  openItemDescription(transaction: MonetaryTransaction): void {
+    console.log(transaction)
+    if(transaction.soldItemId) {
+      this.firestoreService.getItem(transaction.soldItemId).subscribe(res => {
+        this.dialog.open(ItemDescriptionComponent, {
+          data: {
+            item: res.data()
+          }
+        });
+      });
+    }
   }
 }

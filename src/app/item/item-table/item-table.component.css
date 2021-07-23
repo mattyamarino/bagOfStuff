@@ -23,6 +23,11 @@ width: 80px !important;
 text-align: center !important;
 }
 
+.mat-column-sell { 
+width: 55px !important;
+text-align: center !important;
+}
+
 .mat-column-withdraw { 
 width: 55px !important;
 text-align: center !important;
