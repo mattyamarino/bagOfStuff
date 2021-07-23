@@ -7,6 +7,16 @@
         {{getMessage()}}
     </div><br>
     <form [formGroup]="actionFormGroup">
+        <div *ngIf="data.user.role === 'dm' && data.action === 'move'">
+            <mat-form-field appearance="fill" class="field">
+                <mat-label>Vault To Move Item To</mat-label>
+                <mat-select placeholder="Select Player to Send Item" formControlName="destination" required>
+                    <mat-option *ngFor="let player of players" [value]="player.character">
+                        {{getPlayerOptionLabel(player)}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div *ngIf="data.item.quantity > 1">
             <mat-form-field appearance="fill" class="field">
                 <mat-label>Select Number Of Item(s) to {{data.action | titlecase}}</mat-label>
@@ -25,16 +35,6 @@
                         </mat-error>
                     </div>
                 </div>
-            </mat-form-field>
-        </div>
-        <div *ngIf="data.user.role === 'dm' && data.action === 'move'">
-            <mat-form-field appearance="fill" class="field">
-                <mat-label>Vault To Move Item To</mat-label>
-                <mat-select placeholder="Select Player to Send Item" formControlName="destination" required>
-                    <mat-option *ngFor="let player of players" [value]="player.character">
-                        {{player.character | titlecase}} ({{player.player | titlecase}})
-                    </mat-option>
-                </mat-select>
             </mat-form-field>
         </div>
     </form>

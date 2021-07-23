@@ -43,7 +43,7 @@ export class ItemHistoryComponent implements OnInit {
   }
 
   getTitle(): string {
-    return this.data.target = this.data.target === "item" ? this.data.item.itemName : this.data.target === "player" ? this.data.user.short + "'s Items" : "All Items"
+    return this.data.target === "item" ? this.data.item.itemName : this.data.target === "player" ? this.data.user.short + "'s Items" : "All Items"
   }
 
   openItemDescription(itemId: string): void {
@@ -59,7 +59,8 @@ export class ItemHistoryComponent implements OnInit {
   openModal(item: Item): void {
     this.dialog.open(ItemDescriptionComponent, {
       data: {
-        item: item
+        item: item,
+        hideHistory: true
       }
     });
   }

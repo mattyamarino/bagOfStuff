@@ -1,6 +1,6 @@
 .menu-right {
     position: absolute;
-    right: 22%;
+    right: 18%;
     padding-right: 10px;
     top: 45px;
 }
@@ -13,6 +13,10 @@
 
 ::ng-deep .mat-menu-panel {
     max-width: none !important;
+  }
+
+  ::ng-deep .mat-menu-content{
+    padding-bottom: 15px !important;
   }
 
   .mat-button-toggle {

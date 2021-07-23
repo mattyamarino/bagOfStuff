@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirestoreConstants } from 'src/app/config/FirestoreConstants';
-import { ExternalItem } from 'src/app/models/ExternalItem';
-import { Item } from 'src/app/models/Item';
-import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 import { User } from 'src/app/models/user';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirestoreService {
 
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore, public userService: UserService) { }
 
   // USER FUNCTIONS
   getUsers() {
@@ -72,9 +70,9 @@ export class FirestoreService {
   getItemsByNameTypeAndOwner(name: string, type: string, owner: string) {
     return this.firestore.collection(FirestoreConstants.items,
       ref => ref.where("name", "==", name)
-      .where("type", "==" , type)
-      .where("owner", "==", owner)
-      ).get();
+        .where("type", "==", type)
+        .where("owner", "==", owner)
+    ).get();
   }
 
   getItem(id: string) {
@@ -94,13 +92,27 @@ export class FirestoreService {
       });
   }
 
+  updateItemQuantityAndCost(id: string, quantity: number, cost: number) {
+    return this.firestore.collection(FirestoreConstants.items).doc(id).update({
+      quantity: quantity,
+      cost: cost,
+      lastUpdatedOn: Date.now()
+    })
+      .then(() => {
+        console.log("Document " + id + " successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  }
+
   updateItemOwner(id: string, owner: string) {
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       owner: owner,
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document successfully updated!");
+        console.log("Document " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -114,7 +126,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document successfully updated!");
+        console.log("Document " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -141,4 +153,33 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)).get();
   }
+  
+  getItemHistoriesForItem(queryDate: number, itemId: string) {
+    return this.firestore.collection(FirestoreConstants.itemHistory,
+      ref => ref.where("createdOn", ">=", queryDate)
+      .where("itemId", "==", itemId)).get();
+  }
+
+  async getItemHistoriesForUser(queryDate: number, user: User) {
+    const historiesRef = this.firestore.collection(FirestoreConstants.itemHistory)
+
+    const previousOwner = historiesRef.ref.where('previousOwner', '==', user.character).where("createdOn", ">=", queryDate).get();
+    const currentOwner = historiesRef.ref.where('currentOwner', '==', user.character).where("createdOn", ">=", queryDate).get();
+    const createdBy = historiesRef.ref.where('createdBy', '==', this.userService.getUserLabel(user)).where("createdOn", ">=", queryDate).get();
+
+    const [previousQuerySnapshot, currentQuerySnapshot, createdQuerySnapshot] = await Promise.all([
+      previousOwner,
+      currentOwner,
+      createdBy
+    ]);
+
+    const previousOwnerArray = previousQuerySnapshot.docs;
+    const currentOwnerArray = currentQuerySnapshot.docs;
+    const createdByArray = createdQuerySnapshot.docs;
+
+    const historiesArray = previousOwnerArray.concat(currentOwnerArray.concat(createdByArray));
+
+    return historiesArray;
+  }
+
 }

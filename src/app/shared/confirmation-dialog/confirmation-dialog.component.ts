@@ -16,6 +16,10 @@ export class ConfirmationDialogComponent implements OnInit {
 
   }
 
+  getMessageClass(): string {
+    return this.data.centerMessage ? "confirm-message-center" : "confirm-message" 
+  }
+
   onConfirm(): void {
       // Close the dialog, return true
       this.dialogRef.close(true);

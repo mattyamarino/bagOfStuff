@@ -5,7 +5,7 @@
         <div class="button-container">
             <button mat-raised-button color="light-blue" (click)="openDepositDialog()">Deposit Item</button>
             &nbsp;&nbsp;&nbsp;
-            <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">Transaction History</button>
+            <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">History For All Items</button>
         </div>
         <br><span class="br"></span>
         <div class="center-table">
@@ -16,7 +16,9 @@
         <mat-tab [label]="getPlayerBankLabel(player)">
             <br>
             <div class="button-container">
-                <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">Transaction History</button>
+                <button mat-raised-button color="light-blue" (click)="openDepositDialog(player)">Deposit Item</button>
+                &nbsp;&nbsp;&nbsp;
+                <button mat-raised-button color="light-blue" (click)="openHistoryDialog(player)">History For {{player.short | titlecase}}'s Items</button>
             </div>
             <br><span class="br"></span>
             <app-item-table [user]="getVaultUser(player)" [isForBank]=false [vault]="player"></app-item-table>

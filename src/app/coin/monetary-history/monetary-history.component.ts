@@ -79,12 +79,12 @@ export class MonetaryHistoryComponent implements OnInit {
   }
 
   openItemDescription(transaction: MonetaryTransaction): void {
-    console.log(transaction)
     if(transaction.soldItemId) {
       this.firestoreService.getItem(transaction.soldItemId).subscribe(res => {
         this.dialog.open(ItemDescriptionComponent, {
           data: {
-            item: res.data()
+            item: res.data(),
+            showCost: true
           }
         });
       });

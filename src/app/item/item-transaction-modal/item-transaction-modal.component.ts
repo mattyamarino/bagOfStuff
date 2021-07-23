@@ -270,7 +270,7 @@ export class ItemTransactionModalComponent implements OnInit {
       const duplicateItemId = res.docs[0]?.id
 
       if(duplicateItem !== undefined && isPregen) {
-        this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity);
+        this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value);
         this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory(duplicateItemId, duplicateItem)), duplicateItemId);
       } else {
         this.firestoreService.createItem(itemData, this.itemService.transformToObject(this.buildItemHistory()));

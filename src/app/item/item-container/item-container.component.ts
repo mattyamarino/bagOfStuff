@@ -39,18 +39,27 @@ export class ItemContainerComponent implements OnInit {
     return this.user.role === "dm" ? this.user : playerCharacter;
   }
 
-  openDepositDialog(): void {
+  openDepositDialog(user?: User): void {
+    const createdFor = user !== undefined ? user.character : "bank";
     this.dialog.open(ItemTransactionModalComponent, {
       data: {
         user: this.user,
-        createdFor: "bank"
+        createdFor: createdFor
       }
     });
   }
   
-  openHistoryDialog(): void {
+  openHistoryDialog(user?: User): void {
     let queryDate = new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
+    if(user !== undefined) {
+      this.getItemHistoriesForUser(queryDate, user);
+    } else {
+      this.getAllItemHistories(queryDate)
+    }
+  }
 
+
+  getAllItemHistories(queryDate: number): void {
     this.firestoreService.getItemHistories(queryDate).subscribe(res => {
       const histories = <ItemHistory[]>res.docs.map(doc => doc.data())
       this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories)
@@ -62,4 +71,18 @@ export class ItemContainerComponent implements OnInit {
       });
     });
   }
+
+  getItemHistoriesForUser(queryDate: number, user: User): void {
+    this.firestoreService.getItemHistoriesForUser(queryDate, user).then(res => {
+      const histories = <ItemHistory[]>res.map(doc => doc.data())
+      this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories)
+      this.dialog.open(ItemHistoryComponent, {
+        data: {
+          target: "player",
+          histories: histories,
+          user: user
+        }
+      });
+    });
+  } 
 }

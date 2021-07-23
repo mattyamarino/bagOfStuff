@@ -3,7 +3,7 @@
         {{data.title | titlecase}}
     </div>
     <br>
-    <div style="white-space: pre-line" class="confirm-message">
+    <div style="white-space: pre-line" [ngClass]="getMessageClass()">
         {{data.message}}
     </div>
     <span class="br"></span>

@@ -1,5 +1,5 @@
 <mat-dialog-content>
-    <mat-card class="mat-elevation-z0" class="card-width">
+    <mat-card class="mat-elevation-z0 card-width">
         <mat-card-header>
             <img mat-card-avatar [src]='"../../../assets/"+getItemIcon(data.item.type)+".jpg"' class="item-icon">
             <mat-card-title>
@@ -17,10 +17,18 @@
             <div style="white-space: pre-line">
                 {{data.item.description}}
             </div>
-            <div *ngIf="data.item.quantity > 1">
+            <div *ngIf="data.showQuantity && data.item.quantity > 1">
                 <br>
                 Quantity: {{data.item.quantity}}
             </div>
+            <div *ngIf="data.showCost">
+                <br>
+                Value in Silver: {{data.item.cost}} (each)
+            </div>
         </mat-card-content>
     </mat-card>
+
+    <div *ngIf="!data.hideHistory" class="button-container">
+        <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">View History</button>
+    </div>
 </mat-dialog-content>

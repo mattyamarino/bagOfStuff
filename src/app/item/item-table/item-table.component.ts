@@ -29,8 +29,8 @@ export class ItemTableComponent implements OnInit {
     'type',
     'rarity',
     'cost',
-    'sell',
     'withdraw',
+    'sell',
     'delete',
   ];
   filteredValues = {
@@ -99,7 +99,8 @@ export class ItemTableComponent implements OnInit {
   openItemDescription(item: Item): void {
     this.dialog.open(ItemDescriptionComponent, {
       data: {
-        item: item
+        item: item,
+        showQuantity: true
       }
     });
   }
