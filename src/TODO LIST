@@ -2,6 +2,14 @@ FIX coin and item bank are different widths on smaller screens
 
 FIX page height to not shrink if content becomes smaller
 
+FIX height of Item History grid (use bootstrap?)
+
+CHANGE bank owner to Party Item Vault?
+
+FIX deposit item, clear form if selected pregen item and switch to 
+
+FIX change item history owner from full name to short in history
+
 ADD snackbar confirmation or error whenever user deposits/moves/deletes item
 
 ADD Armor and Adventuring Gear to item search

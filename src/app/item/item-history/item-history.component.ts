@@ -1,4 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -24,7 +25,7 @@ export class ItemHistoryComponent implements OnInit {
   dataSource = new MatTableDataSource<ItemHistory>([]);
   displayedColumns: string[] = [
     'name', 
-    'action', 
+    // 'action', 
     'history', 
     'createdBy',
     'createdOn'
@@ -46,13 +47,17 @@ export class ItemHistoryComponent implements OnInit {
     return this.data.target === "item" ? this.data.item.itemName : this.data.target === "player" ? this.data.user.short + "'s Items" : "All Items"
   }
 
-  openItemDescription(itemId: string): void {
-    if(this.data.item === undefined) {
-      this.firestoreService.getItem(itemId).subscribe(res => {
-        this.openModal(<Item>res.data());
-      });
+  openItemDescription(itemHistory: ItemHistory, openParentItemHistory?: boolean): void {
+    if(openParentItemHistory) {
+      this.goToParentItem(itemHistory);
     } else {
-      this.openModal(this.data.item);
+      if(this.data.item === undefined) {
+        this.firestoreService.getItem(itemHistory.itemId).subscribe(res => {
+          this.openModal(<Item>res.data());
+        });
+      } else {
+        this.openModal(this.data.item);
+      }
     }
   }
 
@@ -70,25 +75,88 @@ export class ItemHistoryComponent implements OnInit {
   }
 
   showParagraph(itemHistory: ItemHistory): boolean {
-    return itemHistory.origin !== undefined || (itemHistory.action === ItemActions.DELETE && itemHistory.currentQuantity! > 0)
+    return itemHistory.origin !== undefined
   }
 
   showGrid(itemHistory: ItemHistory): boolean {
-    return itemHistory.action === ItemActions.MOVE || (itemHistory.action === ItemActions.DELETE && itemHistory.currentQuantity! === 0)
+    return itemHistory.previousQuantity !== undefined || itemHistory.previousCost !== undefined || itemHistory.previousOwner !== undefined 
   }
 
   getBeforeAction(itemHistory: ItemHistory): string {
-    const pre = itemHistory.previousOwner !== undefined ? itemHistory.previousOwner : "";
-    const post = itemHistory.previousQuantity !== undefined ? "Qty: " + itemHistory.previousQuantity.toString() : "";
-    const spacer = pre !== "" && post !== "" ? ",  " : "";
-    return pre + spacer + post;
+    let stringArray = [];
+    let beforeAction = "";
+    let counter = 1;
+    if(itemHistory.previousOwner !== undefined && this.isOwnerShown(itemHistory)) {
+      stringArray.push("Owner:  " + itemHistory.previousOwner);
+    }
+    if(itemHistory.previousQuantity !== undefined) {
+      stringArray.push("Qty:  " + itemHistory.previousQuantity);
+    }
+    if(itemHistory.previousCost !== undefined) {
+      stringArray.push("Value:  " + itemHistory.previousCost + "sp");
+    }
+    stringArray.forEach(string => {
+      beforeAction += string;
+      if(counter < stringArray.length) {
+        beforeAction += ",  ";
+      }
+      counter++;
+    });
+    return beforeAction;
   }
 
   getAfterAction(itemHistory: ItemHistory): string {
-    const pre = itemHistory.currentOwner !== undefined ? itemHistory.currentOwner : "";
-    const post = itemHistory.currentQuantity !== undefined ? "Qty: " + itemHistory.currentQuantity.toString() : "";
-    const spacer = pre !== "" && post !== "" ? ",  " : "";
-    return pre + spacer + post;
+    let stringArray = [];
+    let afterAction = "";
+    let counter = 1;
+    if(itemHistory.currentOwner !== undefined && this.isOwnerShown(itemHistory)) {
+      stringArray.push("Owner:  " + itemHistory.currentOwner);
+    }
+    if(itemHistory.currentQuantity !== undefined) {
+      stringArray.push("Qty:  " + itemHistory.currentQuantity);
+    }
+    if(itemHistory.currentCost !== undefined) {
+      stringArray.push("Value:  " + itemHistory.currentCost + "sp");
+    }
+    stringArray.forEach(string => {
+      afterAction += string;
+      if(counter < stringArray.length) {
+        afterAction += ',  ';
+      }
+      counter++;
+    });
+    return afterAction;
+  }
+
+  getArrowIcon(itemHistory: ItemHistory): string {
+    return itemHistory.action === "deleted" ? "arrow-orange" : itemHistory.action === "sold" ? "arrow-pink" : "arrow-blue";
+  }
+
+  getOrigin(itemHistory: ItemHistory): string {
+    if(itemHistory.action === "created") {
+      return itemHistory.origin!
+    }
+
+    return "Moved from stack in another vault, click here for the parent item's history"
+  }
+
+  isOwnerShown(itemHistory: ItemHistory): boolean {
+    return itemHistory.action !== "deleted" && itemHistory.action !== "sold" && itemHistory.previousOwner !== itemHistory.currentOwner;
+  }
+
+  goToParentItem(itemHistory: ItemHistory): void {
+    this.dataSource.data = this.data.histories;
+    this.firestoreService.getItemHistoriesForItem(itemHistory.origin!).subscribe(resHistories => {
+      const histories = <ItemHistory[]>resHistories.docs.map(doc => doc.data())
+      this.firestoreService.getItem(itemHistory.origin!).subscribe(resItem => {
+        this.data.user = undefined;
+        this.data.item = resItem.data();
+        this.data.target = "item"
+        this.data.histories = histories;
+        this.dataSource.data = histories;
+        console.log(this.data)
+      });
+    });
   }
 
   closeDialog(): void {

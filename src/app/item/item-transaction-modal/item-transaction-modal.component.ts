@@ -260,20 +260,29 @@ export class ItemTransactionModalComponent implements OnInit {
 
   completeTransaction(): void {
     let itemData = this.itemService.transformToObject(this.buildItem());
+    let itemHistory = this.itemService.transformToObject(this.buildItemHistory())
     const isPregen = this.isPregeneratedItem(itemData);
     if(!isPregen) {
-      itemData.name = itemData.name + "*"
+      itemData.name = itemData.name + "*";
+      itemHistory.itemName = itemData.name;
     }
 
+    // FIND IF THERE IS EXISTING ITEM WITH SAME NAME
     this.firestoreService.getItemsByNameTypeAndOwner(itemData.name, itemData.type, this.data.createdFor).subscribe(res => {
       const duplicateItem: Item = <Item>res.docs[0]?.data();
       const duplicateItemId = res.docs[0]?.id
 
+      // UPDATE QUANTITY AND COST FOR EXISTING ITEM IF PRESENT
       if(duplicateItem !== undefined && isPregen) {
-        this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value);
+        if(this.secondFormGroup.get("cost")?.value === undefined) {
+          this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity);
+        } else {
+          this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value);
+        }
         this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory(duplicateItemId, duplicateItem)), duplicateItemId);
+      // CREATE NEW ITEM IF NO EXISTING ITEM IS PRESENT
       } else {
-        this.firestoreService.createItem(itemData, this.itemService.transformToObject(this.buildItemHistory()));
+        this.firestoreService.createItem(itemData, itemHistory);
       }
 
       this.closeModal();
@@ -304,6 +313,8 @@ export class ItemTransactionModalComponent implements OnInit {
     this.data.createdFor,
     duplicateItem?.quantity,
     duplicateItem ? this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity : this.secondFormGroup.get("quantity")?.value,
+    duplicateItem?.cost !== this.secondFormGroup.get("cost")?.value && this.secondFormGroup.get("cost")?.value !== undefined? duplicateItem?.cost : undefined,
+    duplicateItem?.cost !== this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : undefined,
     this.secondFormGroup.get("origin")?.value
     );
   }

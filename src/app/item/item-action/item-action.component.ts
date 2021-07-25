@@ -29,19 +29,23 @@ export class ItemActionComponent implements OnInit {
     private snackBar: MatSnackBar,  public titleCasePipe: TitleCasePipe) { }
 
   ngOnInit(): void {
-    this.setDestination();
+    this.setDestinationLabel();
     this.setFormGroup();
     this.setPlayers();
   }
 
-  setDestination(): void {
+  setDestinationLabel(): void {
     this.destinationLabel = this.data.item.owner === "bank" ? this.data.user.short + "'s Item Vault" : "Party Item Vault";
+  }
+
+  getDestination(): string {
+    return this.data.item.owner === "bank" ? this.data.user.character : "bank"
   }
 
   setFormGroup(): void {
     this.actionFormGroup = new FormGroup({
       quantity: new FormControl('', [Validators.required, Validators.min(1), Validators.max(this.data.item.quantity), Validators.pattern('^(0|[1-9][0-9]*)$')]),
-      destination: new FormControl(this.data.user.character, Validators.required)
+      destination: new FormControl(this.getDestination(), Validators.required)
     });
     if (this.data.item.quantity === 1) {
       this.actionFormGroup.get("quantity")!.setValue(1);
@@ -188,6 +192,8 @@ export class ItemActionComponent implements OnInit {
       updateType === "delete" ? "deleted" : updateType === "sell" ? "sold" : updateType === "owner" || updateType === "create" ? this.actionFormGroup.get("destination")?.value : undefined,
       updateType === "quantity" || updateType === "delete" || updateType === "sell" ? this.data.item.quantity : undefined,
       updateType === "quantity" || updateType === "delete" || updateType === "sell" ? this.data.item.quantity - this.actionFormGroup.get("quantity")!.value : updateType === "create" ? this.actionFormGroup.get("quantity")!.value : undefined,
+      undefined,
+      undefined,
       updateType === "create" ? this.data.item.id : undefined
     )
   }
@@ -203,6 +209,8 @@ export class ItemActionComponent implements OnInit {
       item.owner,
       item.quantity,
       item.quantity + this.actionFormGroup.get("quantity")!.value,
+      undefined,
+      undefined,
       itemId
     );
   }

@@ -50,17 +50,16 @@ export class ItemContainerComponent implements OnInit {
   }
   
   openHistoryDialog(user?: User): void {
-    let queryDate = new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
     if(user !== undefined) {
-      this.getItemHistoriesForUser(queryDate, user);
+      this.getItemHistoriesForUser(user);
     } else {
-      this.getAllItemHistories(queryDate)
+      this.getAllItemHistories()
     }
   }
 
 
-  getAllItemHistories(queryDate: number): void {
-    this.firestoreService.getItemHistories(queryDate).subscribe(res => {
+  getAllItemHistories(): void {
+    this.firestoreService.getItemHistories().subscribe(res => {
       const histories = <ItemHistory[]>res.docs.map(doc => doc.data())
       this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories)
       this.dialog.open(ItemHistoryComponent, {
@@ -72,8 +71,8 @@ export class ItemContainerComponent implements OnInit {
     });
   }
 
-  getItemHistoriesForUser(queryDate: number, user: User): void {
-    this.firestoreService.getItemHistoriesForUser(queryDate, user).then(res => {
+  getItemHistoriesForUser(user: User): void {
+    this.firestoreService.getItemHistoriesForUser(user).then(res => {
       const histories = <ItemHistory[]>res.map(doc => doc.data())
       this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories)
       this.dialog.open(ItemHistoryComponent, {

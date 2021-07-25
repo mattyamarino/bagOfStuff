@@ -17,7 +17,8 @@ export class FirestoreService {
   }
 
   // CURRENCY FUNCTIONS
-  getCurrencyTransactions(queryDate: number) {
+  getCurrencyTransactions(queryDate?: number) {
+    queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.currencyTransactions,
       ref => ref.where("createdOn", ">=", queryDate)).get();
   }
@@ -85,7 +86,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document successfully updated!");
+        console.log("Document " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -149,18 +150,21 @@ export class FirestoreService {
     });
   }
 
-  getItemHistories(queryDate: number) {
+  getItemHistories(queryDate?: number) {
+    queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)).get();
   }
   
-  getItemHistoriesForItem(queryDate: number, itemId: string) {
+  getItemHistoriesForItem(itemId: string, queryDate?: number) {
+    queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)
       .where("itemId", "==", itemId)).get();
   }
 
-  async getItemHistoriesForUser(queryDate: number, user: User) {
+  async getItemHistoriesForUser(user: User, queryDate?: number) {
+    queryDate = this.setQueryDate(queryDate!);
     const historiesRef = this.firestore.collection(FirestoreConstants.itemHistory)
 
     const previousOwner = historiesRef.ref.where('previousOwner', '==', user.character).where("createdOn", ">=", queryDate).get();
@@ -181,5 +185,9 @@ export class FirestoreService {
 
     return historiesArray;
   }
-
+  
+  // SET QUERYDATE
+  setQueryDate(queryDate: number): number {
+      return queryDate !== undefined ? queryDate : new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
+  }
 }

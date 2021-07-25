@@ -29,7 +29,7 @@ export class ItemService {
   }
 
   buildItemHistory(id: any, itemName: string, itemRarity: string, action: string, createdBy: string, previousOwner: any, currentOwner: any,
-    previousQuantity: any, currentQuantity: any, origin: any): ItemHistory {
+    previousQuantity: any, currentQuantity: any, previousCost: any, currentCost: any, origin: any): ItemHistory {
     let newItemHistory: ItemHistory = new ItemHistory;
     if (id !== undefined) { newItemHistory.itemId = id; }
     newItemHistory.itemName = itemName;
@@ -41,6 +41,8 @@ export class ItemService {
     if (currentOwner !== undefined) { newItemHistory.currentOwner = currentOwner; }
     if (previousQuantity !== undefined) { newItemHistory.previousQuantity = previousQuantity; }
     if (currentQuantity !== undefined) { newItemHistory.currentQuantity = currentQuantity; }
+    if (previousCost !== undefined) { newItemHistory.previousCost = previousCost; }
+    if (currentCost !== undefined) { newItemHistory.currentCost = currentCost; }
     if (origin !== undefined) { newItemHistory.origin = origin; }
     return newItemHistory;
   }
