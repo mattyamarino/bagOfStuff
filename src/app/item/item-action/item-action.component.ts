@@ -118,16 +118,16 @@ export class ItemActionComponent implements OnInit {
             this.deleteItemAndSetQuantityToZero()
             // DELETE PARTIAL STACK
           } else if (this.data.action === "delete") {
-            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value, this.data.user.id);
             this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
             // SELL FULL STACK
           } else if (this.data.action === "sell" && existingItem.quantity === this.actionFormGroup.get("quantity")!.value) {
-            this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "sold", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "sold", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value, this.data.user.id);
             this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("sell")), this.data.item.id);
             this.sellItem();
             // SELL PARTIAL STACK
           } else if (this.data.action === "sell") {
-            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value, this.data.user.id);
             this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("sell")), this.data.item.id);
             this.sellItem();
             // MOVE FULL STACK TO DUPLICATE ITEM AT DESTINATION
@@ -137,18 +137,18 @@ export class ItemActionComponent implements OnInit {
               this.updateQuantityOnDuplicateItemAtDestination(duplicateItemId, duplicateItem);
               // MOVE FULL STACK
             } else {
-              this.firestoreService.updateItemOwner(this.data.item.id, this.actionFormGroup.get("destination")?.value);
+              this.firestoreService.updateItemOwner(this.data.item.id, this.actionFormGroup.get("destination")?.value, this.data.user.id);
               this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("owner")), this.data.item.id);
             }
             // MOVE PARTIAL STACK
           } else {
-            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+            this.firestoreService.updateItemQuantity(this.data.item.id, this.data.item.quantity - this.actionFormGroup.get("quantity")!.value, this.data.user.id);
             this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("quantity")), this.data.item.id);
             // MOVE PARTIAL STACK TO DUPLICATE ITEM AT DESTINATION 
             if (duplicateItem !== undefined && this.data.item.name.charAt(this.data.item.name.length - 1) !== '*') {
               this.updateQuantityOnDuplicateItemAtDestination(duplicateItemId, duplicateItem);
             } else {
-              this.firestoreService.createItem(this.itemService.transformToObject(this.buildItem()), this.itemService.transformToObject(this.buildItemHistory("create")));
+              this.firestoreService.createItem(this.itemService.transformToObject(this.buildItem()), this.itemService.transformToObject(this.buildItemHistory("create")), this.data.user.id);
             }
           }
         });
@@ -160,12 +160,12 @@ export class ItemActionComponent implements OnInit {
   }
 
   deleteItemAndSetQuantityToZero() {
-    this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "deleted", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value);
+    this.firestoreService.updateItemOwnerAndQuantity(this.data.item.id, "deleted", this.data.item.quantity - this.actionFormGroup.get("quantity")!.value, this.data.user.id);
     this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory("delete")), this.data.item.id);
   }
 
   updateQuantityOnDuplicateItemAtDestination(duplicateItemId: string, duplicateItem: Item) {
-    this.firestoreService.updateItemQuantityAndCost(duplicateItemId, duplicateItem.quantity! + this.actionFormGroup.get("quantity")!.value, this.data.item.cost);
+    this.firestoreService.updateItemQuantityAndCost(duplicateItemId, duplicateItem.quantity! + this.actionFormGroup.get("quantity")!.value, this.data.item.cost, this.data.user.id);
     this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistoryForExistingItem(duplicateItemId, duplicateItem)), duplicateItemId);
   }
 

@@ -232,7 +232,6 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   depositItem(): void {
-    console.log(this.secondFormGroup)
     if (this.secondFormGroup.valid) {
       let amountToCreate: string = "";
       if(this.secondFormGroup.get('quantity')?.value > 1) {
@@ -278,14 +277,14 @@ export class ItemTransactionModalComponent implements OnInit {
       // UPDATE QUANTITY AND COST FOR EXISTING ITEM IF PRESENT
       if(duplicateItem !== undefined && isPregen) {
         if(this.secondFormGroup.get("cost")?.value === undefined) {
-          this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity);
+          this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.data.user.id);
         } else {
-          this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value);
+          this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value, this.data.user.id);
         }
         this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory(duplicateItemId, duplicateItem)), duplicateItemId);
       // CREATE NEW ITEM IF NO EXISTING ITEM IS PRESENT
       } else {
-        this.firestoreService.createItem(itemData, itemHistory);
+        this.firestoreService.createItem(itemData, itemHistory, this.data.user.id);
       }
 
       this.closeModal();

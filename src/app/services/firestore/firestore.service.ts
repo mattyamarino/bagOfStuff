@@ -16,6 +16,18 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.users).valueChanges({ idField: 'id' });
   }
 
+  updateUserLastLogin(id: string) {
+    return this.firestore.collection(FirestoreConstants.users).doc(id).update({
+      lastLogin: Date.now() + 2000
+    })
+      .then(() => { 
+        console.log("Document " + id + " successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  }
+
   // CURRENCY FUNCTIONS
   getCurrencyTransactions(queryDate?: number) {
     queryDate = this.setQueryDate(queryDate!);
@@ -48,7 +60,8 @@ export class FirestoreService {
   }
 
   // ITEM FUNCTIONS
-  createItem(itemData: any, itemHistory: any) {
+  createItem(itemData: any, itemHistory: any, userId: string) {
+    this.updateUserLastLogin(userId);
     return new Promise<any>((resolve, reject) => {
       this.firestore
         .collection(FirestoreConstants.items)
@@ -80,7 +93,8 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.items).doc(id).get();
   }
 
-  updateItemQuantity(id: string, quantity: number) {
+  updateItemQuantity(id: string, quantity: number, userId: string) {
+    this.updateUserLastLogin(userId);
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       quantity: quantity,
       lastUpdatedOn: Date.now()
@@ -93,7 +107,8 @@ export class FirestoreService {
       });
   }
 
-  updateItemQuantityAndCost(id: string, quantity: number, cost: number) {
+  updateItemQuantityAndCost(id: string, quantity: number, cost: number, userId: string) {
+    this.updateUserLastLogin(userId);
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       quantity: quantity,
       cost: cost,
@@ -107,7 +122,8 @@ export class FirestoreService {
       });
   }
 
-  updateItemOwner(id: string, owner: string) {
+  updateItemOwner(id: string, owner: string, userId: string) {
+    this.updateUserLastLogin(userId);
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       owner: owner,
       lastUpdatedOn: Date.now()
@@ -120,7 +136,8 @@ export class FirestoreService {
       });
   }
 
-  updateItemOwnerAndQuantity(id: string, owner: string, quantity: number) {
+  updateItemOwnerAndQuantity(id: string, owner: string, quantity: number, userId: string) {
+    this.updateUserLastLogin(userId);
     return this.firestore.collection(FirestoreConstants.items).doc(id).update({
       owner: owner,
       quantity: quantity,

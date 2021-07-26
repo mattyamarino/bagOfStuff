@@ -8,7 +8,14 @@
         <ng-container matColumnDef="icon">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let element">
-                <div (click)="openItemDescription(element)">
+                <div *ngIf="!isNewItem(element.lastUpdatedOn)" (click)="openItemDescription(element)">
+                    <img [src]='"../../../assets/"+getItemIcon(element.type)+".jpg"' class="item-icon">
+                </div>
+                <div *ngIf="isNewItem(element.lastUpdatedOn)"
+                (click)="openItemDescription(element)" 
+                matBadge="new" 
+                matBadgePosition="before" 
+                matBadgeOverlap="true">
                     <img [src]='"../../../assets/"+getItemIcon(element.type)+".jpg"' class="item-icon">
                 </div>
             </td>

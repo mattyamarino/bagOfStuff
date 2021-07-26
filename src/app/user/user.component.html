@@ -6,7 +6,7 @@
     <mat-select placeholder = "Select Character Here" 
     [(ngModel)]="selectedUser" name = "user" 
     [displayWith]="displayProperty"
-    (selectionChange)='setAssociatedPlayerCharacters($event.value)'>
+    (selectionChange)='updateUser($event.value)'>
         <mat-option *ngFor="let user of users" [value]="user">
             {{user.character}} ({{user.player}})
         </mat-option>

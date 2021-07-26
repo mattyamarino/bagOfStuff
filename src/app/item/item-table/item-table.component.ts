@@ -144,4 +144,8 @@ export class ItemTableComponent implements OnInit {
   getItemIcon(type: string): string {
     return type.split(" ")[0].toLowerCase();
   }
+
+  isNewItem(lastUpdatedOn: number): boolean {
+    return lastUpdatedOn > this.user?.lastLogin!
+  }
 }

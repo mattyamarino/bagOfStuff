@@ -4,5 +4,6 @@ export class User{
     character!: string;
     role!: string;
     short!: string;
+    lastLogin!: number;
     associatedPlayerCharacters?: User[];
 }

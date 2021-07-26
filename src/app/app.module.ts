@@ -44,6 +44,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { ItemActionComponent } from './item/item-action/item-action.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ItemHistoryComponent } from './item/item-history/item-history.component';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { ItemHistoryComponent } from './item/item-history/item-history.component
     MatDividerModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatBadgeModule,
   ],
   providers: [MatDatepickerModule, TitleCasePipe],
   bootstrap: [AppComponent],
