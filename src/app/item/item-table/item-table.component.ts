@@ -50,7 +50,7 @@ export class ItemTableComponent implements OnInit {
   }
 
   getItems(): void {
-    const query =  this.isForBank ? "bank" : this.vault!.character
+    const query =  this.isForBank ? "bank" : this.vault!.short
     this.firestoreService.getItems(query).subscribe(res => {
       this.itemService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
       this.dataSource.data = <Item[]><unknown>res

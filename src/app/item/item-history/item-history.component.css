@@ -1,11 +1,7 @@
 .mat-column-name { 
-width: 200px !important;
+padding-top: 7px;
+width: 210px !important;
 text-align: left !important;
-}
-
-.mat-column-action { 
-width: 90px !important;
-text-align: center !important;
 }
 
 .mat-column-history { 
@@ -60,6 +56,11 @@ margin-left: 43%;
 margin-right: 43%;
 }
 
+.small-text {
+    font-size: 10px;
+    color: rgb(182, 182, 182);
+}
+
 .mat-column {
 border: none;
 }
@@ -76,4 +77,8 @@ transform: translateY(0px) !important;
 
 ::ng-deep mat-datepicker-toggle.mat-datepicker-toggle button.mat-focus-indicator.mat-icon-button.mat-button-base {
 display: inherit;
+}
+
+::ng-deep .mat-grid-tile-content {
+    align-items: unset !important;
 }

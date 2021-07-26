@@ -87,11 +87,9 @@ text-align: center !important;
     margin-right: 43%;
 }
 
-.tall-button {
-    height: 52px;
-    width: 202px;
-    margin-bottom: 1rem;
-    align-items: center;
+::ng-deep .mat-grid-tile-content {
+    align-items: unset !important;
 }
+
 
 

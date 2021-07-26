@@ -5,6 +5,7 @@ import { CurrencyConstants } from 'src/app/config/CurrencyConstants';
 import { User } from 'src/app/models/user';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 
@@ -23,7 +24,7 @@ export class TransactionModalComponent implements OnInit {
   processingTransaction: boolean = false;
   submitAttempted: boolean = false;
   isFieldsEmpty: boolean = false;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService, public userService: UserService) {
     this.latestTransaction = data.latestTransaction;
     this.selectedUser = data.selectedUser;
     this.type = data.type;
@@ -157,7 +158,7 @@ export class TransactionModalComponent implements OnInit {
         newTransaction.description = this.transactionFormGroup.get('description')!.value;
         newTransaction.type = this.type;
         newTransaction.createdOn = Date.now();
-        newTransaction.createdBy = this.selectedUser.character + " (" + this.selectedUser.player + ")";
+        newTransaction.createdBy = this.userService.getUserLabel(this.selectedUser);
 
         this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction));
 

@@ -39,7 +39,7 @@ export class ItemActionComponent implements OnInit {
   }
 
   getDestination(): string {
-    return this.data.item.owner === "bank" ? this.data.user.character : "bank"
+    return this.data.item.owner === "bank" ? this.data.user.short : "bank"
   }
 
   setFormGroup(): void {
@@ -56,11 +56,11 @@ export class ItemActionComponent implements OnInit {
     if (this.data.user.role === "dm") {
       if(this.data.vault !== undefined) {
         let bank = new User;
-        bank.character = "bank";
+        bank.short = "bank";
         this.players.push(bank);
       }
       this.data.user.associatedPlayerCharacters.map((val: any) => this.players.push(Object.assign({}, val)));
-      this.players.splice(this.players.findIndex(player => player.character === this.data.vault.character), 1);
+      this.players.splice(this.players.findIndex(player => player.short === this.data.vault.short), 1);
     }
   }
 
@@ -73,7 +73,7 @@ export class ItemActionComponent implements OnInit {
   }
 
   getPlayerOptionLabel(user: User): string {
-    return user.character === "bank" ? "Party Item Bank" : user.character + " (" + user.player + ")";
+    return user.short === "bank" ? "Party Item Bank" : this.userService.getUserLabel(user);
   }
 
   moveDeleteItem(): void {

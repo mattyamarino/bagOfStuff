@@ -25,7 +25,6 @@ export class ItemHistoryComponent implements OnInit {
   dataSource = new MatTableDataSource<ItemHistory>([]);
   displayedColumns: string[] = [
     'name', 
-    // 'action', 
     'history', 
     'createdBy',
     'createdOn'
@@ -44,7 +43,33 @@ export class ItemHistoryComponent implements OnInit {
   }
 
   getTitle(): string {
-    return this.data.target === "item" ? this.data.item.itemName : this.data.target === "player" ? this.data.user.short + "'s Items" : "All Items"
+    return this.data.target === "item" ? this.data.item.name : this.data.target === "player" ? this.data.user.short + "'s Items" : "All Items"
+  }
+
+  isDateUnchanged() {
+    return this.selectedDate == this.originalDate;
+  }
+
+  updateTransactions(): void {
+    if(this.selectedDate && this.data.target === "all") {
+      this.firestoreService.getItemHistories(this.selectedDate.getTime()).subscribe(res => {
+        const refArray =  res.docs.map(doc => doc.data());
+        this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(<ItemHistory[]>refArray)
+        this.dataSource.data = <ItemHistory[]>refArray;
+      });
+    } else if(this.selectedDate && this.data.target === "player") {
+      this.firestoreService.getItemHistoriesForUser(this.data.user, this.selectedDate.getTime()).then(res => {
+        const refArray =  res.map(doc => doc.data());
+        this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(<ItemHistory[]>refArray)
+        this.dataSource.data = <ItemHistory[]>refArray;
+      });
+    } else if(this.selectedDate && this.data.target === "item") {
+      this.firestoreService.getItemHistoriesForItem(this.data.item, this.selectedDate.getTime()).subscribe(res => {
+        const refArray =  res.docs.map(doc => doc.data());
+        this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(<ItemHistory[]>refArray)
+        this.dataSource.data = <ItemHistory[]>refArray;
+      });
+    } 
   }
 
   openItemDescription(itemHistory: ItemHistory, openParentItemHistory?: boolean): void {
@@ -53,7 +78,9 @@ export class ItemHistoryComponent implements OnInit {
     } else {
       if(this.data.item === undefined) {
         this.firestoreService.getItem(itemHistory.itemId).subscribe(res => {
-          this.openModal(<Item>res.data());
+          let item = <Item>res.data();
+          item.id = res.id
+          this.openModal(item);
         });
       } else {
         this.openModal(this.data.item);
@@ -62,10 +89,11 @@ export class ItemHistoryComponent implements OnInit {
   }
 
   openModal(item: Item): void {
+    const hideHistory = this.data.target === "item" ? true : false;
     this.dialog.open(ItemDescriptionComponent, {
       data: {
         item: item,
-        hideHistory: true
+        hideHistory: hideHistory
       }
     });
   }
@@ -87,7 +115,8 @@ export class ItemHistoryComponent implements OnInit {
     let beforeAction = "";
     let counter = 1;
     if(itemHistory.previousOwner !== undefined && this.isOwnerShown(itemHistory)) {
-      stringArray.push("Owner:  " + itemHistory.previousOwner);
+      let owner = itemHistory.previousOwner === "bank" ? "Party Vault" : itemHistory.previousOwner;
+      stringArray.push(owner);
     }
     if(itemHistory.previousQuantity !== undefined) {
       stringArray.push("Qty:  " + itemHistory.previousQuantity);
@@ -110,7 +139,8 @@ export class ItemHistoryComponent implements OnInit {
     let afterAction = "";
     let counter = 1;
     if(itemHistory.currentOwner !== undefined && this.isOwnerShown(itemHistory)) {
-      stringArray.push("Owner:  " + itemHistory.currentOwner);
+      let owner = itemHistory.currentOwner === "bank" ? "Party Vault" : itemHistory.currentOwner;
+      stringArray.push(owner);
     }
     if(itemHistory.currentQuantity !== undefined) {
       stringArray.push("Qty:  " + itemHistory.currentQuantity);
@@ -134,7 +164,7 @@ export class ItemHistoryComponent implements OnInit {
 
   getOrigin(itemHistory: ItemHistory): string {
     if(itemHistory.action === "created") {
-      return itemHistory.origin!
+      return "Aquired From:  " + itemHistory.origin!;
     }
 
     return "Moved from stack in another vault, click here for the parent item's history"
@@ -154,7 +184,6 @@ export class ItemHistoryComponent implements OnInit {
         this.data.target = "item"
         this.data.histories = histories;
         this.dataSource.data = histories;
-        console.log(this.data)
       });
     });
   }

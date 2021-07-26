@@ -167,8 +167,8 @@ export class FirestoreService {
     queryDate = this.setQueryDate(queryDate!);
     const historiesRef = this.firestore.collection(FirestoreConstants.itemHistory)
 
-    const previousOwner = historiesRef.ref.where('previousOwner', '==', user.character).where("createdOn", ">=", queryDate).get();
-    const currentOwner = historiesRef.ref.where('currentOwner', '==', user.character).where("createdOn", ">=", queryDate).get();
+    const previousOwner = historiesRef.ref.where('previousOwner', '==', user.short).where("createdOn", ">=", queryDate).get();
+    const currentOwner = historiesRef.ref.where('currentOwner', '==', user.short).where("createdOn", ">=", queryDate).get();
     const createdBy = historiesRef.ref.where('createdBy', '==', this.userService.getUserLabel(user)).where("createdOn", ">=", queryDate).get();
 
     const [previousQuerySnapshot, currentQuerySnapshot, createdQuerySnapshot] = await Promise.all([

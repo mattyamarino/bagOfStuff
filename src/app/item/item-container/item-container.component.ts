@@ -40,7 +40,7 @@ export class ItemContainerComponent implements OnInit {
   }
 
   openDepositDialog(user?: User): void {
-    const createdFor = user !== undefined ? user.character : "bank";
+    const createdFor = user !== undefined ? user.short : "bank";
     this.dialog.open(ItemTransactionModalComponent, {
       data: {
         user: this.user,

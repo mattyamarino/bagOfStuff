@@ -29,7 +29,7 @@ export class ItemTransactionModalComponent implements OnInit {
 
   constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog,
     public dialogRef: MatDialogRef<ItemTransactionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    public firestoreService: FirestoreService, private itemService: ItemService) { }
+    public firestoreService: FirestoreService, private itemService: ItemService, public userService: UserService) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -55,6 +55,8 @@ export class ItemTransactionModalComponent implements OnInit {
       if (val == false) {
         this.firstFormGroup.controls['itemName'].setValidators([Validators.required]);
       } else {
+        this.secondFormGroup.reset();
+        this.secondFormGroup.get("quantity")?.setValue(1);
         this.firstFormGroup.controls['itemName'].clearValidators();
       }
       this.firstFormGroup.controls['itemName'].updateValueAndValidity();
@@ -230,6 +232,7 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   depositItem(): void {
+    console.log(this.secondFormGroup)
     if (this.secondFormGroup.valid) {
       let amountToCreate: string = "";
       if(this.secondFormGroup.get('quantity')?.value > 1) {
@@ -308,7 +311,7 @@ export class ItemTransactionModalComponent implements OnInit {
     this.secondFormGroup.get("name")?.value,
     this.secondFormGroup.get("rarity")?.value,
     ItemActions.CREATE,
-    this.data.user.character + " (" + this.data.user.player + ")",
+    this.userService.getUserLabel(this.data.user),
     undefined,
     this.data.createdFor,
     duplicateItem?.quantity,
