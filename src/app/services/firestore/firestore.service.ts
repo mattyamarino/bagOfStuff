@@ -21,7 +21,7 @@ export class FirestoreService {
       lastLogin: Date.now() + 2000
     })
       .then(() => { 
-        console.log("Document " + id + " successfully updated!");
+        console.log("User " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -51,7 +51,7 @@ export class FirestoreService {
         .collection(FirestoreConstants.currencyTransactions)
         .add(data)
         .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Monetary Transaction written with ID: ", docRef.id);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
@@ -67,7 +67,7 @@ export class FirestoreService {
         .collection(FirestoreConstants.items)
         .add(itemData)
         .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Item written with ID: ", docRef.id);
           this.createItemHistory(itemHistory, docRef.id);
         })
         .catch((error) => {
@@ -100,7 +100,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document " + id + " successfully updated!");
+        console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -115,7 +115,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document " + id + " successfully updated!");
+        console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -129,7 +129,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document " + id + " successfully updated!");
+        console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -144,7 +144,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
-        console.log("Document " + id + " successfully updated!");
+        console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
@@ -159,7 +159,7 @@ export class FirestoreService {
         .collection(FirestoreConstants.itemHistory)
         .add(itemHistory)
         .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Item History written with ID: ", docRef.id);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);

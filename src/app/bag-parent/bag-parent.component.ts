@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { User } from '../models/user';
 import { MatDialog } from '@angular/material/dialog';
 import { TransactionModalComponent } from '../coin/transaction-modal/transaction-modal.component';
@@ -17,13 +17,33 @@ export class BagParentComponent implements OnInit {
   users: User[] = [];
   latestTransaction!: MonetaryTransaction;
   @ViewChild("user", { static: false }) userComponent?: UserComponent;
-  tempNumber: number = 0;
-
+  @ViewChild("money", { static: false }) moneyRef?: ElementRef;
+  @ViewChild("items", { static: false }) itemRef?: ElementRef;
+  maxHeight: number = 0;
+  resized = false;
   constructor(private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService, public userService: UserService) { }
 
   ngOnInit(): void {
     this.getCurrencyTotals();
     this.getUsers();
+  }
+
+  setCompenentSizes(): void {
+    this.setScreenHeight();
+    this.setBankWidths();
+  }
+
+  setScreenHeight(): void {
+    if(document.body.scrollHeight > this.maxHeight) {this.maxHeight = document.body.scrollHeight}
+    document.documentElement.style.setProperty('--documentHeight', this.maxHeight + "px");
+  }
+
+  setBankWidths(): void {
+      if(this.moneyRef?.nativeElement.clientWidth > this.itemRef?.nativeElement.clientWidth) {
+        document.documentElement.style.setProperty('--itemWidth', this.moneyRef?.nativeElement.clientWidth + "px");
+      } else if(this.moneyRef?.nativeElement.clientWidth < this.itemRef?.nativeElement.clientWidth){
+        document.documentElement.style.setProperty('--moneyWidth', this.itemRef?.nativeElement.clientWidth + "px");
+      }
   }
 
   getCurrencyTotals(): void {

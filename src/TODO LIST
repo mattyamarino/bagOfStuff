@@ -1,12 +1,8 @@
-FIX coin and item bank are different widths on smaller screens
-
-FIX page height to not shrink if content becomes smaller
-
-FIX deposit item, clear form if selected pregen item and switch to 
-
 ADD snackbar confirmation or error whenever user deposits/moves/deletes item
 
-ADD new label to items generated since last login
+ADD new label to item history and monetary transactions
+
+ADD ability to filter item histories by item name
 
 ADD Armor and Adventuring Gear to item search
 
@@ -19,6 +15,10 @@ ADD ability for DM to set or change price on existing items
 DISABLE ability for DM to move or delete items from player banks?
 
 REFACTOR player label for item bank to be unique if duplicate characters with same first name.
+
+STRETCH refactor coin bank to the left of item bank to better use screen space
+
+STRETCH write scripts to integrate with roll 20
 
 
 PROVIDE DOCUMENTATION

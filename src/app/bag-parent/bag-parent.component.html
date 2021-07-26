@@ -1,10 +1,11 @@
 <div class="bag-background">
+    {{setCompenentSizes()}}
     <br>
     <img class="title" src="../../assets/title.png" />
     <br>
     <app-user [users]="users" #user></app-user>
     <br><br>
-    <div class="money-card" *ngIf="userComponent?.selectedUser !== undefined">
+    <div class="money-card" *ngIf="userComponent?.selectedUser !== undefined" #money>
         <app-money [currencyTransaction]="latestTransaction"></app-money>
         <div class="button-container">
             <br>
@@ -14,13 +15,12 @@
             </span>
             <button mat-raised-button color="light-blue" (click)="openWithdrawDialog()">Withdraw Coin</button>
             &nbsp;&nbsp;&nbsp;
-            <button mat-raised-button color="light-blue" (click)="openMonetaryHistoryDialog()">Transaction
-                History</button>
+            <button mat-raised-button color="light-blue" (click)="openMonetaryHistoryDialog()">Transaction History</button>
         </div>
         <br>
     </div>
     <br><br><br>
-    <div *ngIf="userComponent?.selectedUser !== undefined" class="item-card">
+    <div *ngIf="userComponent?.selectedUser !== undefined" class="item-card" #items>
         <app-item-container [user]="this.userComponent?.selectedUser"></app-item-container>
     </div>
     <br><br><br>

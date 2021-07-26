@@ -3,7 +3,7 @@
     background-repeat: repeat;
     background-attachment: fixed;
     height: fit-content;
-    min-height: calc(100vh + 300px);
+    min-height: var(--documentHeight);
     overflow-y: visible;
 }
 
@@ -22,7 +22,7 @@
 .money-card{
     margin: auto;
     width: fit-content;
-    min-width: 50%;
+    min-width: var(--moneyWidth);
     background-color: #424242;
     border: 5px solid #000;
 }
@@ -30,10 +30,10 @@
 .item-card{
     margin: auto;
     width: fit-content;
-    min-width: 50%;
+    min-width: var(--itemWidth);
     background-color: #424242;
     border: 5px solid #000;
-    max-width: 80vw;
+    max-width: 80%;
 }
 
 
