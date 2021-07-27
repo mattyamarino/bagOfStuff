@@ -1,7 +1,7 @@
 <mat-dialog-content>
     <mat-card class="mat-elevation-z0 card-width">
         <mat-card-header>
-            <img mat-card-avatar [src]='"../../../assets/"+getItemIcon(data.item.type)+".jpg"' class="item-icon">
+            <mat-icon mat-card-avatar [svgIcon]="itemService.getItemIcon(data.item.type)" class="item-icon"></mat-icon>
             <mat-card-title>
                 <span [ngClass]="itemService.getRarity(data.item.rarity)">
                     {{data.item.name | titlecase}}

@@ -2,6 +2,8 @@ ADD snackbar confirmation or error whenever user deposits/moves/deletes item
 
 ADD new label to item history and monetary transactions
 
+ADD toolbar to replace money and item buttons, and incorporate item filters
+
 ADD ability to filter item histories by item name
 
 ADD Armor and Adventuring Gear to item search

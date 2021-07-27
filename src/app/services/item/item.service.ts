@@ -73,4 +73,9 @@ export class ItemService {
         return rarity;
     }
   }
+
+  getItemIcon(type: string): string {
+    return type.split(" ")[0].toLowerCase();
+  }
+
 }

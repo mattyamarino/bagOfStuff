@@ -4,6 +4,9 @@ import { ItemHistory } from 'src/app/models/ItemHistory';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemService } from 'src/app/services/item/item.service';
 import { ItemHistoryComponent } from '../item-history/item-history.component';
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
+import { ItemConstants } from 'src/app/config/ItemConstants';
 
 @Component({
   selector: 'app-item-description',
@@ -13,7 +16,8 @@ import { ItemHistoryComponent } from '../item-history/item-history.component';
 export class ItemDescriptionComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ItemDescriptionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, 
-              public itemService: ItemService, public firestoreService: FirestoreService, public dialog: MatDialog) { }
+              public itemService: ItemService, public firestoreService: FirestoreService, public dialog: MatDialog,
+              private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
   }
@@ -33,6 +37,15 @@ export class ItemDescriptionComponent implements OnInit {
           item: this.data.item
         }
       });
+    });
+  }
+
+  setIcons(): void {
+    ItemConstants.itemTypes.forEach(type => {
+      this.matIconRegistry.addSvgIcon(
+        type.split(" ")[0],
+        this.domSanitizer.bypassSecurityTrustResourceUrl("../../assets/" + type.split(" ")[0] + ".svg")
+      );
     });
   }
 }

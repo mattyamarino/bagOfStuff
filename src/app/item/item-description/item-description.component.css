@@ -10,3 +10,10 @@
 .mat-card-title {
   font-family: 'Poppins', sans-serif;
 }
+
+.item-icon {
+  transform: scale(2);
+  margin-top: 10px;
+  padding-right: 10px;
+  padding-left: 8px;
+}

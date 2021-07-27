@@ -67,8 +67,7 @@ transform: translateY(0px) !important;
 }
 
 .item-icon {
-    height: 30px;
-margin-left: 7px;
+    transform: scale(1.45);
     vertical-align: middle
 }
 

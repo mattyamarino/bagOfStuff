@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -10,6 +9,9 @@ import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemService } from 'src/app/services/item/item.service';
 import { ItemActionComponent } from '../item-action/item-action.component';
 import { ItemDescriptionComponent } from '../item-description/item-description.component';
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
+import { ItemConstants } from 'src/app/config/ItemConstants';
 
 @Component({
   selector: 'app-item-table',
@@ -37,16 +39,18 @@ export class ItemTableComponent implements OnInit {
     type: '', rarity: ''
   };
   
-  constructor(private firestoreService: FirestoreService, public itemService: ItemService,  private dialog: MatDialog) { }
+  constructor(private firestoreService: FirestoreService, public itemService: ItemService,  private dialog: MatDialog, 
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) { }
   
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.getItems();
   }
-
+  
   ngOnInit(): void {
     this.dataSource.filterPredicate = this.customFilterPredicate();
+    this.setIcons();
   }
 
   getItems(): void {
@@ -55,6 +59,19 @@ export class ItemTableComponent implements OnInit {
       this.itemService.sortItemsDescendingByLastUpdatedOn(<Item[]><unknown>res);
       this.dataSource.data = <Item[]><unknown>res
     });
+  }
+
+  setIcons(): void {
+    ItemConstants.itemTypes.forEach(type => {
+      this.matIconRegistry.addSvgIcon(
+        type.split(" ")[0],
+        this.domSanitizer.bypassSecurityTrustResourceUrl("../../assets/" + type.split(" ")[0] + ".svg")
+      );
+    });
+  }
+  
+  isNewItem(lastUpdatedOn: number): boolean {
+    return lastUpdatedOn > this.user?.lastLogin!
   }
 
   getTooltipLabel(): string {
@@ -139,13 +156,5 @@ export class ItemTableComponent implements OnInit {
        vault: this.vault
       }
     });
-  }
-
-  getItemIcon(type: string): string {
-    return type.split(" ")[0].toLowerCase();
-  }
-
-  isNewItem(lastUpdatedOn: number): boolean {
-    return lastUpdatedOn > this.user?.lastLogin!
   }
 }
