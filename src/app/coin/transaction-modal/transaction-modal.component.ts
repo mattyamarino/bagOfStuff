@@ -1,12 +1,14 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CurrencyConstants } from 'src/app/config/CurrencyConstants';
 import { User } from 'src/app/models/user';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
+import { SnackbarComponent } from 'src/app/shared/snackbar/snackbar.component';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 
 @Component({
@@ -24,7 +26,8 @@ export class TransactionModalComponent implements OnInit {
   processingTransaction: boolean = false;
   submitAttempted: boolean = false;
   isFieldsEmpty: boolean = false;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService, public userService: UserService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService, 
+  public userService: UserService,  private snackBar: MatSnackBar) {
     this.latestTransaction = data.latestTransaction;
     this.selectedUser = data.selectedUser;
     this.type = data.type;
@@ -149,9 +152,10 @@ export class TransactionModalComponent implements OnInit {
   async completeTransaction() {
     let newTransaction: MonetaryTransaction = new MonetaryTransaction;
 
-    this.firestoreService.getLatestTransaction().subscribe(res => {
-      const response = <MonetaryTransaction[]>res;
+    this.firestoreService.getLatestTransactionOnce().subscribe(res => {
+      const response = <MonetaryTransaction[]>res.docs.map(doc => doc.data());;
       this.latestTransaction = response[0];
+      debugger
       if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
 
@@ -163,6 +167,8 @@ export class TransactionModalComponent implements OnInit {
         this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction));
 
         this.closeDialog();
+      } else {
+        this.openSnackbar("Another User Has Withdrawn Funds.  Insufficient Amount Available", true)
       }
     });
   }
@@ -282,6 +288,18 @@ export class TransactionModalComponent implements OnInit {
         }
       });
     }
+  }
+
+  openSnackbar(message: string, isError: boolean): void {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      duration: 5000,
+      horizontalPosition: "center",
+      verticalPosition: "top",
+      data: {
+        message: message,
+        isError: isError
+      }
+    });
   }
 
   getLabelForAmountField(): string {

@@ -45,6 +45,7 @@ import { ItemActionComponent } from './item/item-action/item-action.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ItemHistoryComponent } from './item/item-history/item-history.component';
 import {MatBadgeModule} from '@angular/material/badge';
+import { SnackbarComponent } from './shared/snackbar/snackbar.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import {MatBadgeModule} from '@angular/material/badge';
     ItemDescriptionComponent,
     ItemActionComponent,
     ItemHistoryComponent,
+    SnackbarComponent,
   ],
   imports: [
     BrowserModule,

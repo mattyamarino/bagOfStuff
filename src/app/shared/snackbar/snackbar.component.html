@@ -1,0 +1,11 @@
+<div class="center">
+    <span *ngIf="data.isError">
+        <mat-icon class="orange">error</mat-icon>
+    </span>
+    <span *ngIf="!data.isError">
+        <mat-icon class="light-blue">check_circle</mat-icon>
+    </span>
+    <span class="message">
+        &nbsp;{{data.message}}
+    </span>
+</div>

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FirestoreConstants } from 'src/app/config/FirestoreConstants';
 import { User } from 'src/app/models/user';
+import { SnackbarComponent } from 'src/app/shared/snackbar/snackbar.component';
 import { UserService } from '../user/user.service';
 
 @Injectable({
@@ -9,7 +11,7 @@ import { UserService } from '../user/user.service';
 })
 export class FirestoreService {
 
-  constructor(private firestore: AngularFirestore, public userService: UserService) { }
+  constructor(private firestore: AngularFirestore, public userService: UserService, private snackBar: MatSnackBar) { }
 
   // USER FUNCTIONS
   getUsers() {
@@ -52,6 +54,7 @@ export class FirestoreService {
         .add(data)
         .then((docRef) => {
           console.log("Monetary Transaction written with ID: ", docRef.id);
+          this.openSnackbar("Monetary Transaction Succesful", false);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
@@ -68,6 +71,7 @@ export class FirestoreService {
         .add(itemData)
         .then((docRef) => {
           console.log("Item written with ID: ", docRef.id);
+          this.openSnackbar("Item Succesfully Created", false);
           this.createItemHistory(itemHistory, docRef.id);
         })
         .catch((error) => {
@@ -100,6 +104,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
+        this.openSnackbar("Item Succesfully Updated", false);
         console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
@@ -115,6 +120,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
+        this.openSnackbar("Item Succesfully Updated", false);
         console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
@@ -129,6 +135,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
+        this.openSnackbar("Item Succesfully Updated", false);
         console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
@@ -144,6 +151,7 @@ export class FirestoreService {
       lastUpdatedOn: Date.now()
     })
       .then(() => {
+        this.openSnackbar("Item Succesfully Updated", false);
         console.log("Item " + id + " successfully updated!");
       })
       .catch((error) => {
@@ -203,8 +211,21 @@ export class FirestoreService {
     return historiesArray;
   }
   
-  // SET QUERYDATE
+  // HELPER FUNCTIONS
   setQueryDate(queryDate: number): number {
       return queryDate !== undefined ? queryDate : new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
+  }
+
+  
+  openSnackbar(message: string, isError: boolean): void {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      duration: 5000,
+      horizontalPosition: "center",
+      verticalPosition: "top",
+      data: {
+        message: message,
+        isError: isError
+      }
+    });
   }
 }

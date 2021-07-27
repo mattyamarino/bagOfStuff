@@ -1,10 +1,14 @@
-ADD snackbar confirmation or error whenever user deposits/moves/deletes item
+BUG item description has locked width scrollbar if description requires vertical scrolling
+
+BUG DM screen looks dumb (too wide).  Fix if not switching layout
 
 ADD new label to item history and monetary transactions
 
 ADD toolbar to replace money and item buttons, and incorporate item filters
 
 ADD ability to filter item histories by item name
+
+ADD max limit to cost in item creation
 
 ADD Armor and Adventuring Gear to item search
 

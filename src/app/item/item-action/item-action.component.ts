@@ -13,6 +13,7 @@ import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemService } from 'src/app/services/item/item.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
+import { SnackbarComponent } from 'src/app/shared/snackbar/snackbar.component';
 
 @Component({
   selector: 'app-item-action',
@@ -39,6 +40,8 @@ export class ItemActionComponent implements OnInit {
   }
 
   getDestination(): string {
+    console.log(this.data.item.owner === "bank" ? this.data.user.short : "bank")
+    console.log(this.data.user)
     return this.data.item.owner === "bank" ? this.data.user.short : "bank"
   }
 
@@ -153,7 +156,7 @@ export class ItemActionComponent implements OnInit {
           }
         });
       } else {
-        this.openSnackbar();
+        this.openSnackbar("Another User Has Updated Item, That Quantity Is No Longer Available", true);
       }
       this.closeModal();
     });
@@ -238,11 +241,15 @@ export class ItemActionComponent implements OnInit {
     });
   }
 
-  openSnackbar(): void {
-    this.snackBar.open("", "Another User Has Already Moved That Item", {
-      duration: 4000,
+  openSnackbar(message: string, isError: boolean): void {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      duration: 5000,
       horizontalPosition: "center",
-      verticalPosition: "top"
+      verticalPosition: "top",
+      data: {
+        message: message,
+        isError: isError
+      }
     });
   }
 
