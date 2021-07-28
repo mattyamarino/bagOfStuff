@@ -305,6 +305,7 @@ export class ItemTransactionModalComponent implements OnInit {
   }
 
   buildItemHistory(duplicateItemId?: string, duplicateItem?: Item): ItemHistory {
+    let previousCost = duplicateItem?.cost === null ? 0 : duplicateItem?.cost
     return this.itemService.buildItemHistory(
     duplicateItemId,
     this.secondFormGroup.get("name")?.value,
@@ -315,7 +316,7 @@ export class ItemTransactionModalComponent implements OnInit {
     this.data.createdFor,
     duplicateItem?.quantity,
     duplicateItem ? this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity : this.secondFormGroup.get("quantity")?.value,
-    duplicateItem?.cost !== this.secondFormGroup.get("cost")?.value && this.secondFormGroup.get("cost")?.value !== undefined? duplicateItem?.cost : undefined,
+    duplicateItem?.cost !== this.secondFormGroup.get("cost")?.value && this.secondFormGroup.get("cost")?.value !== undefined? previousCost : undefined,
     duplicateItem?.cost !== this.secondFormGroup.get("cost")?.value ? this.secondFormGroup.get("cost")?.value : undefined,
     this.secondFormGroup.get("origin")?.value
     );

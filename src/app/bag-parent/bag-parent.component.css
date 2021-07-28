@@ -22,7 +22,6 @@
 .money-card{
     margin: auto;
     width: fit-content;
-    /* min-width: var(--moneyWidth); */
     background-color: #424242;
     border: 5px solid #000;
     max-width: 80%;
@@ -30,7 +29,6 @@
 
 .item-card{
     margin: auto;
-    /* width: fit-content; */
     width: var(--itemWidth);
     background-color: #424242;
     border: 5px solid #000;
