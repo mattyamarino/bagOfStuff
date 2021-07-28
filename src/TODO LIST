@@ -2,6 +2,10 @@ BUG item description has locked width scrollbar if description requires vertical
 
 BUG DM screen looks dumb (too wide).  Fix if not switching layout
 
+RESEARCH encumbrance tracking
+
+CHANGE dm view to be dashboard (not tabs for every player).   
+
 ADD new label to item history and monetary transactions
 
 ADD toolbar to replace money and item buttons, and incorporate item filters

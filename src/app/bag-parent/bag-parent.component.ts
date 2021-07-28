@@ -39,11 +39,7 @@ export class BagParentComponent implements OnInit {
   }
 
   setBankWidths(): void {
-      if(this.moneyRef?.nativeElement.clientWidth > this.itemRef?.nativeElement.clientWidth) {
-        document.documentElement.style.setProperty('--itemWidth', this.moneyRef?.nativeElement.clientWidth + "px");
-      } else if(this.moneyRef?.nativeElement.clientWidth < this.itemRef?.nativeElement.clientWidth){
-        document.documentElement.style.setProperty('--moneyWidth', this.itemRef?.nativeElement.clientWidth + "px");
-      }
+    document.documentElement.style.setProperty('--itemWidth', this.moneyRef?.nativeElement.clientWidth + "px");
   }
 
   getCurrencyTotals(): void {
