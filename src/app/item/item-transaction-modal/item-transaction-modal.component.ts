@@ -2,6 +2,7 @@ import { TitleCasePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { ItemActions, ItemConstants, ItemValueByRarity } from 'src/app/config/ItemConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
@@ -11,8 +12,10 @@ import { ItemHistory } from 'src/app/models/ItemHistory';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { HttpService } from 'src/app/services/http/http.service';
 import { ItemService } from 'src/app/services/item/item.service';
+import { MessageService } from 'src/app/services/message/message.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
+import { SnackbarComponent } from 'src/app/shared/snackbar/snackbar.component';
 
 @Component({
   selector: 'app-item-transaction-modal',
@@ -29,7 +32,8 @@ export class ItemTransactionModalComponent implements OnInit {
 
   constructor(private httpService: HttpService, public titleCasePipe: TitleCasePipe, public dialog: MatDialog,
     public dialogRef: MatDialogRef<ItemTransactionModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-    public firestoreService: FirestoreService, private itemService: ItemService, public userService: UserService) { }
+    public firestoreService: FirestoreService, private itemService: ItemService, public userService: UserService, 
+    private snackBar: MatSnackBar, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.firstFormGroup = new FormGroup({
@@ -286,7 +290,7 @@ export class ItemTransactionModalComponent implements OnInit {
       } else {
         this.firestoreService.createItem(itemData, itemHistory, this.data.user.id);
       }
-
+      this.openSnackbar(this.messageService.itemActionMessage(itemData.name, itemData.quantity, ItemActions.CREATE), false)
       this.closeModal();
     })
 
@@ -337,6 +341,18 @@ export class ItemTransactionModalComponent implements OnInit {
     itemToCheck.type === this.pregeneratedItem.type &&
     itemToCheck.description === this.pregeneratedItem.description &&
     rarityMatch && costsMatch
+  }
+
+  openSnackbar(message: string, isError: boolean): void {
+    this.snackBar.openFromComponent(SnackbarComponent, {
+      duration: 5000,
+      horizontalPosition: "center",
+      verticalPosition: "top",
+      data: {
+        message: message,
+        isError: isError
+      }
+    });
   }
 
   closeModal(): void {

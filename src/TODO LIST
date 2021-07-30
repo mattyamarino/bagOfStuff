@@ -4,11 +4,11 @@ BUG selling an item generates two snackbar messages
 
 RESEARCH encumbrance tracking
 
-CHANGE dm view to be dashboard (not tabs for every player).   
-
 ADD new label to item history and monetary transactions
 
-ADD descriptive snackbar messages for each action
+ADD validation of firestore transaction before displaying snackbar
+
+CHANGE dm view to be dashboard (not tabs for every player).   
 
 ADD toolbar to replace money and item buttons, and incorporate item filters
 

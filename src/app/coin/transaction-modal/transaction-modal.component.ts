@@ -6,6 +6,7 @@ import { CurrencyConstants } from 'src/app/config/CurrencyConstants';
 import { User } from 'src/app/models/user';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { MessageService } from 'src/app/services/message/message.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { SnackbarComponent } from 'src/app/shared/snackbar/snackbar.component';
@@ -27,7 +28,7 @@ export class TransactionModalComponent implements OnInit {
   submitAttempted: boolean = false;
   isFieldsEmpty: boolean = false;
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private firestoreService: FirestoreService, public dialog: MatDialog, public coinService: CoinService, 
-  public userService: UserService,  private snackBar: MatSnackBar) {
+  public userService: UserService,  private snackBar: MatSnackBar, private messageService: MessageService) {
     this.latestTransaction = data.latestTransaction;
     this.selectedUser = data.selectedUser;
     this.type = data.type;
@@ -155,7 +156,6 @@ export class TransactionModalComponent implements OnInit {
     this.firestoreService.getLatestTransactionOnce().subscribe(res => {
       const response = <MonetaryTransaction[]>res.docs.map(doc => doc.data());;
       this.latestTransaction = response[0];
-      debugger
       if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
 
@@ -164,11 +164,13 @@ export class TransactionModalComponent implements OnInit {
         newTransaction.createdOn = Date.now();
         newTransaction.createdBy = this.userService.getUserLabel(this.selectedUser);
 
-        this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction));
+        this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction)).then(res => {
+          this.openSnackbar(this.messageService.monetaryTransactionMessage(newTransaction, this.getTransactionValueInSilver()), false)
+        });
 
         this.closeDialog();
       } else {
-        this.openSnackbar("Another User Has Withdrawn Funds.  Insufficient Amount Available", true)
+        this.openSnackbar(this.messageService.overdraftFundsMessage(), true)
       }
     });
   }
@@ -235,7 +237,7 @@ export class TransactionModalComponent implements OnInit {
   getTransactionValueInSilver(): number {
     let amount = 0;
     this.dataSource.forEach((element: { currency: any; transactionAmount: any; }) => {
-      amount += this.getCurrentAmountValueInSilver(element.currency, element.transactionAmount);
+      amount += this.getCurrentAmountValueInSilver(element.currency, this.transactionFormGroup.get(element.currency)?.value);
     });
     return amount;
   }

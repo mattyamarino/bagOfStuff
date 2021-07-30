@@ -69,9 +69,7 @@ export class NumericDirective {
   
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    console.log(event)
     if (this.ngControl) {
-      console.log("DING", this.ngControl.value)
       this.run(this.ngControl.control!.value);
     } else {
       this.run(this.el.nativeElement.value);

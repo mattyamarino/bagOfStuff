@@ -164,7 +164,7 @@ export class ItemHistoryComponent implements OnInit {
 
   getOrigin(itemHistory: ItemHistory): string {
     if(itemHistory.action === "created") {
-      return "Aquired From:  " + itemHistory.origin!;
+      return "Acquired From:  " + itemHistory.origin!;
     }
 
     return "Moved from stack in another vault, click here for the parent item's history"

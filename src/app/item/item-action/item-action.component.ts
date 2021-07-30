@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ItemActions } from 'src/app/config/ItemConstants';
+import { ItemActions, ItemConstants } from 'src/app/config/ItemConstants';
 import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
 import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
@@ -11,6 +11,7 @@ import { User } from 'src/app/models/user';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemService } from 'src/app/services/item/item.service';
+import { MessageService } from 'src/app/services/message/message.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/confirmation-dialog.component';
 import { SnackbarComponent } from 'src/app/shared/snackbar/snackbar.component';
@@ -27,7 +28,7 @@ export class ItemActionComponent implements OnInit {
 
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ItemActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
     private firestoreService: FirestoreService, public itemService: ItemService, public coinService: CoinService, public userService: UserService, 
-    private snackBar: MatSnackBar,  public titleCasePipe: TitleCasePipe) { }
+    private snackBar: MatSnackBar,  public titleCasePipe: TitleCasePipe, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.setDestinationLabel();
@@ -40,8 +41,6 @@ export class ItemActionComponent implements OnInit {
   }
 
   getDestination(): string {
-    console.log(this.data.item.owner === "bank" ? this.data.user.short : "bank")
-    console.log(this.data.user)
     return this.data.item.owner === "bank" ? this.data.user.short : "bank"
   }
 
@@ -155,8 +154,9 @@ export class ItemActionComponent implements OnInit {
             }
           }
         });
+        this.openSnackbar(this.messageService.itemActionMessage(this.data.item.name, this.actionFormGroup.get("quantity")?.value, this.getActionConstant()), false);
       } else {
-        this.openSnackbar("Another User Has Updated Item, That Quantity Is No Longer Available", true);
+        this.openSnackbar(this.messageService.overdraftItemQuantityMessage(), true);
       }
       this.closeModal();
     });
@@ -251,6 +251,15 @@ export class ItemActionComponent implements OnInit {
         isError: isError
       }
     });
+  }
+
+  getActionConstant(): string {
+    switch(this.data.action) {
+      case "move" : return ItemActions.MOVE
+      case "sell" : return ItemActions.SELL
+      case "delete" : return ItemActions.DELETE
+      default : return ""
+    }
   }
 
   closeModal(): void {

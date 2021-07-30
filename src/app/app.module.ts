@@ -37,7 +37,7 @@ import { ItemTransactionModalComponent } from './item/item-transaction-modal/ite
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { TitleCasePipe } from '@angular/common';
+import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { ItemDescriptionComponent } from './item/item-description/item-description.component';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -98,7 +98,7 @@ import { SnackbarComponent } from './shared/snackbar/snackbar.component';
     MatSnackBarModule,
     MatBadgeModule,
   ],
-  providers: [MatDatepickerModule, TitleCasePipe],
+  providers: [MatDatepickerModule, TitleCasePipe, DecimalPipe],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
