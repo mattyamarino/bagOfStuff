@@ -17,3 +17,7 @@
   padding-right: 15px;
   padding-left: 8px;
 }
+
+::ng-deep .mat-dialog-content {
+  overflow-x: hidden;
+}

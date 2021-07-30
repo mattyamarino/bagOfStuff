@@ -1,4 +1,5 @@
-import { Directive, ElementRef, HostListener, Input } from "@angular/core";
+import { Directive, ElementRef, Host, HostListener, Input, Optional } from "@angular/core";
+import { NgControl } from "@angular/forms";
 
 @Directive({
   selector: "[numeric]"
@@ -7,6 +8,8 @@ export class NumericDirective {
   @Input("decimals") decimals: number = 0;
   @Input("negative") negative: number = 0;
   @Input("separator") separator: string = ".";
+
+  constructor(private el: ElementRef, @Optional() @Host() private ngControl: NgControl) {}
 
   private checkAllowNegative(value: string) {
     if (this.decimals <= 0) {
@@ -46,25 +49,41 @@ export class NumericDirective {
           !["", "-"].includes(currentValue) &&
           !this.checkAllowNegative(currentValue)
         ) {
-          this.el.nativeElement.value = oldValue;
+          if (this.ngControl) {
+            this.ngControl.control!.setValue(oldValue);
+          } else {
+            this.el.nativeElement.value = oldValue;
+          }
         }
       } else {
         if (currentValue !== "" && !this.check(currentValue)) {
-          this.el.nativeElement.value = oldValue;
+          if (this.ngControl) {
+            this.ngControl.control!.setValue(oldValue);
+          } else {
+            this.el.nativeElement.value = oldValue;
+          }
         }
       }
     });
   }
-
-  constructor(private el: ElementRef) {}
-
-  @HostListener("keydown", ["$event"])
+  
+  @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    this.run(this.el.nativeElement.value);
+    console.log(event)
+    if (this.ngControl) {
+      console.log("DING", this.ngControl.value)
+      this.run(this.ngControl.control!.value);
+    } else {
+      this.run(this.el.nativeElement.value);
+    }
   }
 
   @HostListener("paste", ["$event"])
   onPaste(event: ClipboardEvent) {
-    this.run(this.el.nativeElement.value);
+    if (this.ngControl) {
+      this.run(this.ngControl.control!.value);
+    } else {
+      this.run(this.el.nativeElement.value);
+    }
   }
 }
