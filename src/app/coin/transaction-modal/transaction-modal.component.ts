@@ -164,9 +164,8 @@ export class TransactionModalComponent implements OnInit {
         newTransaction.createdOn = Date.now();
         newTransaction.createdBy = this.userService.getUserLabel(this.selectedUser);
 
-        this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction)).then(res => {
-          this.openSnackbar(this.messageService.monetaryTransactionMessage(newTransaction, this.getTransactionValueInSilver()), false)
-        });
+        this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction));
+        this.openSnackbar(this.messageService.monetaryTransactionMessage(newTransaction, this.getTransactionValueInSilver()), false)
 
         this.closeDialog();
       } else {
