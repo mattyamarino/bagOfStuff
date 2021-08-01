@@ -1,7 +1,5 @@
 BUG item description sets focus to bottom of dialog if there is vertical scrolling
 
-BUG selling an item generates two snackbar messages
-
 RESEARCH encumbrance tracking
 
 ADD new label to item history and monetary transactions

@@ -281,16 +281,21 @@ export class ItemTransactionModalComponent implements OnInit {
       // UPDATE QUANTITY AND COST FOR EXISTING ITEM IF PRESENT
       if(duplicateItem !== undefined && isPregen) {
         if(this.secondFormGroup.get("cost")?.value === undefined) {
-          this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.data.user.id);
+          this.firestoreService.updateItemQuantity(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.data.user.id).then(res => {
+            this.openSnackbar(this.messageService.itemActionMessage(itemData.name, itemData.quantity, ItemActions.CREATE), false);
+          });
         } else {
-          this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value, this.data.user.id);
+          this.firestoreService.updateItemQuantityAndCost(duplicateItemId, this.secondFormGroup.get("quantity")?.value + duplicateItem.quantity, this.secondFormGroup.get("cost")?.value, this.data.user.id).then(res => {
+            this.openSnackbar(this.messageService.itemActionMessage(itemData.name, itemData.quantity, ItemActions.CREATE), false);
+          });
         }
         this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistory(duplicateItemId, duplicateItem)), duplicateItemId);
       // CREATE NEW ITEM IF NO EXISTING ITEM IS PRESENT
       } else {
-        this.firestoreService.createItem(itemData, itemHistory, this.data.user.id);
+        this.firestoreService.createItem(itemData, itemHistory, this.data.user.id).then(res => {
+          this.openSnackbar(this.messageService.itemActionMessage(itemData.name, itemData.quantity, ItemActions.CREATE), false);
+        });
       }
-      this.openSnackbar(this.messageService.itemActionMessage(itemData.name, itemData.quantity, ItemActions.CREATE), false)
       this.closeModal();
     })
 

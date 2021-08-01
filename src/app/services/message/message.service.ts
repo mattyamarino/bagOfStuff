@@ -1,5 +1,6 @@
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
+import { ItemActions } from 'src/app/config/ItemConstants';
 import { MonetaryTransaction } from 'src/app/models/MonetaryTransaction';
 
 @Injectable({
@@ -9,8 +10,12 @@ export class MessageService {
 
   constructor(public titleCasePipe: TitleCasePipe, public numberPipe: DecimalPipe) { }
 
-  itemActionMessage(itemName: string, quantity: number, action: string) {
-        return "Succesfully " + this.titleCasePipe.transform(action) + " " + quantity + " " + this.titleCasePipe.transform(itemName)
+  itemActionMessage(itemName: string, quantity: number, action: string, valueInSilver?: number) {
+    let message = "Succesfully " + this.titleCasePipe.transform(action) + " " + quantity + " " + this.titleCasePipe.transform(itemName);
+    if (action === ItemActions.SELL) {
+      message += " for " + valueInSilver + "sp"
+    }
+    return message
   }
   
   monetaryTransactionMessage(transaction: MonetaryTransaction, valueInSilver: number): string {

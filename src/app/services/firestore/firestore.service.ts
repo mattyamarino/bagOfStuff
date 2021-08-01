@@ -22,7 +22,7 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.users).doc(id).update({
       lastLogin: Date.now() + 2000
     })
-      .then(() => { 
+      .then(() => {
         console.log("User " + id + " successfully updated!");
       })
       .catch((error) => {
@@ -48,35 +48,29 @@ export class FirestoreService {
   }
 
   createCurrencyTransaction(data: any) {
-    return new Promise<any>((resolve, reject) => {
-      this.firestore
-        .collection(FirestoreConstants.currencyTransactions)
-        .add(data)
-        .then((docRef) => {
-          console.log("Monetary Transaction written with ID: ", docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-        });
-    });
+    return this.firestore.collection(FirestoreConstants.currencyTransactions)
+      .add(data)
+      .then((docRef) => {
+        console.log("Monetary Transaction written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
   }
 
   // ITEM FUNCTIONS
   createItem(itemData: any, itemHistory: any, userId: string) {
     this.updateUserLastLogin(userId);
-    
-    new Promise<any>((resolve, reject) => {
-      this.firestore
-        .collection(FirestoreConstants.items)
-        .add(itemData)
-        .then((docRef) => {
-          console.log("Item written with ID: ", docRef.id);
-          this.createItemHistory(itemHistory, docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-        });
-    });
+
+    return this.firestore.collection(FirestoreConstants.items)
+      .add(itemData)
+      .then((docRef) => {
+        console.log("Item written with ID: ", docRef.id);
+        this.createItemHistory(itemHistory, docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
   }
 
   getItems(owner: string) {
@@ -157,17 +151,14 @@ export class FirestoreService {
   // ITEM HISTORY FUNCTIONS
   createItemHistory(itemHistory: any, itemId: string) {
     itemHistory.itemId = itemId;
-    return new Promise<any>((resolve, reject) => {
-      this.firestore
-        .collection(FirestoreConstants.itemHistory)
-        .add(itemHistory)
-        .then((docRef) => {
-          console.log("Item History written with ID: ", docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-        });
-    });
+    return this.firestore.collection(FirestoreConstants.itemHistory)
+      .add(itemHistory)
+      .then((docRef) => {
+        console.log("Item History written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
   }
 
   getItemHistories(queryDate?: number) {
@@ -175,12 +166,12 @@ export class FirestoreService {
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)).get();
   }
-  
+
   getItemHistoriesForItem(itemId: string, queryDate?: number) {
     queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)
-      .where("itemId", "==", itemId)).get();
+        .where("itemId", "==", itemId)).get();
   }
 
   async getItemHistoriesForUser(user: User, queryDate?: number) {
@@ -205,12 +196,12 @@ export class FirestoreService {
 
     return historiesArray;
   }
-  
+
   // HELPER FUNCTIONS
   setQueryDate(queryDate: number): number {
-      return queryDate !== undefined ? queryDate : new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
+    return queryDate !== undefined ? queryDate : new Date(new Date().setDate(new Date().getDate() - 30)).getTime();
   }
 
-  
+
 
 }
