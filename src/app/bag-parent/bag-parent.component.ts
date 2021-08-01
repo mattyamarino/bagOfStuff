@@ -80,12 +80,13 @@ export class BagParentComponent implements OnInit {
   }
 
   openMonetaryHistoryDialog(): void {
-    this.firestoreService.getCurrencyTransactions().subscribe(res => {
+    this.firestoreService.getCurrencyTransactions(this.userComponent?.selectedUser?.id!).subscribe(res => {
       const refArray = res.docs.map(doc => doc.data());
       this.coinService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
       this.dialog.open(MonetaryHistoryComponent, {
         data: {
-          currencyTransactions: refArray
+          currencyTransactions: refArray,
+          user: this.userComponent?.selectedUser
         }
       });
     });

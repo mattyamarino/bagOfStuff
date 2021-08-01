@@ -27,14 +27,15 @@ export class ItemDescriptionComponent implements OnInit {
   }
 
   openHistoryDialog(): void {
-    this.firestoreService.getItemHistoriesForItem(this.data.item.id).subscribe(res => {
+    this.firestoreService.getItemHistoriesForItem(this.data.item.id, this.data.userId).subscribe(res => {
       const histories = <ItemHistory[]>res.docs.map(doc => doc.data())
       this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories)
       this.dialog.open(ItemHistoryComponent, {
         data: {
           target: "item",
           histories: histories,
-          item: this.data.item
+          item: this.data.item,
+          user: this.data.user
         }
       });
     });

@@ -8,8 +8,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ItemActions } from 'src/app/config/ItemConstants';
 import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
+import { User } from 'src/app/models/user';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { ItemService } from 'src/app/services/item/item.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { ItemDescriptionComponent } from '../item-description/item-description.component';
 
 @Component({
@@ -30,7 +32,8 @@ export class ItemHistoryComponent implements OnInit {
     'createdOn'
   ];
   
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public titleCasePipe: TitleCasePipe, public itemService: ItemService, public firestoreService: FirestoreService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public titleCasePipe: TitleCasePipe, public itemService: ItemService, 
+  public firestoreService: FirestoreService, private userService: UserService) { }
 
   ngOnInit(): void {
 
@@ -52,7 +55,7 @@ export class ItemHistoryComponent implements OnInit {
 
   updateTransactions(): void {
     if(this.selectedDate && this.data.target === "all") {
-      this.firestoreService.getItemHistories(this.selectedDate.getTime()).subscribe(res => {
+      this.firestoreService.getItemHistories(this.data.user.id, this.selectedDate.getTime()).subscribe(res => {
         const refArray =  res.docs.map(doc => doc.data());
         this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(<ItemHistory[]>refArray)
         this.dataSource.data = <ItemHistory[]>refArray;
@@ -64,7 +67,7 @@ export class ItemHistoryComponent implements OnInit {
         this.dataSource.data = <ItemHistory[]>refArray;
       });
     } else if(this.selectedDate && this.data.target === "item") {
-      this.firestoreService.getItemHistoriesForItem(this.data.item, this.selectedDate.getTime()).subscribe(res => {
+      this.firestoreService.getItemHistoriesForItem(this.data.item, this.data.user.id, this.selectedDate.getTime()).subscribe(res => {
         const refArray =  res.docs.map(doc => doc.data());
         this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(<ItemHistory[]>refArray)
         this.dataSource.data = <ItemHistory[]>refArray;
@@ -93,7 +96,8 @@ export class ItemHistoryComponent implements OnInit {
     this.dialog.open(ItemDescriptionComponent, {
       data: {
         item: item,
-        hideHistory: hideHistory
+        hideHistory: hideHistory,
+        user: this.data.user.id
       }
     });
   }
@@ -176,7 +180,7 @@ export class ItemHistoryComponent implements OnInit {
 
   goToParentItem(itemHistory: ItemHistory): void {
     this.dataSource.data = this.data.histories;
-    this.firestoreService.getItemHistoriesForItem(itemHistory.origin!).subscribe(resHistories => {
+    this.firestoreService.getItemHistoriesForItem(this.data.user.id, itemHistory.origin!).subscribe(resHistories => {
       const histories = <ItemHistory[]>resHistories.docs.map(doc => doc.data())
       this.firestoreService.getItem(itemHistory.origin!).subscribe(resItem => {
         this.data.user = undefined;

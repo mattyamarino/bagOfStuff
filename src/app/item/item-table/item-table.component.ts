@@ -12,6 +12,7 @@ import { ItemDescriptionComponent } from '../item-description/item-description.c
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ItemConstants } from 'src/app/config/ItemConstants';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-item-table',
@@ -40,7 +41,7 @@ export class ItemTableComponent implements OnInit {
   };
   
   constructor(private firestoreService: FirestoreService, public itemService: ItemService,  private dialog: MatDialog, 
-    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) { }
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer, private userService: UserService) { }
   
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -68,10 +69,6 @@ export class ItemTableComponent implements OnInit {
         this.domSanitizer.bypassSecurityTrustResourceUrl("../../assets/" + type.split(" ")[0] + ".svg")
       );
     });
-  }
-  
-  isNewItem(lastUpdatedOn: number): boolean {
-    return lastUpdatedOn > this.user?.lastLogin!
   }
 
   getTooltipLabel(): string {
@@ -117,7 +114,8 @@ export class ItemTableComponent implements OnInit {
     this.dialog.open(ItemDescriptionComponent, {
       data: {
         item: item,
-        showQuantity: true
+        showQuantity: true,
+        user: this.user
       }
     });
   }

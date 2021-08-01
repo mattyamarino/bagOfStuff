@@ -59,13 +59,14 @@ export class ItemContainerComponent implements OnInit {
 
 
   getAllItemHistories(): void {
-    this.firestoreService.getItemHistories().subscribe(res => {
+    this.firestoreService.getItemHistories(this.user.id).subscribe(res => {
       const histories = <ItemHistory[]>res.docs.map(doc => doc.data())
       this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories)
       this.dialog.open(ItemHistoryComponent, {
         data: {
           target: "all",
-          histories: histories
+          histories: histories,
+          user: this.user
         }
       });
     });

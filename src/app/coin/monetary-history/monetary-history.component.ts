@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ItemDescriptionComponent } from 'src/app/item/item-description/item-description.component';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 
 @Component({
@@ -34,7 +35,8 @@ export class MonetaryHistoryComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService, public coinService: CoinService) { 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialog: MatDialog, public firestoreService: FirestoreService, public coinService: CoinService, 
+  private userService: UserService) { 
   }
 
   ngAfterViewInit() {
@@ -66,7 +68,7 @@ export class MonetaryHistoryComponent implements OnInit {
 
   updateTransactions(): void {
     if(this.selectedDate) {
-      this.firestoreService.getCurrencyTransactions(this.selectedDate.getTime()).subscribe(res => {
+      this.firestoreService.getCurrencyTransactions(this.data.user.id, this.selectedDate.getTime()).subscribe(res => {
         const refArray =  res.docs.map(doc => doc.data());
         this.coinService.sortTransactionsDescendingByDate(<MonetaryTransaction[]>refArray);
         this.dataSource.data = <MonetaryTransaction[]>refArray;
@@ -84,7 +86,8 @@ export class MonetaryHistoryComponent implements OnInit {
         this.dialog.open(ItemDescriptionComponent, {
           data: {
             item: res.data(),
-            showCost: true
+            showCost: true,
+            user: this.data.user
           }
         });
       });

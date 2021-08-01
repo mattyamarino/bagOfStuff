@@ -44,7 +44,20 @@
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
         <td mat-cell *matCellDef="let element">
-            <div (click)="openItemDescription(element)">
+            <div *ngIf="userService.isNew(element.createdOn, data.user)" 
+            (click)="openItemDescription(element)"
+            matBadge="new" 
+            matBadgePosition="before" 
+            matBadgeOverlap="false">
+                <span [ngClass]="itemService.getRarity(element.itemRarity)">
+                    {{element.itemName | titlecase}}
+                </span>
+                <div class="small-text">
+                    Item Id: {{element.itemId}}
+                </div>
+            </div>
+            <div *ngIf="!userService.isNew(element.createdOn, data.user)" 
+            (click)="openItemDescription(element)">
                 <span [ngClass]="itemService.getRarity(element.itemRarity)">
                     {{element.itemName | titlecase}}
                 </span>

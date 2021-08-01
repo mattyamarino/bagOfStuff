@@ -31,7 +31,8 @@ export class FirestoreService {
   }
 
   // CURRENCY FUNCTIONS
-  getCurrencyTransactions(queryDate?: number) {
+  getCurrencyTransactions(userId: string, queryDate?: number) {
+    this.updateUserLastLogin(userId);
     queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.currencyTransactions,
       ref => ref.where("createdOn", ">=", queryDate)).get();
@@ -161,13 +162,15 @@ export class FirestoreService {
       });
   }
 
-  getItemHistories(queryDate?: number) {
+  getItemHistories(userId: string, queryDate?: number) {
+    this.updateUserLastLogin(userId);
     queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)).get();
   }
 
-  getItemHistoriesForItem(itemId: string, queryDate?: number) {
+  getItemHistoriesForItem(itemId: string, userId: string,  queryDate?: number) {
+    this.updateUserLastLogin(userId);
     queryDate = this.setQueryDate(queryDate!);
     return this.firestore.collection(FirestoreConstants.itemHistory,
       ref => ref.where("createdOn", ">=", queryDate)
@@ -175,6 +178,7 @@ export class FirestoreService {
   }
 
   async getItemHistoriesForUser(user: User, queryDate?: number) {
+    this.updateUserLastLogin(user.id);
     queryDate = this.setQueryDate(queryDate!);
     const historiesRef = this.firestore.collection(FirestoreConstants.itemHistory)
 

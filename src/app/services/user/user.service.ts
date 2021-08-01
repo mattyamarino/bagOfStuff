@@ -17,4 +17,8 @@ export class UserService {
   getUserLabel(user: User): string {
     return user.character + " (" + user.player + ")";
   }
+
+  isNew(dateCreatedOrUpdated: number, user: User): boolean {
+    return dateCreatedOrUpdated > user.lastLogin;
+  }
 }
