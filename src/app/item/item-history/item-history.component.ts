@@ -75,8 +75,8 @@ export class ItemHistoryComponent implements OnInit {
     } 
   }
 
-  openItemDescription(itemHistory: ItemHistory, openParentItemHistory?: boolean): void {
-    if(openParentItemHistory) {
+  openItemDescription(itemHistory: ItemHistory, isChangeColumn?: boolean): void {
+    if(isChangeColumn && (itemHistory.action === ItemActions.MOVE || itemHistory.action === ItemActions.UPDATE) && itemHistory.origin !== undefined) {
       this.goToParentItem(itemHistory);
     } else {
       if(this.data.item === undefined) {
@@ -180,10 +180,10 @@ export class ItemHistoryComponent implements OnInit {
 
   goToParentItem(itemHistory: ItemHistory): void {
     this.dataSource.data = this.data.histories;
-    this.firestoreService.getItemHistoriesForItem(this.data.user.id, itemHistory.origin!).subscribe(resHistories => {
-      const histories = <ItemHistory[]>resHistories.docs.map(doc => doc.data())
+    this.firestoreService.getItemHistoriesForItem(itemHistory.origin!, this.data.user.id).subscribe(resHistories => {
+      const histories = <ItemHistory[]>resHistories.docs.map(doc => doc.data());
+      this.itemService.sortItemsHistoryDescendingByLastUpdatedOn(histories);
       this.firestoreService.getItem(itemHistory.origin!).subscribe(resItem => {
-        this.data.user = undefined;
         this.data.item = resItem.data();
         this.data.target = "item"
         this.data.histories = histories;

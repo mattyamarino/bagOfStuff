@@ -2,10 +2,6 @@ BUG item description sets focus to bottom of dialog if there is vertical scrolli
 
 RESEARCH encumbrance tracking
 
-ADD new label to item history and monetary transactions
-
-ADD validation of firestore transaction before displaying snackbar
-
 CHANGE dm view to be dashboard (not tabs for every player).   
 
 ADD toolbar to replace money and item buttons, and incorporate item filters
@@ -24,7 +20,7 @@ ADD ability for DM to set or change price on existing items
 
 DISABLE ability for DM to move or delete items from player banks?
 
-REFACTOR player label for item bank to be unique if duplicate characters with same first name.
+REFACTOR user.short to be unique if duplicate characters with same first name.
 
 STRETCH refactor coin bank to the left of item bank to better use screen space
 
