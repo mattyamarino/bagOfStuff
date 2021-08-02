@@ -184,7 +184,7 @@ export class ItemActionComponent implements OnInit {
     this.firestoreService.updateItemQuantityAndCost(duplicateItemId, duplicateItem.quantity! + this.actionFormGroup.get("quantity")!.value, this.data.item.cost, this.data.user.id).then(res => {
       this.openSnackbar(this.messageService.itemActionMessage(this.data.item.name, this.actionFormGroup.get("quantity")?.value, this.getActionConstant()), false);
     });
-    this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistoryForExistingItem(duplicateItemId, duplicateItem)), duplicateItemId);
+    this.firestoreService.createItemHistory(this.itemService.transformToObject(this.buildItemHistoryForExistingItem(duplicateItemId, duplicateItem, this.data.item.id)), duplicateItemId);
   }
 
   buildItem(): Item {
@@ -216,20 +216,20 @@ export class ItemActionComponent implements OnInit {
     )
   }
 
-  buildItemHistoryForExistingItem(itemId: string, item: Item) {
+  buildItemHistoryForExistingItem(duplicateItemId: string, duplicateItem: Item, parentItemId: number) {
     return this.itemService.buildItemHistory(
-      itemId,
+      duplicateItemId,
       this.data.item.name,
       this.data.item.rarity,
       ItemActions.UPDATE,
       this.userService.getUserLabel(this.data.user),
       this.data.item.owner,
-      item.owner,
-      item.quantity,
-      item.quantity + this.actionFormGroup.get("quantity")!.value,
+      duplicateItem.owner,
+      duplicateItem.quantity,
+      duplicateItem.quantity + this.actionFormGroup.get("quantity")!.value,
       undefined,
       undefined,
-      itemId
+      parentItemId
     );
   }
 
