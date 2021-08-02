@@ -13,3 +13,7 @@
 ::ng-deep .mat-ink-bar {
     background-color: var(--primary-color, orangered) !important;
 }
+
+.mat-card {
+    border-radius: 30px !important;
+}

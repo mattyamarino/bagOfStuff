@@ -25,6 +25,7 @@
     background-color: #424242;
     border: 5px solid #000;
     max-width: 80%;
+    border-radius: 30px;
 }
 
 .item-card{
@@ -33,6 +34,7 @@
     background-color: #424242;
     border: 5px solid #000;
     max-width: 80%;
+    border-radius: 30px;
 }
 
 

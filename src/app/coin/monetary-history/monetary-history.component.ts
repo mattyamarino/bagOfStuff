@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ItemDescriptionComponent } from 'src/app/item/item-description/item-description.component';
+import { Item } from 'src/app/models/Item';
 import { CoinService } from 'src/app/services/coin/coin.service';
 import { FirestoreService } from 'src/app/services/firestore/firestore.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -46,7 +47,6 @@ export class MonetaryHistoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   closeDialog(): void {
@@ -83,9 +83,11 @@ export class MonetaryHistoryComponent implements OnInit {
   openItemDescription(transaction: MonetaryTransaction): void {
     if(transaction.soldItemId) {
       this.firestoreService.getItem(transaction.soldItemId).subscribe(res => {
+        let item: Item = <Item>res.data();
+        item.id = res.id;
         this.dialog.open(ItemDescriptionComponent, {
           data: {
-            item: res.data(),
+            item: item,
             showCost: true,
             user: this.data.user
           }

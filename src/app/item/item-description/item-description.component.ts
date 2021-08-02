@@ -20,6 +20,7 @@ export class ItemDescriptionComponent implements OnInit {
               private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
+    console.log(this.data)
   }
 
   getItemIcon(type: string): string {
