@@ -9,6 +9,9 @@
 }
 
 .confirm-message-center{
-    
     font-size: 15px;
+}
+
+::ng-deep .mat-dialog-container {
+    max-height: 90vh !important;
 }

@@ -46,6 +46,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ItemHistoryComponent } from './item/item-history/item-history.component';
 import {MatBadgeModule} from '@angular/material/badge';
 import { SnackbarComponent } from './shared/snackbar/snackbar.component';
+import { AppRoutingModule } from './app-routing.module';
+import { SignInComponent } from './sign-in/sign-in/sign-in.component';
+import { ForgotPasswordComponent } from './sign-in/forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './sign-in/verify-email/verify-email.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +69,9 @@ import { SnackbarComponent } from './shared/snackbar/snackbar.component';
     ItemActionComponent,
     ItemHistoryComponent,
     SnackbarComponent,
+    SignInComponent,
+    ForgotPasswordComponent,
+    VerifyEmailComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,6 +104,7 @@ import { SnackbarComponent } from './shared/snackbar/snackbar.component';
     MatTooltipModule,
     MatSnackBarModule,
     MatBadgeModule,
+    AppRoutingModule,
   ],
   providers: [MatDatepickerModule, TitleCasePipe, DecimalPipe],
   bootstrap: [AppComponent],

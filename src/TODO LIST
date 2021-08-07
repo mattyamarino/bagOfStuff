@@ -1,5 +1,7 @@
 BUG item description sets focus to bottom of dialog if there is vertical scrolling
 
+BUG confirmation dialog too big for small screens
+
 RESEARCH encumbrance tracking
 
 CHANGE dm view to be dashboard (not tabs for every player).   
