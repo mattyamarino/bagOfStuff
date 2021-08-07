@@ -91,5 +91,14 @@ text-align: center !important;
     align-items: unset !important;
 }
 
+.orange-bold {
+    color: orangered;
+    font-weight: bold;
+}
+
+.light-blue-bold {
+    color: #4699c7;
+    font-weight: bold;
+}
 
 

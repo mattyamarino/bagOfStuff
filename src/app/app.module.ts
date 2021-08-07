@@ -50,6 +50,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SignInComponent } from './sign-in/sign-in/sign-in.component';
 import { ForgotPasswordComponent } from './sign-in/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './sign-in/verify-email/verify-email.component';
+import { SignUpComponent } from './sign-in/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { VerifyEmailComponent } from './sign-in/verify-email/verify-email.compon
     SignInComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
