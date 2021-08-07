@@ -44,7 +44,7 @@ export class TransactionModalComponent implements OnInit {
       currency: 'Platinum', transactionAmount: 0, valueInSilver: '100sp', currentAmount: this.latestTransaction.platinumTotal
     });
     this.dataSource.push({
-      currency: 'Electrum', transactionAmount: 0, valueInSilver: '50sp', currentAmount: this.latestTransaction.electrumTotal
+      currency: 'Electrum', transactionAmount: 0, valueInSilver: '5sp', currentAmount: this.latestTransaction.electrumTotal
     });
     this.dataSource.push({
       currency: 'Silver', transactionAmount: 0, valueInSilver: '1sp', currentAmount: this.latestTransaction.silverTotal
@@ -247,7 +247,7 @@ export class TransactionModalComponent implements OnInit {
       case "Platinum":
         return amount * 100;
       case "Electrum":
-        return amount * 50;
+        return amount * 5;
       case "Silver":
         return amount;
       case "Copper":
