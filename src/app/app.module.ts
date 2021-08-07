@@ -51,6 +51,7 @@ import { SignInComponent } from './sign-in/sign-in/sign-in.component';
 import { ForgotPasswordComponent } from './sign-in/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './sign-in/verify-email/verify-email.component';
 import { SignUpComponent } from './sign-in/sign-up/sign-up.component';
+import { AngularFireAuthModule } from '@angular/fire/auth'
 
 @NgModule({
   declarations: [
@@ -108,7 +109,7 @@ import { SignUpComponent } from './sign-in/sign-up/sign-up.component';
     MatBadgeModule,
     AppRoutingModule,
   ],
-  providers: [MatDatepickerModule, TitleCasePipe, DecimalPipe],
+  providers: [MatDatepickerModule, TitleCasePipe, DecimalPipe, AngularFireAuthModule],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
