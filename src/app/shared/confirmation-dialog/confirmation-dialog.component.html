@@ -1,15 +1,17 @@
 <mat-card class="mat-elevation-z0">
-    <div class="confirm-title">
-        {{data.title | titlecase}}
-    </div>
-    <br>
-    <div style="white-space: pre-line" [ngClass]="getMessageClass()">
-        {{data.message}}
-    </div>
-    <span class="br"></span>
-    <div mat-dialog-actions class="center">
-        <button mat-raised-button color="light-blue" (click)="onConfirm()">{{data.confirm | titlecase}}</button>
-        &nbsp;&nbsp;
-        <button mat-raised-button color="orange" (click)="onDismiss()">{{data.cancel | titlecase}}</button>
-    </div>
+    <mat-card-content>
+        <div class="confirm-title">
+            {{data.title | titlecase}}
+        </div>
+        <br>
+        <div style="white-space: pre-line" [ngClass]="getMessageClass()">
+            {{data.message}}
+        </div>
+        <span class="br"></span>
+        <div mat-dialog-actions class="center">
+            <button mat-raised-button color="light-blue" (click)="onConfirm()">{{data.confirm | titlecase}}</button>
+            &nbsp;&nbsp;
+            <button mat-raised-button color="orange" (click)="onDismiss()">{{data.cancel | titlecase}}</button>
+        </div>
+    </mat-card-content>
 </mat-card>

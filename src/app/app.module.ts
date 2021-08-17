@@ -108,7 +108,11 @@ import { SignUpComponent } from './sign-in/sign-up/sign-up.component';
     MatBadgeModule,
     AppRoutingModule,
   ],
-  providers: [MatDatepickerModule, TitleCasePipe, DecimalPipe],
+  providers: [
+    MatDatepickerModule, 
+    TitleCasePipe, 
+    DecimalPipe, 
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
