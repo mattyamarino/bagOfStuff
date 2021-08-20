@@ -51,6 +51,8 @@ import { SignInComponent } from './sign-in/sign-in/sign-in.component';
 import { ForgotPasswordComponent } from './sign-in/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './sign-in/verify-email/verify-email.component';
 import { SignUpComponent } from './sign-in/sign-up/sign-up.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 
 @NgModule({
   declarations: [
@@ -107,6 +109,7 @@ import { SignUpComponent } from './sign-in/sign-up/sign-up.component';
     MatSnackBarModule,
     MatBadgeModule,
     AppRoutingModule,
+    MatSlideToggleModule,
   ],
   providers: [
     MatDatepickerModule, 

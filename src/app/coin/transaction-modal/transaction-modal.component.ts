@@ -154,8 +154,10 @@ export class TransactionModalComponent implements OnInit {
     let newTransaction: MonetaryTransaction = new MonetaryTransaction;
 
     this.firestoreService.getLatestTransactionOnce().subscribe(res => {
-      const response = <MonetaryTransaction[]>res.docs.map(doc => doc.data());;
-      this.latestTransaction = response[0];
+      const response = <MonetaryTransaction[]>res.docs.map(doc => doc.data());
+      
+      this.latestTransaction = response.length > 0 ? response[0] : this.coinService.buildEmptyMonertaryTransaction();
+      
       if (!this.processingTransaction && this.validateTransaction(newTransaction)) {
         this.processingTransaction = true;
 
