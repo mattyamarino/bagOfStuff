@@ -1,6 +1,12 @@
+BUG dm action confirmation is showing dm vault as destination instead of actual destination.
+
 BUG item description sets focus to bottom of dialog if there is vertical scrolling
 
+ADD close button for item description modal
+
 ADD optional uses for item
+
+RESEARCH adding flavor text
 
 RESEARCH encumbrance tracking
 
