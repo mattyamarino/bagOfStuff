@@ -28,7 +28,10 @@
         </mat-card-content>
     </mat-card>
 
-    <div *ngIf="!data.hideHistory" class="button-container">
-        <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">View History</button>
+    <div class="button-container">
+        <span *ngIf="!data.hideHistory">
+            <button mat-raised-button color="light-blue" (click)="openHistoryDialog()">View History</button>&nbsp;&nbsp;&nbsp;
+        </span>
+        <button mat-raised-button color="light-blue" (click)="closeModal()">Close</button>
     </div>
 </mat-dialog-content>

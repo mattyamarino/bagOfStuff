@@ -31,13 +31,13 @@ export class ItemActionComponent implements OnInit {
     private snackBar: MatSnackBar,  public titleCasePipe: TitleCasePipe, private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.setDestinationLabel();
     this.setFormGroup();
+    this.setDestinationLabel();
     this.setPlayers();
   }
 
   setDestinationLabel(): void {
-    this.destinationLabel = this.data.item.owner === "bank" ? this.data.user.short + "'s Item Vault" : "Party Item Vault";
+    this.destinationLabel = this.data.item.owner === "bank" ? this.actionFormGroup.get("destination")?.value + "'s Item Vault" : "Party Item Vault";
   }
 
   getDestination(): string {
@@ -64,6 +64,10 @@ export class ItemActionComponent implements OnInit {
       this.data.user.associatedPlayerCharacters.map((val: any) => this.players.push(Object.assign({}, val)));
       this.players.splice(this.players.findIndex(player => player.short === this.data.vault.short), 1);
     }
+  }
+
+  updateDestination(): void {
+    this.setDestinationLabel();
   }
 
   getTitle(): string {
@@ -272,12 +276,7 @@ export class ItemActionComponent implements OnInit {
   }
 
   getActionConstant(): string {
-    switch(this.data.action) {
-      case "move" : return ItemActions.MOVE
-      case "sell" : return ItemActions.SELL
-      case "delete" : return ItemActions.DELETE
-      default : return ""
-    }
+    return this.itemService.getActionConstant(this.data.action);
   }
 
   closeModal(): void {

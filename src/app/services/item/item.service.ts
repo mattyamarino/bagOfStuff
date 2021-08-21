@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ItemActions } from 'src/app/config/ItemConstants';
 import { ExternalItem } from 'src/app/models/ExternalItem';
 import { Item } from 'src/app/models/Item';
 import { ItemHistory } from 'src/app/models/ItemHistory';
@@ -78,4 +79,13 @@ export class ItemService {
     return type.split(" ")[0].toLowerCase();
   }
 
+
+  getActionConstant(action: string): string {
+    switch(action) {
+      case "move" : return ItemActions.MOVE
+      case "sell" : return ItemActions.SELL
+      case "delete" : return ItemActions.DELETE
+      default : return ""
+    }
+  }
 }

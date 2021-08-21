@@ -50,4 +50,8 @@ export class ItemDescriptionComponent implements OnInit {
       );
     });
   }
+
+  closeModal(): void {
+    this.dialog.closeAll();
+  }
 }

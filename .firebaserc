@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "bag-of-stuff"
+    "default": "bag-of-stuff",
+    "demo": "bigbagofstuffdemo"
   },
   "targets": {
     "bag-of-stuff": {

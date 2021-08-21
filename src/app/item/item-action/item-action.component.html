@@ -10,7 +10,11 @@
         <div *ngIf="data.user.role === 'dm' && data.action === 'move'">
             <mat-form-field appearance="fill" class="field">
                 <mat-label>Vault To Move Item To</mat-label>
-                <mat-select placeholder="Select Player to Send Item" formControlName="destination" required>
+                <mat-select 
+                placeholder="Select Player to Send Item" 
+                formControlName="destination" 
+                (selectionChange)="updateDestination()"
+                required>
                     <mat-option *ngFor="let player of players" [value]="player.short">
                         {{getPlayerOptionLabel(player)}}
                     </mat-option>
