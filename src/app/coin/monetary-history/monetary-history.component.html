@@ -79,9 +79,9 @@
             <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{element.goldDeposited | number}}</td>
         </ng-container>
         
-        <ng-container matColumnDef="totalValueInSilver">
-            <th mat-header-cell *matHeaderCellDef>Transaction Value in Silver</th>
-            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{getTotalValueInSilver(element) | number:'1.2-2'}}</td>
+        <ng-container matColumnDef="totalValueInStandard">
+            <th mat-header-cell *matHeaderCellDef>Transaction Value in Gold</th>
+            <td mat-cell *matCellDef="let element">{{getTransactionSymbol(element.type)}}{{getTotalValueInStandard(element) | number:'1.2-2'}}</td>
         </ng-container>
         
         <ng-container matColumnDef="createdBy">

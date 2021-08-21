@@ -23,11 +23,11 @@ export class MonetaryHistoryComponent implements OnInit {
   displayedColumns: string[] = [
     'type', 
     'platinumDeposited', 
+    'goldDeposited',
     'electrumDeposited', 
     'silverDeposited',
     'copperDeposited',
-    'goldDeposited',
-    'totalValueInSilver',
+    'totalValueInStandard',
     'createdBy',
     'createdOn',
     'description'
@@ -61,9 +61,9 @@ export class MonetaryHistoryComponent implements OnInit {
     return type === "Withdraw"? "-" : "+";
   }
 
-  getTotalValueInSilver(transaction: MonetaryTransaction): number {
-    this.coinService.calculateTransactionValueInSilver(transaction);
-    return transaction.totalValueInSilver ? transaction.totalValueInSilver : 0;
+  getTotalValueInStandard(transaction: MonetaryTransaction): number {
+    this.coinService.calculateTransactionValueInStandard(transaction);
+    return transaction.totalValueInStandard ? transaction.totalValueInStandard : 0;
   }
 
   updateTransactions(): void {

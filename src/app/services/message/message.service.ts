@@ -10,19 +10,19 @@ export class MessageService {
 
   constructor(public titleCasePipe: TitleCasePipe, public numberPipe: DecimalPipe) { }
 
-  itemActionMessage(itemName: string, quantity: number, action: string, valueInSilver?: number) {
+  itemActionMessage(itemName: string, quantity: number, action: string, valueInStandard?: number) {
     let message = "Succesfully " + this.titleCasePipe.transform(action) + " " + quantity + " " + this.titleCasePipe.transform(itemName);
     if (action === ItemActions.SELL) {
-      message += " for " + valueInSilver + "sp"
+      message += " for " + valueInStandard + "gp"
     }
     return message
   }
   
-  monetaryTransactionMessage(transaction: MonetaryTransaction, valueInSilver: number): string {
+  monetaryTransactionMessage(transaction: MonetaryTransaction, valueInStandard: number): string {
     if(transaction.type === "Withdraw") {
-      return "Successfully Withdrew Coin With A Value Of " + this.numberPipe.transform(valueInSilver, '2.2-2') + "sp"
+      return "Successfully Withdrew Coin With A Value Of " + this.numberPipe.transform(valueInStandard, '2.2-2') + "gp"
     } else {
-      return "Successfully Deposited Coin With A Value Of " + this.numberPipe.transform(valueInSilver, '2.2-2') + "sp"
+      return "Successfully Deposited Coin With A Value Of " + this.numberPipe.transform(valueInStandard, '2.2-2') + "gp"
     }
   }
 

@@ -45,19 +45,19 @@ export class CoinService {
     });
   }
 
-  calculateTotalValueInSilver(transaction: MonetaryTransaction): void {
-    transaction.totalValueInSilver = (transaction.platinumTotal * 100);
-    transaction.totalValueInSilver += (transaction.electrumTotal * 5);
-    transaction.totalValueInSilver += transaction.silverTotal;
-    transaction.totalValueInSilver += (transaction.copperTotal / 10);
-    transaction.totalValueInSilver += (transaction.goldTotal / 10);
+  calculateTotalValueInStandard(transaction: MonetaryTransaction): void {
+    transaction.totalValueInStandard = (transaction.platinumTotal * 10);
+    transaction.totalValueInStandard += (transaction.electrumTotal / 2);
+    transaction.totalValueInStandard += transaction.silverTotal / 10;
+    transaction.totalValueInStandard += (transaction.copperTotal / 100);
+    transaction.totalValueInStandard += (transaction.goldTotal);
   }
 
-  calculateTransactionValueInSilver(transaction: MonetaryTransaction): void {
-    transaction.totalValueInSilver = (transaction.platinumDeposited * 100);
-    transaction.totalValueInSilver += (transaction.electrumDeposited * 5);
-    transaction.totalValueInSilver += transaction.silverDeposited;
-    transaction.totalValueInSilver += (transaction.copperDeposited / 10);
-    transaction.totalValueInSilver += (transaction.goldDeposited / 10);
+  calculateTransactionValueInStandard(transaction: MonetaryTransaction): void {
+    transaction.totalValueInStandard = (transaction.platinumDeposited * 10);
+    transaction.totalValueInStandard += (transaction.electrumDeposited / 2);
+    transaction.totalValueInStandard += transaction.silverDeposited / 10;
+    transaction.totalValueInStandard += (transaction.copperDeposited / 100);
+    transaction.totalValueInStandard += (transaction.goldDeposited);
   }
 }

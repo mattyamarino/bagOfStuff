@@ -49,9 +49,9 @@
                 <td mat-cell *matCellDef="let element">{{getTotalForCurrencyType(element.currency) | number}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="valueInSilver">
-                <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp; Value In Silver &nbsp;&nbsp;</th>
-                <td mat-cell *matCellDef="let element">{{element.valueInSilver}}</td>
+            <ng-container matColumnDef="valueInStandard">
+                <th mat-header-cell *matHeaderCellDef>&nbsp;&nbsp; Value In Gold &nbsp;&nbsp;</th>
+                <td mat-cell *matCellDef="let element">{{element.valueInStandard}}</td>
             </ng-container>
 
 
@@ -63,9 +63,9 @@
             Cannot Submit Empty Transaction
         </div>
         <div class="emptyTransaction">
-            Value of {{type}} in Silver
-            <img src="../../../assets/silver.png" class="smallMoneyIcon">
-            {{ getTransactionValueInSilver() | number:'1.2-2' }}
+            Value of {{type}} in Gold
+            <img src="../../../assets/gold.png" class="smallMoneyIcon">
+            {{ getTransactionValueInStandard() | number:'1.2-2' }}
         </div>
     
         <mat-form-field appearance="fill" class="description">

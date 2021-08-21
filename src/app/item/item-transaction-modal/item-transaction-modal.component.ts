@@ -250,7 +250,7 @@ export class ItemTransactionModalComponent implements OnInit {
           message: "Name: " + this.titleCasePipe.transform(this.secondFormGroup.get("name")?.value) + "\n" +
             "Type: " + this.titleCasePipe.transform(this.secondFormGroup.get("type")?.value) + "\n" +
             "Rarity: " + this.titleCasePipe.transform(this.secondFormGroup.get("rarity")?.value) + "\n" +
-            "Value In Silver: " + this.getItemValue() + "\n" +
+            "Value In Gold: " + this.getItemValue() + "\n" +
             amountToCreate +
             this.secondFormGroup.get("description")?.value
         }

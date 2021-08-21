@@ -19,7 +19,7 @@ import { MonetaryTransaction } from '../../models/MonetaryTransaction';
 })
 export class TransactionModalComponent implements OnInit {
   latestTransaction!: MonetaryTransaction;
-  displayedColumns: string[] = ['currency', 'transactionAmount', 'currentAmount', 'valueInSilver'];
+  displayedColumns: string[] = ['currency', 'transactionAmount', 'currentAmount', 'valueInStandard'];
   dataSource: any = [];
   transactionFormGroup!: FormGroup;
   selectedUser!: User;
@@ -41,19 +41,19 @@ export class TransactionModalComponent implements OnInit {
 
   populateColumns(): void {
     this.dataSource.push({
-      currency: 'Platinum', transactionAmount: 0, valueInSilver: '100sp', currentAmount: this.latestTransaction.platinumTotal
+      currency: 'Platinum', transactionAmount: 0, valueInStandard: '10gp', currentAmount: this.latestTransaction.platinumTotal
     });
     this.dataSource.push({
-      currency: 'Electrum', transactionAmount: 0, valueInSilver: '5sp', currentAmount: this.latestTransaction.electrumTotal
+      currency: 'Gold', transactionAmount: 0, valueInStandard: '1gp', currentAmount: this.latestTransaction.goldTotal
     });
     this.dataSource.push({
-      currency: 'Silver', transactionAmount: 0, valueInSilver: '1sp', currentAmount: this.latestTransaction.silverTotal
+      currency: 'Electrum', transactionAmount: 0, valueInStandard: '0.5gp', currentAmount: this.latestTransaction.electrumTotal
     });
     this.dataSource.push({
-      currency: 'Copper', transactionAmount: 0, valueInSilver: '0.1sp', currentAmount: this.latestTransaction.copperTotal
+      currency: 'Silver', transactionAmount: 0, valueInStandard: '0.1gp', currentAmount: this.latestTransaction.silverTotal
     });
     this.dataSource.push({
-      currency: 'Gold', transactionAmount: 0, valueInSilver: '0.1sp', currentAmount: this.latestTransaction.goldTotal
+      currency: 'Copper', transactionAmount: 0, valueInStandard: '0.01gp', currentAmount: this.latestTransaction.copperTotal
     });
   }
 
@@ -167,7 +167,7 @@ export class TransactionModalComponent implements OnInit {
         newTransaction.createdBy = this.userService.getUserLabel(this.selectedUser);
 
         this.firestoreService.createCurrencyTransaction(this.coinService.transformToObject(newTransaction)).then(res => {
-          this.openSnackbar(this.messageService.monetaryTransactionMessage(newTransaction, this.getTransactionValueInSilver()), false)
+          this.openSnackbar(this.messageService.monetaryTransactionMessage(newTransaction, this.getTransactionValueInStandard()), false)
         });
 
         this.closeDialog();
@@ -236,26 +236,26 @@ export class TransactionModalComponent implements OnInit {
     }
   }
 
-  getTransactionValueInSilver(): number {
+  getTransactionValueInStandard(): number {
     let amount = 0;
     this.dataSource.forEach((element: { currency: any; transactionAmount: any; }) => {
-      amount += this.getCurrentAmountValueInSilver(element.currency, this.transactionFormGroup.get(element.currency)?.value);
+      amount += this.getCurrentAmountValueInStandard(element.currency, this.transactionFormGroup.get(element.currency)?.value);
     });
     return amount;
   }
 
-  getCurrentAmountValueInSilver(currency: string, amount: number): number {
+  getCurrentAmountValueInStandard(currency: string, amount: number): number {
     switch (currency) {
       case "Platinum":
-        return amount * 100;
+        return amount * 10;
       case "Electrum":
-        return amount * 5;
-      case "Silver":
-        return amount;
+        return amount * 0.5;
+      case "Silver": 
+        return amount * 0.1;
       case "Copper":
-        return amount * 0.1;
+        return amount * 0.01;
       case "Gold":
-        return amount * 0.1;
+        return amount;
       default:
         return 0;
     }

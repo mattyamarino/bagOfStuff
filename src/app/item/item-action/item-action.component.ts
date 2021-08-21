@@ -105,7 +105,7 @@ export class ItemActionComponent implements OnInit {
   getConfirmationMessage(): string {
     let message = "";
     if(this.data.action === "sell") {
-      message = "This will deposit " + this.data.item.cost * this.actionFormGroup.get("quantity")!.value + "sp into the Party Bank";
+      message = "This will deposit " + this.data.item.cost * this.actionFormGroup.get("quantity")!.value + "gp into the Party Bank";
     }else if(this.data.action === "move") {
       message = "Send " + this.actionFormGroup.get("quantity")!.value + " Items to " + this.destinationLabel;
     }
@@ -244,14 +244,14 @@ export class ItemActionComponent implements OnInit {
         undefined,
         0,
         0,
+        0,
+        0,
         this.data.item.cost * this.actionFormGroup.get("quantity")!.value,
-        0,
-        0,
         latestTransaction.platinumTotal,
         latestTransaction.electrumTotal,
-        latestTransaction.silverTotal + (this.data.item.cost * this.actionFormGroup.get("quantity")!.value),
+        latestTransaction.silverTotal,
         latestTransaction.copperTotal,
-        latestTransaction.goldTotal,
+        latestTransaction.goldTotal + (this.data.item.cost * this.actionFormGroup.get("quantity")!.value),
         "Funds gained from selling: " + this.titleCasePipe.transform(this.data.item.name) + " (qty: " + this.actionFormGroup.get("quantity")!.value + ")",
         this.userService.getUserLabel(this.data.user),
         "Deposit",

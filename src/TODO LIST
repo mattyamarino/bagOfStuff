@@ -1,6 +1,8 @@
 
 BUG item description sets focus to bottom of dialog if there is vertical scrolling
 
+ADD ability for user to enter decimal for item value less than one gold
+
 ADD optional uses for item
 
 RESEARCH adding flavor text
